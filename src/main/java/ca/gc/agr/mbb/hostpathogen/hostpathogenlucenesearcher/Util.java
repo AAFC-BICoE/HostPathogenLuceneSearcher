@@ -1,6 +1,7 @@
 package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
+import java.util.List;
 
 public class Util{
 
@@ -23,6 +24,14 @@ public class Util{
 	}
 
     }
-    
+
+    public static final void checkIds(List<Long> ids) throws IllegalArgumentException{
+	if(ids == null){
+	    throw new IllegalArgumentException("ids List<Long> is null");
+	}
+	if(ids.size() == 0){
+	    throw new IllegalArgumentException("ids List<Long> is empty (length=0)");
+	}
+    }
 
 }
