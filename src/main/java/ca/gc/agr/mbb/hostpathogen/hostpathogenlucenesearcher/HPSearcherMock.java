@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class HPSearcherMock implements Searcher{
     public static final int NUM_IDS = 100;
 
-    // 2000-2199
+    // 2000-2099
     static List<Long>pathogenId = null;
 
     // 100-199
@@ -22,37 +22,58 @@ public class HPSearcherMock implements Searcher{
 	}
     }
 
+/** 
+  * Initialize Searcher with Properties.
+  *  Must be run before any other methods.
+  * 
+  * 
+  * @param java.util.Properties - contains init information
+  * @return Searcher 
+  * @exception InitializationException
+  */ 
     public Searcher init(Properties p) throws InitializationException{
+	// get 
 	return this;
     }
 
-    public List<Long>getPathogens(final List<Long> ids, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
-	return pathogenId.subList((int)offset, (int)(offset+limit));
+/** 
+  * Get Pathogens by ID
+  * 
+  * @param ids         List of ids wanted
+  * @return List<Long> List of ids found
+  * @exception IllegalArgumentException
+  */ 
+    public List<Long>getPathogens(final List<Long> ids)
+	throws IllegalArgumentException{
+	
+	Util.checkList(ids, NUM_IDS);
+	return pathogenId.subList(0, NUM_IDS);
     }
+
+
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffset(offset, limit);
-	return pathogenId.subList((int)offset, (int)(offset+limit));
+	return Util.sliceList(pathogenId, offset, limit);
     }
 
     public List<Long>searchPathogens(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffset(offset, limit);
-	return pathogenId.subList((int)offset, (int)(offset+limit));
+	return Util.sliceList(pathogenId, offset, limit);
     }
 
 
-    public List<Long>getHosts(List<Long> ids, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
-	return hostId.subList((int)offset, (int)(offset+limit));
+    public List<Long>getHosts(List<Long> ids) throws IllegalArgumentException{
+	Util.checkList(ids, NUM_IDS);
+	return hostId.subList(0, ids.size());
     }
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffset(offset, limit);
-	return hostId.subList((int)offset, (int)(offset+limit));
+	return Util.sliceList(hostId, offset, limit);
 
     }
     public List<Long>searchHosts(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffset(offset, limit);
-	return hostId.subList((int)offset, (int)(offset+limit));
+	return Util.sliceList(hostId, offset, limit);
     }
 
 

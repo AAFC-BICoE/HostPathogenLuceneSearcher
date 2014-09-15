@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Util{
 
@@ -25,7 +26,21 @@ public class Util{
 
     }
 
-    public static final void checkIds(List<Long> ids) throws IllegalArgumentException{
+    public static final void checkList(List list, int limit){
+	if(list == null){
+		throw new IllegalArgumentException("Null list");
+	    }
+
+	int len = list.size();
+	if(len == 0){
+		throw new IllegalArgumentException("Empty list (size=0)");
+	    }
+	if(len > limit){
+		throw new IllegalArgumentException("List too large " + len + "; greater than limit: " + limit);
+	    }
+    }
+
+    public static final void checkIds(final List<Long> ids) throws IllegalArgumentException{
 	if(ids == null){
 	    throw new IllegalArgumentException("ids List<Long> is null");
 	}
@@ -34,4 +49,19 @@ public class Util{
 	}
     }
 
+    public static final int min(final int i, final int j){
+	if (j>i){
+	    return i;
+	}
+	return j;
+    }
+
+    public static final List<Long> sliceList(final List<Long> list, final long offset, final int limit){
+	int len = list.size();
+	
+	if(offset >len){
+	    return new ArrayList<Long>(0);
+	}
+	return list.subList((int)offset, min((int)(offset+limit), len));
+    }
 }

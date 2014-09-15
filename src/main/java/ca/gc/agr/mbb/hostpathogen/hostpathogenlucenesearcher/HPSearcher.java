@@ -18,14 +18,21 @@ public class HPSearcher implements Searcher{
     }
 
 
-    public Searcher init(Properties p) throws InitializationException{
+    /**
+     * Initialize the Searcher. Must be run before any other methods.
+     *
+     * @param p Initialization properties (like Search.MOCK_PROPERTY)
+     * @return Searcher
+     * @throws InitializationException <<Description>>
+     */
+    public Searcher init(Properties prop) throws InitializationException{
 	// itialize all Lucene indices 
 	return this;
     }
 
     ///// Pathogens
-    public List<Long>getPathogens(final List<Long> ids, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
+
+    public List<Long>getPathogens(final List<Long> ids) throws IllegalArgumentException{
 	Util.checkIds(ids);
 	return null;
     }
@@ -42,8 +49,7 @@ public class HPSearcher implements Searcher{
 
 
     ///// Hosts
-    public List<Long>getHosts(List<Long> ids, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
+    public List<Long>getHosts(List<Long> ids) throws IllegalArgumentException{
 	Util.checkIds(ids);
 	return null;
     }
