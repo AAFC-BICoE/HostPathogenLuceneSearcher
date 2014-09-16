@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Util{
 
     // Make sure offset and limits are sane and within constraints.
-    public static final void checkOffset(final long offset, final int limit) throws IllegalOffsetLimitException{
+    public static final void checkOffsetAndLimit(final long offset, final int limit) throws IllegalOffsetLimitException{
 	StringBuilder s = new StringBuilder();
 	if (offset <0){
 	    s.append("Offset is < 0: " + offset + "||");
@@ -24,6 +24,16 @@ public class Util{
 	    throw new IllegalOffsetLimitException(s.toString());
 	}
 
+    }
+
+    public static final void checkQueryParameters(final List<String>queryPrameters) throws IllegalArgumentException{
+	if(queryPrameters == null){
+	    throw new IllegalArgumentException("queryPrameters List<String> is null");
+	} 
+
+	if(queryPrameters.size() == 0){
+	    throw new IllegalArgumentException("queryPrameters List<String> is zero length");
+	} 
     }
 
     public static final void checkList(List list, int limit){
@@ -56,7 +66,8 @@ public class Util{
 	return j;
     }
 
-    public static final List<Long> sliceList(final List<Long> list, final long offset, final int limit){
+    public static final List<Long> sliceList(final List<Long> list, final long offset, final int limit) throws IllegalArgumentException{
+	checkList(list, Integer.MAX_VALUE);
 	int len = list.size();
 	
 	if(offset >len){

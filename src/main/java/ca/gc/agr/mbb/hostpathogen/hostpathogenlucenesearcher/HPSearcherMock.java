@@ -33,10 +33,15 @@ public class HPSearcherMock implements Searcher{
 
 	    Pathogen pathogen = new Pathogen();
 	    pathogen.setId(pid);
+	    pathogen.setPathogengenus("genus" + pid);
+	    pathogen.setPathogenspecies("species" + pid);
+
 	    pathogens.add(pathogen);
 
 	    Host host = new Host();
 	    host.setId(pid);
+	    host.setgenus("genus" + pid);
+	    host.setspecies("species" + pid);
 	    hosts.add(host);
 	}
     }
@@ -72,12 +77,13 @@ public class HPSearcherMock implements Searcher{
 
 
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
+	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
-    public List<Long>searchPathogens(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
+    public List<Long>searchPathogens(List<String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+	Util.checkQueryParameters(queryParameters);
+	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
@@ -87,12 +93,13 @@ public class HPSearcherMock implements Searcher{
 	return hosts.subList(0, ids.size());
     }
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
+	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(hostIds, offset, limit);
 
     }
-    public List<Long>searchHosts(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffset(offset, limit);
+    public List<Long>searchHosts(final List<String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+	Util.checkQueryParameters(queryParameters);
+	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(hostIds, offset, limit);
     }
 
