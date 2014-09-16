@@ -28,7 +28,7 @@ public class HPSearcherMockTest{
     public void negativeOffset() throws IllegalOffsetLimitException
     {
 	try{
-	    Searcher s = HPSearcher.newInstance(p);
+	    Searcher s = HPSearcher.newSearcher(p);
 	    s.getAllPathogens((long)-1, 2);
 	}catch(InitializationException e){
 	    // Not supposed to happen
@@ -40,7 +40,7 @@ public class HPSearcherMockTest{
     public void limitLessThanOne() throws IllegalOffsetLimitException
     {
 	try{
-	    Searcher s = HPSearcher.newInstance(p);
+	    Searcher s = HPSearcher.newSearcher(p);
 	    s.getAllPathogens(100, 0);
 	}catch(InitializationException e){
 	    // Not supposed to happen
@@ -53,7 +53,7 @@ public class HPSearcherMockTest{
     public void limitTooLarge() throws IllegalOffsetLimitException
     {
 	try{
-	    Searcher s = HPSearcher.newInstance(p);
+	    Searcher s = HPSearcher.newSearcher(p);
 	    s.getAllPathogens(100, HPSearcher.LIMIT_MAX+6);
 	}catch(InitializationException e){
 	    // Not supposed to happen
@@ -67,7 +67,7 @@ public class HPSearcherMockTest{
     public void successfullyGetAllPathogensFirstPage(){
 	Searcher s = null;
 	try{
-	    s = HPSearcher.newInstance(p);
+	    s = HPSearcher.newSearcher(p);
 	}catch(InitializationException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
@@ -90,7 +90,7 @@ public class HPSearcherMockTest{
     public void successfullyGetAllPathogensOddOffset(){
 	Searcher s = null;
 	try{
-	    s = HPSearcher.newInstance(p);
+	    s = HPSearcher.newSearcher(p);
 	}catch(InitializationException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
@@ -113,7 +113,7 @@ public class HPSearcherMockTest{
     public void successfullyGetAllPathogensMaxOffset(){
 	Searcher s = null;
 	try{
-	    s = HPSearcher.newInstance(p);
+	    s = HPSearcher.newSearcher(p);
 	}catch(InitializationException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
@@ -141,7 +141,7 @@ public class HPSearcherMockTest{
     public void successfullyGetAllPathogensWithPaging(){
 	Searcher s = null;
 	try{
-	    s = HPSearcher.newInstance(p);
+	    s = HPSearcher.newSearcher(p);
 	}catch(InitializationException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();

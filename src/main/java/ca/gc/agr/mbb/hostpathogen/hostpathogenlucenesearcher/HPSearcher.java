@@ -2,11 +2,13 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
 import java.util.List;
+import ca.gc.agr.mbb.hostpathogen.ws.pojo.Host;
+import ca.gc.agr.mbb.hostpathogen.ws.pojo.Pathogen;
 
 public class HPSearcher implements Searcher{
     public static int LIMIT_MAX = 50;
 
-    public static final Searcher newInstance(final Properties p) throws InitializationException{
+    public static final Searcher newSearcher(final Properties p) throws InitializationException{
 	Searcher searcher = null;
 
 	if(p.containsKey(MOCK_PROPERTY)){
@@ -32,7 +34,7 @@ public class HPSearcher implements Searcher{
 
     ///// Pathogens
 
-    public List<Long>getPathogens(final List<Long> ids) throws IllegalArgumentException{
+    public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException{
 	Util.checkIds(ids);
 	return null;
     }
@@ -49,7 +51,7 @@ public class HPSearcher implements Searcher{
 
 
     ///// Hosts
-    public List<Long>getHosts(List<Long> ids) throws IllegalArgumentException{
+    public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException{
 	Util.checkIds(ids);
 	return null;
     }

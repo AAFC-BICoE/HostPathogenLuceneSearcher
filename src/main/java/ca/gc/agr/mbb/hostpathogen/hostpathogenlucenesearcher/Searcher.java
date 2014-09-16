@@ -1,7 +1,10 @@
 package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
-import java.util.Properties;
+
+import ca.gc.agr.mbb.hostpathogen.ws.pojo.Host;
+import ca.gc.agr.mbb.hostpathogen.ws.pojo.Pathogen;
 import java.util.List;
+import java.util.Properties;
 
 public interface Searcher{
 
@@ -15,14 +18,14 @@ public interface Searcher{
     public Searcher init(Properties p) throws InitializationException;
 
 
-    public List<Long>getPathogens(final List<Long> ids) throws IllegalArgumentException;
+    public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException;
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException;
     public List<Long>searchPathogens(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException;
 
 
 
     //public List<Host>getHosts(List<Long> ids, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException;
-    public List<Long>getHosts(List<Long> ids) throws IllegalArgumentException;
+    public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException;
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException;
     public List<Long>searchHosts(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException;
 
