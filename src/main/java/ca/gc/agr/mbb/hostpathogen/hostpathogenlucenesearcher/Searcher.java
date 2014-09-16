@@ -1,8 +1,8 @@
 package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 
-import ca.gc.agr.mbb.hostpathogen.ws.pojo.Host;
-import ca.gc.agr.mbb.hostpathogen.ws.pojo.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 import java.util.List;
 import java.util.Properties;
 

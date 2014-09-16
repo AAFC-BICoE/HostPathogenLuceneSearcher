@@ -31,6 +31,12 @@
     </dependency>
 
     <dependency>
+      <groupId>ca.gc.agr.mbb.hostpathogen.nouns</groupId>
+      <artifactId>nouns</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
@@ -70,11 +76,6 @@
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-grouping</artifactId>
       <version>4.10.0</version>
-    </dependency>
- <dependency>
-      <groupId>ca.gc.agr.aafc.hostpathogenws</groupId>
-      <artifactId>HostPathWS</artifactId>
-      <version>1.0</version>
     </dependency>
   </dependencies>
 </project>

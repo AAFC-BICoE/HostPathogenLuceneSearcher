@@ -2,8 +2,9 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
 import java.util.List;
-import ca.gc.agr.mbb.hostpathogen.ws.pojo.Host;
-import ca.gc.agr.mbb.hostpathogen.ws.pojo.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Host;
+
 
 public class HPSearcher implements Searcher{
     public static int LIMIT_MAX = 50;

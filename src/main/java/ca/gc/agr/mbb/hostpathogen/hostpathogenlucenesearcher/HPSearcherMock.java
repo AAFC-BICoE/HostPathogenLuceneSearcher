@@ -4,9 +4,8 @@ import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
 
-
-import ca.gc.agr.mbb.hostpathogen.ws.pojo.Host;
-import ca.gc.agr.mbb.hostpathogen.ws.pojo.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 
 public class HPSearcherMock implements Searcher{
     public static final int NUM_IDS = 100;
@@ -33,11 +32,11 @@ public class HPSearcherMock implements Searcher{
 	    pathogenIds.add(new Long(pid));
 
 	    Pathogen pathogen = new Pathogen();
-	    pathogen.setPathogenId(pid);
+	    pathogen.setId(pid);
 	    pathogens.add(pathogen);
 
 	    Host host = new Host();
-	    host.setHostId(pid);
+	    host.setId(pid);
 	    hosts.add(host);
 	}
     }
