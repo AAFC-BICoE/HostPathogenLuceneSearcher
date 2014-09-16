@@ -23,7 +23,7 @@ public class HPSearcherMockTest{
 
     // Pathogen tests///////////////////
 
-    // Simple
+    // FAIL tests
     @Test(expected=IllegalOffsetLimitException.class)
     public void negativeOffset() throws IllegalOffsetLimitException
     {
@@ -54,7 +54,7 @@ public class HPSearcherMockTest{
     {
 	try{
 	    Searcher s = HPSearcher.newInstance(p);
-	    s.getAllPathogens(100, HPSearcher.OFFSET_MAX+6);
+	    s.getAllPathogens(100, HPSearcher.LIMIT_MAX+6);
 	}catch(InitializationException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
@@ -62,6 +62,81 @@ public class HPSearcherMockTest{
     }
 
     // getAllPathogens
+    // Success tests
+    @Test
+    public void successfullyGetAllPathogensFirstPage(){
+	Searcher s = null;
+	try{
+	    s = HPSearcher.newInstance(p);
+	}catch(InitializationException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
+
+	long offset = 0l;
+	int limit = 20;
+
+	List<Long>pathogens = new ArrayList<Long>(limit);
+	
+	try{
+	    pathogens = s.getAllPathogens(offset, limit);
+	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
+	Assert.assertEquals(pathogens.size(), limit);
+    }
+
+    public void successfullyGetAllPathogensOddOffset(){
+	Searcher s = null;
+	try{
+	    s = HPSearcher.newInstance(p);
+	}catch(InitializationException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
+
+	// odd offset
+	long offset = 37l;
+	int limit = 20;
+	List<Long>pathogens = new ArrayList<Long>(limit);
+	
+	try{
+	    pathogens = s.getAllPathogens(offset, limit);
+	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
+	Assert.assertEquals(pathogens.size(), limit);
+    }
+
+    public void successfullyGetAllPathogensMaxOffset(){
+	Searcher s = null;
+	try{
+	    s = HPSearcher.newInstance(p);
+	}catch(InitializationException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
+
+
+	// max offset
+	long offset = HPSearcher.LIMIT_MAX;
+	int limit = 20;
+	List<Long>pathogens = new ArrayList<Long>(limit);
+	
+	try{
+	    pathogens = s.getAllPathogens(offset, limit);
+	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
+	Assert.assertEquals(pathogens.size(), limit);
+    }
+
+
+
+
     @Test
     public void successfullyGetAllPathogensWithPaging(){
 	Searcher s = null;
@@ -85,7 +160,6 @@ public class HPSearcherMockTest{
 	    throw new NullPointerException();
 	}
 	Assert.assertEquals(pathogens.size(), HPSearcherMock.NUM_IDS);
-
     }
 
 }

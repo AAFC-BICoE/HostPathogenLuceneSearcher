@@ -27,7 +27,7 @@ public class UtilTest{
     @Test(expected=IllegalOffsetLimitException.class)
     public void limitTooLarge() throws IllegalOffsetLimitException
     {
-	Util.checkOffset(100, HPSearcher.OFFSET_MAX+6);
+	Util.checkOffset(100, HPSearcher.LIMIT_MAX+6);
     }
 
 

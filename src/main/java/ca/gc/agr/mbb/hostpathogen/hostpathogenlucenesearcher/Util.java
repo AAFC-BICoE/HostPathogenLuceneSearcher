@@ -16,8 +16,8 @@ public class Util{
 	    s.append("Limit is < 1: " + limit);
 	}
 
-	if (limit>HPSearcher.OFFSET_MAX){
-	    s.append("Limit is > max limit value:" + HPSearcher.OFFSET_MAX + " :" + limit); 
+	if (limit>HPSearcher.LIMIT_MAX){
+	    s.append("Limit is > max limit value:" + HPSearcher.LIMIT_MAX + " :" + limit); 
 	}
 
 	if(s.length() > 0){

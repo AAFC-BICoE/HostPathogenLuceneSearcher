@@ -4,7 +4,7 @@ import java.util.Properties;
 import java.util.List;
 
 public class HPSearcher implements Searcher{
-    public static int OFFSET_MAX = 50;
+    public static int LIMIT_MAX = 50;
 
     public static final Searcher newInstance(final Properties p) throws InitializationException{
 	Searcher searcher = null;
