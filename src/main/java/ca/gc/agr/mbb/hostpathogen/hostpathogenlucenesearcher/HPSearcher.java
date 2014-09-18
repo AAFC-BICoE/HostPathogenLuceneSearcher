@@ -12,7 +12,12 @@ public class HPSearcher implements Searcher{
     
     private String luceneDir = null;
 
+    private LuceneIndexSearcher<Pathogen> lis = null;
+
     public static final Searcher newSearcher(final Properties p) throws InitializationException{
+	if (p==null){
+	    throw new InitializationException("Properties are null");
+	}
 	Searcher searcher = null;
 
 	if(p.containsKey(MOCK_PROPERTY)){
@@ -46,17 +51,18 @@ public class HPSearcher implements Searcher{
 	    throw new InitializationException(errorString);
 	}
 
-	LuceneIndexSearcher<Pathogen> lis = new LuceneIndexSearcher<Pathogen>();
+	lis = new LuceneIndexSearcher<Pathogen>();
 	lis.init("luceneIndexes/luceneIndex.host_pathogens");
 
 	return this;
     }
 
+
     ///// Pathogens
 
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException{
 	Util.checkIds(ids);
-	return null;
+	return lis.get(ids);
     }
 
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{

@@ -17,9 +17,17 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.ScoreDoc;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.lucene.document.Document;
+
+
+
 
 public class LuceneIndexSearcher<T>{
-
+    private final static Logger LOG = Logger.getLogger("test"); 
     IndexSearcher searcher = null;
 
     public void init(final String indexDir) throws InitializationException{
@@ -38,10 +46,21 @@ public class LuceneIndexSearcher<T>{
 	    Query longQuery = NumericRangeQuery.newLongRange(pkField, id, id, true,true);
 	    BooleanClause bc = new BooleanClause(longQuery, BooleanClause.Occur.SHOULD);
 	    query.add(bc);
+	    break;
 	}
 
 	try{
-	    TopDocs td = searcher.search(query, 99999999);
+	    LOG.info("************ query=" + query);
+	    //TopDocs td = searcher.search(query, 99999999);
+	    TopDocs td = searcher.search(new MatchAllDocsQuery(), 99999999);
+	    LOG.info("************ Totalhits=" + td.totalHits);
+	    for(ScoreDoc sd: td.scoreDocs){
+		//Document doc = null;
+		//Document doc = searcher.document(sd.doc);
+		Document doc = searcher.doc(28);
+		//LOG.info(sd);
+		LOG.info(sd.doc + ":" + doc);
+	    }
 	}catch(Exception e){
 	    e.printStackTrace();
 	}

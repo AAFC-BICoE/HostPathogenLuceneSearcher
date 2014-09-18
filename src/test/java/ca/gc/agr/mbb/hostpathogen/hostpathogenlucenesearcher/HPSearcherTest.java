@@ -59,6 +59,7 @@ public class HPSearcherTest{
 
     @Test(expected=InitializationException.class)
     public void luceneDirNotDir() throws InitializationException{
+	LOGGER.info("************************");
 	File tmpDir = new File(TMP_DIR);
 	tmpDir.deleteOnExit();
 	if(!tmpDir.mkdir()){
@@ -76,4 +77,17 @@ public class HPSearcherTest{
 	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, tmpFile.getAbsolutePath());
 	Searcher s = HPSearcher.newSearcher(p);
     }
+
+    @Test
+    public void luceneSearch() throws InitializationException{
+	Properties p = new Properties();
+	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, ".");
+	Searcher s = HPSearcher.newSearcher(p);
+	List<Long> ids = new ArrayList<Long>();
+	for(int i=21; i<32; i++){
+	    ids.add(new Long(i));
+	}
+	s.getPathogens(ids);
+    }
+
 }
