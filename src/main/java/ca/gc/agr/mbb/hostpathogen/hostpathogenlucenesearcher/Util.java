@@ -3,6 +3,8 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.PrintWriter;
 
 public class Util{
 
@@ -75,4 +77,31 @@ public class Util{
 	}
 	return list.subList((int)offset, min((int)(offset+limit), len));
     }
-}
+
+
+    public static final String existsIsDirIsReadable(String dir){
+	File f = new File(dir);
+	
+	if (!f.exists()){
+	    return "Dir does not exist:" + dir;
+	}
+	if (!f.isDirectory()){
+	    return "Is not a directory:" + dir;
+	}
+	if (!f.canRead()){
+	    return "Unable to read dir:" + dir;
+	}
+
+	return null;
+    }
+
+    public static final void touch(File f) throws java.io.FileNotFoundException{
+	    PrintWriter writer = new PrintWriter(f);
+	    writer.println("x");
+	    writer.flush();
+	    writer.close();
+    }
+
+}//
+
+

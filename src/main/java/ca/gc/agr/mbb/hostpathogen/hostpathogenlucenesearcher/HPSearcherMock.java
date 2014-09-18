@@ -33,8 +33,8 @@ public class HPSearcherMock implements Searcher{
 
 	    Pathogen pathogen = new Pathogen();
 	    pathogen.setId(pid);
-	    pathogen.setPathogengenus("genus" + pid);
-	    pathogen.setPathogenspecies("species" + pid);
+	    pathogen.setGenus("genus" + pid);
+	    pathogen.setSpecies("species" + pid);
 
 	    pathogens.add(pathogen);
 
@@ -44,6 +44,10 @@ public class HPSearcherMock implements Searcher{
 	    host.setspecies("species" + pid);
 	    hosts.add(host);
 	}
+    }
+
+    protected HPSearcherMock(){
+	
     }
 
 /** 

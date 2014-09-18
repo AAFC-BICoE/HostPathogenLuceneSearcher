@@ -9,6 +9,8 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 
 public class HPSearcher implements Searcher{
     public static int LIMIT_MAX = 50;
+    
+    private String luceneDir = null;
 
     public static final Searcher newSearcher(final Properties p) throws InitializationException{
 	Searcher searcher = null;
@@ -22,6 +24,10 @@ public class HPSearcher implements Searcher{
     }
 
 
+    private HPSearcher(){
+
+    }
+
     /**
      * Initialize the Searcher. Must be run before any other methods.
      *
@@ -30,7 +36,19 @@ public class HPSearcher implements Searcher{
      * @throws InitializationException <<Description>>
      */
     public Searcher init(Properties prop) throws InitializationException{
-	// itialize all Lucene indices 
+	if(!prop.containsKey(LUCENE_INDICES_BASE_DIR)){
+	    throw new InitializationException("Missing LUCENE_INDICES_BASE_DIR property for location of Lucene indices");
+	}
+	luceneDir = prop.getProperty(LUCENE_INDICES_BASE_DIR);
+
+	String errorString = Util.existsIsDirIsReadable(luceneDir);
+	if(errorString != null){
+	    throw new InitializationException(errorString);
+	}
+
+	LuceneIndexSearcher<Pathogen> lis = new LuceneIndexSearcher<Pathogen>();
+	lis.init("luceneIndexes/luceneIndex.host_pathogens");
+
 	return this;
     }
 

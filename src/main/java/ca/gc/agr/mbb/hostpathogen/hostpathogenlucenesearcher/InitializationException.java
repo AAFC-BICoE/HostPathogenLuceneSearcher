@@ -13,6 +13,10 @@ public class InitializationException extends Exception{
 	super(m);
     }
 
+    public InitializationException(final Throwable m){
+	super(m);
+    }
+
 
 }
 
