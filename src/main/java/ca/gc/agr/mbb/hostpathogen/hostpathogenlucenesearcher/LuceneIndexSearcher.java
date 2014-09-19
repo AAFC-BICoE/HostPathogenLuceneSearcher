@@ -26,7 +26,7 @@ import org.apache.lucene.document.Document;
 
 
 
-public class LuceneIndexSearcher<T>{
+public class LuceneIndexSearcher<T> implements LuceneFields{
     private final static Logger LOG = Logger.getLogger("test"); 
     IndexSearcher searcher = null;
 
@@ -59,7 +59,7 @@ public class LuceneIndexSearcher<T>{
 		//Document doc = searcher.document(sd.doc);
 		Document doc = searcher.doc(28);
 		//LOG.info(sd);
-		LOG.info(sd.doc + ":" + doc);
+		//LOG.info(sd.doc + ":" + doc);
 	    }
 	}catch(Exception e){
 	    e.printStackTrace();
