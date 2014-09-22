@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.PrintWriter;
@@ -28,7 +29,7 @@ public class Util{
 
     }
 
-    public static final void checkQueryParameters(final List<String>queryPrameters) throws IllegalArgumentException{
+    public static final void checkQueryParameters(final Map<String,String>queryPrameters) throws IllegalArgumentException{
 	if(queryPrameters == null){
 	    throw new IllegalArgumentException("queryPrameters List<String> is null");
 	} 

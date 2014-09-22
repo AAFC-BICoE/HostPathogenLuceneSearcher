@@ -3,6 +3,8 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,13 +53,13 @@ public class UtilTest{
 
     @Test(expected=IllegalArgumentException.class)
     public void queryIsZeroLength() throws IllegalArgumentException{
-	Util.checkQueryParameters(new ArrayList<String>());
+	Util.checkQueryParameters(new HashMap<String,String>());
     }
 
     @Test
     public void queryWithOneParameter(){
-	List<String>queries = new ArrayList<String>();
-	queries.add("genus=ali*");
+	Map<String, String>queries = new HashMap<String,String>();
+	queries.put("genus", "ali*");
 	Util.checkQueryParameters(queries);
     }
 

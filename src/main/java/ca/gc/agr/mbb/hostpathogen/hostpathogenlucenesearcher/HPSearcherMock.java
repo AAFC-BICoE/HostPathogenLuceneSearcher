@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
@@ -85,7 +86,7 @@ public class HPSearcherMock implements Searcher{
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
-    public List<Long>searchPathogens(List<String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public List<Long>searchPathogens(Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkQueryParameters(queryParameters);
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(pathogenIds, offset, limit);
@@ -101,7 +102,7 @@ public class HPSearcherMock implements Searcher{
 	return Util.sliceList(hostIds, offset, limit);
 
     }
-    public List<Long>searchHosts(final List<String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public List<Long>searchHosts(final Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkQueryParameters(queryParameters);
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(hostIds, offset, limit);

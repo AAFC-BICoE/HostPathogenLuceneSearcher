@@ -78,16 +78,29 @@ public class HPSearcherTest{
 	Searcher s = HPSearcher.newSearcher(p);
     }
 
-    @Test
-    public void luceneSearch() throws InitializationException{
+
+    @Test(expected=TooManyIdsException.class)
+    public void requestTooManyPathogenIds() throws InitializationException{
 	Properties p = new Properties();
 	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, ".");
 	Searcher s = HPSearcher.newSearcher(p);
 	List<Long> ids = new ArrayList<Long>();
-	for(int i=21; i<32; i++){
+	for(int i=21; i<1000; i++){
 	    ids.add(new Long(i));
 	}
 	s.getPathogens(ids);
+    }
+
+    @Test
+    public void getPathogensdByIdSuccessfully() throws InitializationException{
+	Properties p = new Properties();
+	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, ".");
+	Searcher s = HPSearcher.newSearcher(p);
+	List<Long> ids = new ArrayList<Long>();
+	for(int i=21; i<40; i++){
+	    ids.add(new Long(i));
+	}
+	Assert.assertTrue(s.getPathogens(ids).size() > 0);
     }
 
 }

@@ -1,78 +1,100 @@
 package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 import java.io.File;
-
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 
-import org.apache.lucene.util.BytesRef;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.util.NumericUtils;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.NumericRangeQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.MatchAllDocsQuery;
-import org.apache.lucene.search.ScoreDoc;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-
-
-
+import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.NumericUtils;
+import org.apache.lucene.util.Version;
 
 public class LuceneIndexSearcher<T> implements LuceneFields{
     private final static Logger LOG = Logger.getLogger("test"); 
-    IndexSearcher searcher = null;
+    private final static int MAX_IDS = 50;
 
-    public void init(final String indexDir) throws InitializationException{
+    private IndexSearcher searcher = null;
+    private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_4_10_0);
+    private Populator populator = null;
+
+    public void init(final String indexDir, final Populator populator) throws InitializationException{
+	this.populator = populator;
 	try{
-	    searcher = new IndexSearcher(DirectoryReader.open(FSDirectory.open(new File(indexDir))));
+	    IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(indexDir)));
+	    analyzer = new StandardAnalyzer(Version.LUCENE_4_10_0); // thread safe
+	    LOG.info("*** Num docs in " + indexDir + "=" + reader.maxDoc());
+	    searcher = new IndexSearcher(reader);
 	}catch(Throwable t){
 	    throw new InitializationException(t);
 	}
     }
 
-    final static String pkField = "pk_pathogen_id";
-    public List<T>get(final List<Long> ids){
-	BooleanQuery query = new  BooleanQuery();
 
-	for(Long id: ids){
-	    Query longQuery = NumericRangeQuery.newLongRange(pkField, id, id, true,true);
-	    BooleanClause bc = new BooleanClause(longQuery, BooleanClause.Occur.SHOULD);
-	    query.add(bc);
-	    break;
+    public List<T>get(final List<Long> ids)throws TooManyIdsException, IllegalArgumentException{
+	Util.checkIds(ids);
+	if(ids.size() > MAX_IDS){
+	    throw new TooManyIdsException("Too many ids: " + ids.size() +"; larger than max=" + MAX_IDS);
 	}
 
+	QueryParser queryParser = new QueryParser("tmp", analyzer); // not thread safe
+	TermQuery tq = null;
+	StringBuilder sb = new StringBuilder(ids.size()*16);
+	boolean first = true;
+	for(Long id: ids){
+	    if (first){
+		first = false;
+	    }else{
+		sb.append(" ");
+	    }
+	    sb.append(PK_PATHOGEN_ID + ":" + id);
+	}
+
+	Query query = null;
+	try{
+	    query = queryParser.parse(sb.toString());
+	}catch(org.apache.lucene.queryparser.classic.ParseException p){
+	    p.printStackTrace();
+	    return null;
+	}
 	try{
 	    LOG.info("************ query=" + query);
-	    //TopDocs td = searcher.search(query, 99999999);
-	    TopDocs td = searcher.search(new MatchAllDocsQuery(), 99999999);
+	    TopDocs td = searcher.search(query, MAX_IDS);
 	    LOG.info("************ Totalhits=" + td.totalHits);
+	    //List<T>pathogens = new ArrayList<T>(td.totalHits);
+	    //List<Pathogen>pathogens = new ArrayList<Pathogen>(td.totalHits);
+	    List<T>pathogens = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
-		//Document doc = null;
-		//Document doc = searcher.document(sd.doc);
-		Document doc = searcher.doc(28);
-		//LOG.info(sd);
-		//LOG.info(sd.doc + ":" + doc);
+		Document doc = searcher.doc(sd.doc);
+		//Pathogen p = new Pathogen();
+		//p.setId(new Long(doc.getValues(PK_PATHOGEN_ID)[0]));
+		pathogens.add((T)populator.populate(doc));
+		LOG.info(sd.doc + ":" + doc);
 	    }
+	    return pathogens;
 	}catch(Exception e){
 	    e.printStackTrace();
 	}
 
-	//BytesRef ref = new BytesRef();    
-	//NumericUtils.longToPrefixCoded( 12L, 0, ref );
-
-	// BooleanQuery q = new BooleanQuery();
-
-	// for(String id: ids){
-	//     TermQuery tq = new TermQuery(new Term(pkFields, id));
-	//     BooleanClause bc = new BooleanClause(tq, 
 
 	return null;
     }
@@ -81,7 +103,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	return null;
     }
 
-    public List<Long>search(List<String>queryPrameters, final long offset, final int limit){
+    public List<Long>search(Map<String,String>queryPrameters, final long offset, final int limit){
 	return null;
     }
     

@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
 import java.util.List;
+import java.util.Map;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
@@ -52,7 +53,7 @@ public class HPSearcher implements Searcher{
 	}
 
 	lis = new LuceneIndexSearcher<Pathogen>();
-	lis.init("luceneIndexes/luceneIndex.host_pathogens");
+	lis.init("/home/newtong/work/HostPathogenLuceneSearcher/luceneIndexes/luceneIndex.pathogens", new PathogenPopulator<Pathogen>());
 
 	return this;
     }
@@ -70,7 +71,7 @@ public class HPSearcher implements Searcher{
 	return null;
     }
 
-    public List<Long>searchPathogens(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public List<Long>searchPathogens(Map<String,String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
 	return null;
     }
@@ -86,7 +87,16 @@ public class HPSearcher implements Searcher{
 	return null;
     }
 
-    public List<Long>searchHosts(List<String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    // country=x*
+    // provState=y
+    // enumerate=true
+    // hostFamily=foobar
+    // hostGenus=foobar
+    // hostSpecies=foobar    
+    // pathogenVirus=x
+    // pathogenGenus=x
+    // pathogenSpecies=x
+    public List<Long>searchHosts(Map<String,String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
 	return null;
     }
