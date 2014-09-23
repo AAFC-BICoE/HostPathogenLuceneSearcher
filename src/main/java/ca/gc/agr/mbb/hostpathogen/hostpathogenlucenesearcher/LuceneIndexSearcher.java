@@ -77,16 +77,12 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	    return null;
 	}
 	try{
-	    LOG.info("************ query=" + query);
+	    LOG.info("**** query=" + query);
 	    TopDocs td = searcher.search(query, MAX_IDS);
-	    LOG.info("************ Totalhits=" + td.totalHits);
-	    //List<T>pathogens = new ArrayList<T>(td.totalHits);
-	    //List<Pathogen>pathogens = new ArrayList<Pathogen>(td.totalHits);
+	    LOG.info("**** Totalhits=" + td.totalHits);
 	    List<T>pathogens = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
 		Document doc = searcher.doc(sd.doc);
-		//Pathogen p = new Pathogen();
-		//p.setId(new Long(doc.getValues(PK_PATHOGEN_ID)[0]));
 		pathogens.add((T)populator.populate(doc));
 		LOG.info(sd.doc + ":" + doc);
 	    }
