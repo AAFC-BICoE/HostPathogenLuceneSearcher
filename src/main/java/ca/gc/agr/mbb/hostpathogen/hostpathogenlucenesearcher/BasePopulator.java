@@ -7,9 +7,8 @@ abstract public class BasePopulator<T> implements Populator{
 
     static final long longValue(Document doc, String fieldName, boolean mustExist) throws FailedPopulateException
     {
-	if (doc == null){
-	    throw new FailedPopulateException(new NullPointerException("Document is null"));
-	}
+	checkDocFieldName(doc, fieldName);
+
 	String[] values = doc.getValues(fieldName);
 	if(values == null || values.length == 0){
 	    if(mustExist){
@@ -26,6 +25,8 @@ abstract public class BasePopulator<T> implements Populator{
 
     static final String stringValue(Document doc, String fieldName, boolean mustExist) throws FailedPopulateException
     {
+	checkDocFieldName(doc, fieldName);
+
 	String[] values = doc.getValues(fieldName);
 	if(values == null || values.length == 0){
 	    if(mustExist){
@@ -40,7 +41,15 @@ abstract public class BasePopulator<T> implements Populator{
 	}
     }
 
+    static final void checkDocFieldName(Document doc, String fieldName){
+	if (doc == null){
+	    throw new FailedPopulateException("Document is null");
+	}
 
+	if (fieldName == null || fieldName.length() == 0){
+	    throw new FailedPopulateException("Fieldname is null or zero length");
+	}
+    }
 
 
 }

@@ -31,8 +31,20 @@ public class BasePopulatorTest{
 
     // longValue
     @Test(expected=FailedPopulateException.class)
-    public void nullDoc(){
+    public void nullDocLong(){
 	BasePopulator.longValue(null, "fieldName", true);
+    }
+
+    // longValue
+    @Test(expected=FailedPopulateException.class)
+    public void nullFieldLong(){
+	BasePopulator.longValue(doc, null, true);
+    }
+
+    // longValue
+    @Test(expected=FailedPopulateException.class)
+    public void zeroLengthFieldLong(){
+	BasePopulator.longValue(doc, "", true);
     }
 
     
