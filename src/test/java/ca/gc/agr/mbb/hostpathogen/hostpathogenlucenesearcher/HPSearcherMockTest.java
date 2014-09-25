@@ -13,7 +13,7 @@ import org.junit.Assert;
 @RunWith(JUnit4.class)
 public class HPSearcherMockTest{
 
-    private final static Logger LOGGER = Logger.getLogger("test"); 
+    private final static Logger LOG = Logger.getLogger("test"); 
     private static Properties p;
     static{
 	p = new Properties();

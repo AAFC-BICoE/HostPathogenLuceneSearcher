@@ -5,6 +5,10 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 
 abstract public class BasePopulator<T> implements Populator{
 
+    static final long longValue(Document doc, String fieldName) throws FailedPopulateException{
+	return longValue(doc, fieldName, false);
+    }
+
     static final long longValue(Document doc, String fieldName, boolean mustExist) throws FailedPopulateException
     {
 	checkDocFieldName(doc, fieldName);
@@ -21,6 +25,10 @@ abstract public class BasePopulator<T> implements Populator{
 	}catch(NumberFormatException e){
 	    throw new FailedPopulateException(e);
 	}
+    }
+
+    static final String stringValue(Document doc, String fieldName) throws FailedPopulateException{
+	return stringValue(doc, fieldName, false);
     }
 
     static final String stringValue(Document doc, String fieldName, boolean mustExist) throws FailedPopulateException

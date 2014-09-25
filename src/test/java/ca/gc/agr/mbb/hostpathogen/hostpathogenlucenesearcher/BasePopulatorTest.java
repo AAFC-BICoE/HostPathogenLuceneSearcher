@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 @RunWith(JUnit4.class)
 public class BasePopulatorTest{
-    private final static Logger LOGGER = Logger.getLogger("test"); 
+    private final static Logger LOG = Logger.getLogger("test"); 
     static Document doc = null;
     static final String fieldName1 = "f1";
     static final String fieldValue1String = "string1";

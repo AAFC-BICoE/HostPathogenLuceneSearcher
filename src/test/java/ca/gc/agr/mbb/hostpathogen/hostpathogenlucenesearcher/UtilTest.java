@@ -13,7 +13,7 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class UtilTest{
-    private final static Logger LOGGER = Logger.getLogger("test"); 
+    private final static Logger LOG = Logger.getLogger("test"); 
 
     // checkOffsetAndLimit
     @Test(expected=IllegalOffsetLimitException.class)

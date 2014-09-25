@@ -3,12 +3,15 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 import java.util.Properties;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 
 
 public class HPSearcher implements Searcher{
+    private final static Logger LOGGER = Logger.getLogger(HPSearcher.class.getName()); 
     public static int LIMIT_MAX = 50;
     
     private String luceneDir = null;
@@ -46,6 +49,7 @@ public class HPSearcher implements Searcher{
 	    throw new InitializationException("Missing LUCENE_INDICES_BASE_DIR property for location of Lucene indices");
 	}
 	luceneDir = prop.getProperty(LUCENE_INDICES_BASE_DIR);
+	LOGGER.info("Lucene directory=" + luceneDir);
 
 	String errorString = Util.existsIsDirIsReadable(luceneDir);
 	if(errorString != null){
@@ -53,7 +57,8 @@ public class HPSearcher implements Searcher{
 	}
 
 	lis = new LuceneIndexSearcher<Pathogen>();
-	lis.init("/home/newtong/work/HostPathogenLuceneSearcher/luceneIndexes/luceneIndex.pathogens", new PathogenPopulator<Pathogen>());
+	lis.init(luceneDir + "/luceneIndex.pathogens", new PathogenPopulator<Pathogen>());
+	//lis.init("/home/newtong/work/HostPathogenLuceneSearcher/luceneIndexes/luceneIndex.pathogens", new PathogenPopulator<Pathogen>());
 
 	return this;
     }

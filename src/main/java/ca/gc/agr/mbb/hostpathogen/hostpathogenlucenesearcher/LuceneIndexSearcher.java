@@ -30,7 +30,7 @@ import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
 
 public class LuceneIndexSearcher<T> implements LuceneFields{
-    private final static Logger LOG = Logger.getLogger("test"); 
+    private final static Logger LOG = Logger.getLogger(LuceneIndexSearcher.class.getName()); 
     private final static int MAX_IDS = 50;
 
     private IndexSearcher searcher = null;
@@ -39,6 +39,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 
     public void init(final String indexDir, final Populator populator) throws InitializationException{
 	this.populator = populator;
+	LOG.info("Opening Lucene index for directory: " + indexDir);
 	try{
 	    IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(indexDir)));
 	    analyzer = new StandardAnalyzer(Version.LUCENE_4_10_0); // thread safe
@@ -76,23 +77,22 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	    p.printStackTrace();
 	    return null;
 	}
+	List<T>pathogens = null;
 	try{
 	    LOG.info("**** query=" + query);
 	    TopDocs td = searcher.search(query, MAX_IDS);
 	    LOG.info("**** Totalhits=" + td.totalHits);
-	    List<T>pathogens = new ArrayList<T>(td.totalHits);
+	    pathogens = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
 		Document doc = searcher.doc(sd.doc);
 		pathogens.add((T)populator.populate(doc));
 		LOG.info(sd.doc + ":" + doc);
 	    }
-	    return pathogens;
 	}catch(Exception e){
 	    e.printStackTrace();
+	    throw new IllegalArgumentException(e);
 	}
-
-
-	return null;
+	return pathogens;
     }
 
     public List<Long>getAll(final long offset, final int limit){
