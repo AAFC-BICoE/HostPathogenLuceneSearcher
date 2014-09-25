@@ -67,7 +67,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	    }else{
 		sb.append(" ");
 	    }
-	    sb.append(PK_PATHOGEN_ID + ":" + id);
+	    sb.append(populator.getPrimaryKeyField() + ":" + id);
 	}
 
 	Query query = null;

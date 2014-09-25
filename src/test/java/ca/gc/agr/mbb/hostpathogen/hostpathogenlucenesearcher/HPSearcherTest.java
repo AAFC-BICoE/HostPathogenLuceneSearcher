@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 
 @RunWith(JUnit4.class)
 public class HPSearcherTest{
@@ -91,8 +93,21 @@ public class HPSearcherTest{
 	s.getPathogens(ids);
     }
 
+    @Test(expected=TooManyIdsException.class)
+    public void requestTooManyHostIds() throws InitializationException{
+	Properties p = new Properties();
+	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, "./luceneIndexes");
+	Searcher s = HPSearcher.newSearcher(p);
+	List<Long> ids = new ArrayList<Long>();
+	for(int i=21; i<1000; i++){
+	    ids.add(new Long(i));
+	}
+	s.getHosts(ids);
+    }
+
     @Test
     public void getPathogensdByIdSuccessfully() throws InitializationException{
+	LOG.info("************************");
 	Properties p = new Properties();
 	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, "./luceneIndexes");
 	Searcher s = HPSearcher.newSearcher(p);
@@ -100,8 +115,24 @@ public class HPSearcherTest{
 	for(int i=21; i<40; i++){
 	    ids.add(new Long(i));
 	}
-	LOG.info("Num pathogens in search: " +s.getPathogens(ids));
-	//Assert.assertTrue(s.getPathogens(ids).size() > 0);
+	List<Pathogen>results = s.getPathogens(ids);
+	LOG.info("Num pathogens in search: " +results.size());
+	Assert.assertTrue(results.size() > 0);
+    }
+
+    @Test
+    public void getHostByIdSuccessfully() throws InitializationException{
+	LOG.info(" -------- getHostByIdSuccessfully()");
+	Properties p = new Properties();
+	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, "./luceneIndexes");
+	Searcher s = HPSearcher.newSearcher(p);
+	List<Long> ids = new ArrayList<Long>();
+	for(int i=21; i<40; i++){
+	    ids.add(new Long(i));
+	}
+	List<Host>results = s.getHosts(ids);
+	LOG.info("Num hosts in search: " +results.size());
+	//Assert.assertTrue(results.size() > 0);
     }
 
 }

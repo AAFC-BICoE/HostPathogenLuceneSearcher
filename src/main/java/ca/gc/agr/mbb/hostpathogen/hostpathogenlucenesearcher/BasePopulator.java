@@ -4,6 +4,12 @@ import org.apache.lucene.document.Document;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 
 abstract public class BasePopulator<T> implements Populator{
+    protected String primaryKeyField = null;
+
+
+    public String getPrimaryKeyField(){
+	return primaryKeyField;
+    }
 
     static final long longValue(Document doc, String fieldName) throws FailedPopulateException{
 	return longValue(doc, fieldName, false);
