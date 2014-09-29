@@ -60,7 +60,7 @@ public class HPSearcher implements Searcher{
 	pathogenLis = new LuceneIndexSearcher<Pathogen>();
 	pathogenLis.init(luceneDir + "/luceneIndex.pathogens", new PathogenPopulator<Pathogen>());
 	hostLis = new LuceneIndexSearcher<Host>();
-	hostLis.init(luceneDir + "/luceneIndex.hosts", new PathogenPopulator<Pathogen>());
+	hostLis.init(luceneDir + "/luceneIndex.hosts", new HostPopulator<Host>());
 	return this;
     }
 

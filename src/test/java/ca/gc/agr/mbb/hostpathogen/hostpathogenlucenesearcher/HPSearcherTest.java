@@ -19,6 +19,7 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 public class HPSearcherTest{
     private final static Logger LOG = Logger.getLogger(HPSearcherTest.class.getName()); 
 
+    private final String GOOD_LUCENE_DIR="./luceneIndexes";
     private final String BAD_LUCENE_DIR="/88888/444/bhgjrueww/../22/%^$";
     private final String TMP_DIR="./testDir_" + System.nanoTime();
     private final String TMP_FILE="./testFile_" + System.nanoTime();
@@ -119,7 +120,7 @@ public class HPSearcherTest{
     public void getPathogensdByIdSuccessfully() throws InitializationException{
 	LOG.info("************************");
 	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, "./luceneIndexes");
+	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, GOOD_LUCENE_DIR);
 	Searcher s = HPSearcher.newSearcher(p);
 	List<Long> ids = new ArrayList<Long>();
 	for(int i=21; i<40; i++){
@@ -138,23 +139,26 @@ public class HPSearcherTest{
 
     @Test
     public void getHostByIdSuccessfully() throws InitializationException{
-	LOG.info(" -------- getHostByIdSuccessfully()");
+	LOG.info("1 -------- getHostByIdSuccessfully()");
 	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, "./luceneIndexes");
+	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, GOOD_LUCENE_DIR);
 	Searcher s = HPSearcher.newSearcher(p);
 	List<Long> ids = new ArrayList<Long>();
 	for(int i=21; i<40; i++){
 	    ids.add(new Long(i));
 	}
+	LOG.info("2 -------- getHostByIdSuccessfully()");
 	List<Host>results = null;
 	try{
+	LOG.info("3 -------- getHostByIdSuccessfully()");
 	    results = s.getHosts(ids);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
 	}
 	LOG.info("Num hosts in search: " +results.size());
-	//Assert.assertTrue(results.size() > 0);
+	LOG.info("4 -------- getHostByIdSuccessfully()");
+	Assert.assertTrue(results.size() > 0);
     }
 
 }

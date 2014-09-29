@@ -121,6 +121,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 
     private TopDocs runQuery(final Query query) throws IndexFailureException{
 	try{
+	    LOG.info("Lucene query run: " + query);
 	    return searcher.search(query, MAX_IDS);
 	}catch(java.io.IOException e){
 	    e.printStackTrace();

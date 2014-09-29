@@ -5,7 +5,12 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 public interface LuceneFields{
     public static final String ID_SUFFIX= "_ID";
 
+    // Nouns
+    public static final String PATHOGEN_TYPE = "pathogen";
+    public static final String HOST_TYPE = "host";
+
     // FIELDS
+    public static final String RECORD_TYPE = "recordType";
     public static final String BOOK_AUTHOR="book_author";
     public static final String BOOK_EDITOR="book_editor";
     public static final String BOOK_PAGES="book_pages";
@@ -57,6 +62,8 @@ public interface LuceneFields{
     public static final String SYMPTOM="symptom";
     public static final String VIRUS_MPLO_NAMES = "virus_MPLO_names";
     public static final String VOLUME = "volume";
+
+    public static final String PK = "ID";
     
     public static final String PK_HIGHER_TAXA_ID = "pk_higher_taxa_id";
     public static final String KINGDOM = "kingdom";
