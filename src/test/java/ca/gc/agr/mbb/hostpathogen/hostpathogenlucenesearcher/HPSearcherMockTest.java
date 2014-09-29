@@ -33,6 +33,9 @@ public class HPSearcherMockTest{
 	}catch(InitializationException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
 	}
     }
 
@@ -43,6 +46,9 @@ public class HPSearcherMockTest{
 	    Searcher s = HPSearcher.newSearcher(p);
 	    s.getAllPathogens(100, 0);
 	}catch(InitializationException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
 	}
@@ -56,6 +62,9 @@ public class HPSearcherMockTest{
 	    Searcher s = HPSearcher.newSearcher(p);
 	    s.getAllPathogens(100, HPSearcher.LIMIT_MAX+6);
 	}catch(InitializationException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
 	}
@@ -83,6 +92,9 @@ public class HPSearcherMockTest{
 	}catch(IllegalOffsetLimitException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
 	}
 	Assert.assertEquals(pathogens.size(), limit);
     }
@@ -104,6 +116,9 @@ public class HPSearcherMockTest{
 	try{
 	    pathogens = s.getAllPathogens(offset, limit);
 	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
 	}
@@ -128,6 +143,9 @@ public class HPSearcherMockTest{
 	try{
 	    pathogens = s.getAllPathogens(offset, limit);
 	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
 	}
@@ -156,6 +174,9 @@ public class HPSearcherMockTest{
 		offset += limit;
 	    }
 	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    throw new NullPointerException();
 	}

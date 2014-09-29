@@ -90,7 +90,12 @@ public class HPSearcherTest{
 	for(int i=21; i<1000; i++){
 	    ids.add(new Long(i));
 	}
-	s.getPathogens(ids);
+	try{
+	    s.getPathogens(ids);
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
     }
 
     @Test(expected=TooManyIdsException.class)
@@ -102,7 +107,12 @@ public class HPSearcherTest{
 	for(int i=21; i<1000; i++){
 	    ids.add(new Long(i));
 	}
-	s.getHosts(ids);
+	try{
+	    s.getHosts(ids);
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
     }
 
     @Test
@@ -115,7 +125,13 @@ public class HPSearcherTest{
 	for(int i=21; i<40; i++){
 	    ids.add(new Long(i));
 	}
-	List<Pathogen>results = s.getPathogens(ids);
+	List<Pathogen>results = null;
+	try{
+	    results = s.getPathogens(ids);
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
 	LOG.info("Num pathogens in search: " +results.size());
 	Assert.assertTrue(results.size() > 0);
     }
@@ -130,7 +146,13 @@ public class HPSearcherTest{
 	for(int i=21; i<40; i++){
 	    ids.add(new Long(i));
 	}
-	List<Host>results = s.getHosts(ids);
+	List<Host>results = null;
+	try{
+	    results = s.getHosts(ids);
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    throw new NullPointerException();
+	}
 	LOG.info("Num hosts in search: " +results.size());
 	//Assert.assertTrue(results.size() > 0);
     }

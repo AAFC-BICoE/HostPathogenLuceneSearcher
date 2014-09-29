@@ -80,7 +80,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	List<T>pathogens = null;
 	try{
 	    LOG.info("**** query=" + query);
-	    TopDocs td = searcher.search(query, MAX_IDS);
+	    TopDocs td = runQuery(query);
 	    LOG.info("**** Totalhits=" + td.totalHits);
 	    pathogens = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
@@ -96,9 +96,36 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     }
 
 
+    TopDocs runQuery(Query query) throws java.io.IOException{
+	return searcher.search(query, MAX_IDS);
+    }
 
-    public List<Long>getAll(final long offset, final int limit){
-	return null;
+    public List<Long>getAll(final long offset, final int limit) throws IndexFailureException{
+	List<Long> ids = new ArrayList<Long>();
+	Query query = new MatchAllDocsQuery();
+	TopDocs td = null;
+	try{
+	    td = runQuery(query);
+	}catch(Exception e){
+	    e.printStackTrace();
+	    throw new IndexFailureException(e);
+	}
+	ScoreDoc[] scoreDocs = td.scoreDocs;
+	if (offset <= scoreDocs.length){
+	    for(int i=(int)offset; i<limit && i<scoreDocs.length; i++){
+		Document doc = null;
+		try{
+		    doc  = searcher.doc(scoreDocs[i].doc);
+		}catch(java.io.IOException e){
+		    e.printStackTrace();
+		    throw new IndexFailureException(e);
+		}
+		String[] id = doc.getValues(populator.getPrimaryKeyField());
+		//String value = doc.getValues(populator.getPrimaryKeyField())[0];
+		ids.add(new Long(doc.getValues(populator.getPrimaryKeyField())[0]));
+	    }
+	}
+	return ids;
     }
 
     public long countAll(){

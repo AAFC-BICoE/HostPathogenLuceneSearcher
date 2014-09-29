@@ -72,9 +72,9 @@ public class HPSearcher implements Searcher{
 	return pathogenLis.get(ids);
     }
 
-    public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkOffsetAndLimit(offset, limit);
-	return null;
+	return pathogenLis.getAll(offset, limit);
     }
 
     public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException{
