@@ -95,9 +95,20 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	return pathogens;
     }
 
+
+
     public List<Long>getAll(final long offset, final int limit){
 	return null;
     }
+
+    public long countAll(){
+	return 0l;
+    }
+
+    public long countSearch(Map<String,String>queryPrameters){
+	return 0l;
+    }
+
 
     public List<Long>search(Map<String,String>queryPrameters, final long offset, final int limit){
 	return null;

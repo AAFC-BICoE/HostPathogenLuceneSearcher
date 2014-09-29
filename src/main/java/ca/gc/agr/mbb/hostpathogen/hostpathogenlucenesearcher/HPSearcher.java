@@ -77,9 +77,17 @@ public class HPSearcher implements Searcher{
 	return null;
     }
 
-    public List<Long>searchPathogens(Map<String,String>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException{
+	return pathogenLis.countAll();
+    }
+
+    public List<Long>searchPathogens(Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
 	return null;
+    }
+
+    public long searchPathogensCount(Map<String,String>queryParameters) throws IllegalOffsetLimitException, IllegalArgumentException{
+	return pathogenLis.countSearch(queryParameters);
     }
 
 

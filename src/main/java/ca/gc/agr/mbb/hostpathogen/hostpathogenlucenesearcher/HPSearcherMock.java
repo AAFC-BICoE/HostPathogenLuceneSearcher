@@ -86,12 +86,20 @@ public class HPSearcherMock implements Searcher{
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
+    public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException{
+	return pathogenIds.size();
+    }
+
+
     public List<Long>searchPathogens(Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkQueryParameters(queryParameters);
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
+    public long searchPathogensCount(Map<String,String>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException{
+	return 17l;
+    }
 
     public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException{
 	Util.checkList(ids, NUM_IDS);
