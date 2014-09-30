@@ -41,8 +41,8 @@ public class HPSearcherMock implements Searcher{
 
 	    Host host = new Host();
 	    host.setId(pid);
-	    host.setgenus("genus" + pid);
-	    host.setspecies("species" + pid);
+	    host.setGenus("genus" + pid);
+	    host.setSpecies("species" + pid);
 	    hosts.add(host);
 	}
     }
