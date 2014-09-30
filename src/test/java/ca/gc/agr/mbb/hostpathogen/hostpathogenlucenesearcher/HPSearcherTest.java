@@ -95,6 +95,7 @@ public class HPSearcherTest{
 	    s.getPathogens(ids);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
+	    e.printStackTrace();
 	    throw new NullPointerException();
 	}
     }
@@ -112,6 +113,7 @@ public class HPSearcherTest{
 	    s.getHosts(ids);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
+	    e.printStackTrace();
 	    throw new NullPointerException();
 	}
     }
@@ -131,6 +133,7 @@ public class HPSearcherTest{
 	    results = s.getPathogens(ids);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
+	    e.printStackTrace();
 	    throw new NullPointerException();
 	}
 	LOG.info("Num pathogens in search: " +results.size());
@@ -154,6 +157,7 @@ public class HPSearcherTest{
 	    results = s.getHosts(ids);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
+	    e.printStackTrace();
 	    throw new NullPointerException();
 	}
 	LOG.info("Num hosts in search: " +results.size());

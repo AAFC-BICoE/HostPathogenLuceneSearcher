@@ -5,6 +5,7 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,30 +58,11 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	    throw new TooManyIdsException("Too many ids: " + ids.size() +"; larger than max=" + MAX_IDS);
 	}
 
-	QueryParser queryParser = new QueryParser("tmp", analyzer); // not thread safe
-	TermQuery tq = null;
-	StringBuilder sb = new StringBuilder(ids.size()*16);
-	boolean first = true;
-	for(Long id: ids){
-	    if (first){
-		first = false;
-	    }else{
-		sb.append(" ");
-	    }
-	    sb.append(populator.getPrimaryKeyField() + ":" + id);
-	}
-
-	Query query = null;
-	try{
-	    query = queryParser.parse(sb.toString());
-	}catch(org.apache.lucene.queryparser.classic.ParseException e){
-	    e.printStackTrace();
-	    throw new IndexFailureException(e);
-	}
+	String queryString = buildQuery(UtilLucene.makeIdsQueryMap(populator.getPrimaryKeyField(), ids));
 	List<T>pathogens = null;
 	try{
-	    LOG.info("**** query=" + query);
-	    TopDocs td = runQuery(query);
+	    LOG.info("**** query=" + queryString);
+	    TopDocs td = runQuery(queryString, analyzer, searcher);
 	    LOG.info("**** Totalhits=" + td.totalHits);
 	    pathogens = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
@@ -98,28 +80,10 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 
 
     public List<Long>getAll(final long offset, final int limit) throws IndexFailureException{
-	List<Long> ids = new ArrayList<Long>();
-	TopDocs td = all();
-	ScoreDoc[] scoreDocs = td.scoreDocs;
-	if (offset <= scoreDocs.length){
-	    for(int i=(int)offset; i<limit && i<scoreDocs.length; i++){
-		Document doc = null;
-		try{
-		    doc  = searcher.doc(scoreDocs[i].doc);
-		}catch(java.io.IOException e){
-		    e.printStackTrace();
-		    throw new IndexFailureException(e);
-		}
-		String[] id = doc.getValues(populator.getPrimaryKeyField());
-		//String value = doc.getValues(populator.getPrimaryKeyField())[0];
-		ids.add(new Long(doc.getValues(populator.getPrimaryKeyField())[0]));
-	    }
-	}
-	return ids;
+	return UtilLucene.topDocsToIds(all(), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
 
-
-    private TopDocs runQuery(final Query query) throws IndexFailureException{
+    private TopDocs runQuery(final Query query, final IndexSearcher searcher) throws IndexFailureException{
 	try{
 	    LOG.info("Lucene query run: " + query);
 	    return searcher.search(query, MAX_IDS);
@@ -129,24 +93,64 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	}
     }
 
-    private TopDocs all() throws IndexFailureException{
-	Query allQuery = new MatchAllDocsQuery();
-	return runQuery(allQuery);
+    private TopDocs runQuery(final String queryString, final Analyzer analyzer, final IndexSearcher searcher) throws IndexFailureException{
+	QueryParser queryParser = new QueryParser("tmp", analyzer); // not thread safe
+	Query query = null;
+	try{
+	    query = queryParser.parse(queryString);
+	}catch(org.apache.lucene.queryparser.classic.ParseException e){
+	    e.printStackTrace();
+	    throw new IndexFailureException(e);
+	}
+	return runQuery(query, searcher);
     }
 
+
+    private TopDocs all() throws IndexFailureException{
+	Query allQuery = new MatchAllDocsQuery();
+	return runQuery(allQuery, searcher);
+    }
     
 
     public long countAll()throws IndexFailureException{
 	return (long)all().scoreDocs.length;
     }
 
-    public long countSearch(final Map<String,String>queryPrameters) throws IndexFailureException{
-	return 0l;
+    public long countSearch(final Map<String,List<String>>queryPrameters) throws IndexFailureException{
+	return (long)all().totalHits;
     }
 
 
-    public List<Long>search(final Map<String,String>queryPrameters, final long offset, final int limit) throws IndexFailureException{
-	return null;
+
+    public List<Long> search(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IndexFailureException{
+	return UtilLucene.topDocsToIds(runQuery(buildQuery(queryParameters), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
+    }
+
+
+
+
+    private final String buildQuery(final Map<String,List<String>>queryParameters){
+	if(queryParameters == null || queryParameters.size() == 0){
+	    return "";
+	}
+	
+	StringBuilder sb = new StringBuilder();
+	boolean first = true;
+	for(String key:queryParameters.keySet()){
+	    if (first){
+		first = false;
+	    }else{
+		sb.append(" ");
+	    }
+	    List<String>values = queryParameters.get(key);
+	    for(String value: values){
+		sb.append(UtilLucene.makeLuceneQueryPair(key, value));
+		sb.append(" ");
+	    }
+	}
+	LOG.info("Lucene QueryParemeters: " + queryParameters);
+	LOG.info("Lucene Query: " + sb.toString());
+	return sb.toString();
     }
     
 

@@ -3,6 +3,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 import java.util.Properties;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.PrintWriter;
@@ -29,14 +30,26 @@ public class Util{
 
     }
 
-    public static final void checkQueryParameters(final Map<String,String>queryPrameters) throws IllegalArgumentException{
-	if(queryPrameters == null){
-	    throw new IllegalArgumentException("queryPrameters List<String> is null");
+    public static final void checkQueryParameters(final Map<String,List<String>>queryParameters) throws IllegalArgumentException{
+	if(queryParameters == null){
+	    throw new IllegalArgumentException("queryParameters is null");
 	} 
 
-	if(queryPrameters.size() == 0){
-	    throw new IllegalArgumentException("queryPrameters List<String> is zero length");
+	if(queryParameters.size() == 0){
+	    throw new IllegalArgumentException("queryParameters  is zero length");
 	} 
+	for(String key: queryParameters.keySet()){
+	    if(key == null || key.length() == 0){
+		throw new IllegalArgumentException("queryParameters key=" + key + " is null or is zero length");
+	    }
+	    List<String>values = queryParameters.get(key);
+	    if(values == null || values.size() == 0){
+		throw new IllegalArgumentException("queryParameters key=" + key + " has null values or is zero length");
+	    }
+	    for(String value: values){
+		
+	    }
+	}
     }
 
     public static final void checkList(List list, int limit){
@@ -96,12 +109,14 @@ public class Util{
 	return null;
     }
 
-    public static final void touch(File f) throws java.io.FileNotFoundException{
+    public static final void touch(final File f) throws java.io.FileNotFoundException{
 	    PrintWriter writer = new PrintWriter(f);
 	    writer.println("x");
 	    writer.flush();
 	    writer.close();
     }
+
+
 
 }//
 

@@ -53,13 +53,15 @@ public class UtilTest{
 
     @Test(expected=IllegalArgumentException.class)
     public void queryIsZeroLength() throws IllegalArgumentException{
-	Util.checkQueryParameters(new HashMap<String,String>());
+	Util.checkQueryParameters(new HashMap<String,List<String>>());
     }
 
     @Test
     public void queryWithOneParameter(){
-	Map<String, String>queries = new HashMap<String,String>();
-	queries.put("genus", "ali*");
+	Map<String, List<String>>queries = new HashMap<String,List<String>>();
+	List<String>values = new ArrayList<String>();
+	values.add("ali*");
+	queries.put("genus", values);
 	Util.checkQueryParameters(queries);
     }
 

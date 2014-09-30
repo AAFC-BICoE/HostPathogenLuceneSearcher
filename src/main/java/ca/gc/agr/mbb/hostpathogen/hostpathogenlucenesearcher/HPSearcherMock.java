@@ -80,6 +80,12 @@ public class HPSearcherMock implements Searcher{
 	return pathogens.subList(0, NUM_IDS);
     }
 
+    public List<Pathogen>getPathogenByHost(long hostId) throws IllegalArgumentException, IndexFailureException{
+	if(true){
+	    throw new NullPointerException();
+	}
+	return null;
+    }
 
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
@@ -91,13 +97,23 @@ public class HPSearcherMock implements Searcher{
     }
 
 
-    public List<Long>searchPathogens(Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkQueryParameters(queryParameters);
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
-    public long searchPathogensCount(Map<String,String>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException{
+	if(true){
+	    throw new NullPointerException();
+	}
+	return 17l;
+    }
+
+    public long searchHostsCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException{
+	if(true){
+	    throw new NullPointerException();
+	}
 	return 17l;
     }
 
@@ -105,12 +121,20 @@ public class HPSearcherMock implements Searcher{
 	Util.checkList(ids, NUM_IDS);
 	return hosts.subList(0, ids.size());
     }
+
+    public List<Host>getHostByPathogen(long pathogenId) throws IllegalArgumentException, IndexFailureException{
+	if(true){
+	    throw new NullPointerException();
+	}
+	return null;
+    }
+
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(hostIds, offset, limit);
 
     }
-    public List<Long>searchHosts(final Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public List<Long>searchHosts(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkQueryParameters(queryParameters);
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(hostIds, offset, limit);

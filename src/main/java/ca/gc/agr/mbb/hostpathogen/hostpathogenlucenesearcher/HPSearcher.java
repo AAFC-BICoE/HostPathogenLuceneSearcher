@@ -72,6 +72,13 @@ public class HPSearcher implements Searcher{
 	return pathogenLis.get(ids);
     }
 
+    public List<Pathogen>getPathogenByHost(long hostId) throws IllegalArgumentException, IndexFailureException{
+	if(true){
+	    throw new NullPointerException();
+	}
+	return null;
+    }
+
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkOffsetAndLimit(offset, limit);
 	return pathogenLis.getAll(offset, limit);
@@ -81,13 +88,17 @@ public class HPSearcher implements Searcher{
 	return pathogenLis.countAll();
     }
 
-    public List<Long>searchPathogens(Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkOffsetAndLimit(offset, limit);
 	return pathogenLis.search(queryParameters, offset, limit);
     }
 
-    public long searchPathogensCount(Map<String,String>queryParameters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public long searchPathogensCount(Map<String,List<String>>queryParameters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	return pathogenLis.countSearch(queryParameters);
+    }
+
+    public long searchHostsCount(Map<String,List<String>>queryParameters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+	return hostLis.countSearch(queryParameters);
     }
 
 
@@ -98,7 +109,12 @@ public class HPSearcher implements Searcher{
 	return hostLis.get(ids);
     }
 
-
+    public List<Host>getHostByPathogen(long pathogenId) throws IllegalArgumentException, IndexFailureException{
+	if(true){
+	    throw new NullPointerException();
+	}
+	return null;
+    }
 
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkOffsetAndLimit(offset, limit);
@@ -114,7 +130,7 @@ public class HPSearcher implements Searcher{
     // pathogenVirus=x
     // pathogenGenus=x
     // pathogenSpecies=x
-    public List<Long>searchHosts(final Map<String,String>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public List<Long>searchHosts(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkOffsetAndLimit(offset, limit);
 	return hostLis.search(queryParameters, offset, limit);
     }
