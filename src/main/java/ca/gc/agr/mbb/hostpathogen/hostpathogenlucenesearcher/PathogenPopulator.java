@@ -6,14 +6,14 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 public class PathogenPopulator<T> extends BasePopulator{
     
     public PathogenPopulator(){
-	primaryKeyField = PK;
+	recordType = PATHOGEN_TYPE;
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
 	Pathogen p = new Pathogen();
 	// obligatory
 	//	p.setId(longValue(doc, PK_PATHOGEN_ID, true));
-	p.setId(longValue(doc, PK, true));
+	p.setId(longValue(doc, primaryKeyField, true));
 	p.setGenus(stringValue(doc, PATHOGEN_GENUS, true));
 	p.setSpecies(stringValue(doc, PATHOGEN_SPECIES, true));
 	//

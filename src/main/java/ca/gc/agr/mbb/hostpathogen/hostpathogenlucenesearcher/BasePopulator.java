@@ -4,8 +4,8 @@ import org.apache.lucene.document.Document;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 
 abstract public class BasePopulator<T> implements Populator{
-    protected String primaryKeyField = null;
-
+    protected String primaryKeyField = PK;
+    protected String recordType = null;
 
     public String getPrimaryKeyField(){
 	return primaryKeyField;

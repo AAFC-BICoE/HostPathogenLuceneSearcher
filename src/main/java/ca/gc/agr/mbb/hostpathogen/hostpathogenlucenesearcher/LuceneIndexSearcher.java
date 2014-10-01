@@ -35,7 +35,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     private final static int MAX_IDS = 50;
 
     private IndexSearcher searcher = null;
-    private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_4_10_0);
+    private Analyzer analyzer = null;
     private Populator populator = null;
 
     public void init(final String indexDir, final Populator populator) throws InitializationException{
@@ -93,8 +93,12 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	}
     }
 
+    
     private TopDocs runQuery(final String queryString, final Analyzer analyzer, final IndexSearcher searcher) throws IndexFailureException{
 	QueryParser queryParser = new QueryParser("tmp", analyzer); // not thread safe
+	// see https://stackoverflow.com/questions/5527868/exact-phrase-search-using-lucene
+	//queryParser.setDefaultOperator(QueryParser.Operator.AND);
+	//queryParser.setPhraseSlop(0);
 	Query query = null;
 	try{
 	    query = queryParser.parse(queryString);

@@ -5,6 +5,8 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 public interface LuceneFields{
     public static final String ID_SUFFIX= "_ID";
 
+    public static final String STORED_SUFFIX= "_stored";
+
     // Nouns
     public static final String PATHOGEN_TYPE = "pathogen";
     public static final String HOST_TYPE = "host";

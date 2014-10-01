@@ -6,14 +6,13 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 public class HostPopulator<T> extends BasePopulator{
 
     public HostPopulator(){
-	primaryKeyField = PK;
+	recordType = HOST_TYPE;
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
 	Host h = new Host();
 	// obligatory
-	//h.setId(longValue(doc, PK_HOST_ID, true));
-	h.setId(longValue(doc, PK, true));
+	h.setId(longValue(doc, primaryKeyField, true));
 	h.setGenus(stringValue(doc, HOST_GENUS, true));
 	h.setSpecies(stringValue(doc, HOST_SPECIES, true));
 	//
