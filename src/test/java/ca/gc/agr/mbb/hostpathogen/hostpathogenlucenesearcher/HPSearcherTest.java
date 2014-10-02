@@ -26,6 +26,9 @@ public class HPSearcherTest{
     protected static final String TMP_DIR="./testDir_" + System.nanoTime();
     protected static final String TMP_FILE="./testFile_" + System.nanoTime();
 
+    protected static final String GOOD_HOST_GENUS="Abies";
+    protected static final String GOOD_PATHOGEN_GENUS="Basidiodendron";
+
     protected static final Long HUGE_ID = new Long(99999999999999l);
 
     //@BeforeClass

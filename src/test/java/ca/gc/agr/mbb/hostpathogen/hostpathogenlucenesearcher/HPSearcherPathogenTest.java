@@ -102,7 +102,7 @@ public class HPSearcherPathogenTest{
 
 	List<Long>results = null;
 	try{
-	    results = s.searchPathogens(HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, "BasidiodendronZZZZZZZZZZZz"), 0, 20);
+	    results = s.searchPathogens(HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, HPSearcherTest.GOOD_PATHOGEN_GENUS + "ZZZZZZZZZZZz"), 0, 20);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    e.printStackTrace();
@@ -118,7 +118,7 @@ public class HPSearcherPathogenTest{
 
 
     private Map<String,List<String>>goodPathogenGenusParameters(){
-	return HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, "Basidiodendron");
+	return HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, HPSearcherTest.GOOD_PATHOGEN_GENUS);
     }
 
 

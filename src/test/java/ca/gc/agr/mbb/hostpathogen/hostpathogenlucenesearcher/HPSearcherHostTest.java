@@ -94,9 +94,30 @@ public class HPSearcherHostTest{
 	Assert.assertTrue(results.size() > 0);
     }
 
+    @Test
+    public void searchHostsGenusUnSuccessfully() throws InitializationException{
+	LOG.info("************************");
+	Searcher s = HPSearcherTest.goodSearcher();
+
+	List<Long>results = null;
+	try{
+	    results = s.searchHosts(HPSearcherTest.makeParameters(LuceneFields.HOST_GENUS, HPSearcherTest.GOOD_HOST_GENUS + "ZZZZZZZZZZz"), 0, 20);
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}
+	LOG.info("Num pathogens in search: " +results.size());
+	Assert.assertTrue(results.size() == 0);
+    }
+
 
     private Map<String,List<String>>goodHostGenusParameters(){
-	return HPSearcherTest.makeParameters(LuceneFields.HOST_GENUS, "Abies");
+	return HPSearcherTest.makeParameters(LuceneFields.HOST_GENUS, HPSearcherTest.GOOD_HOST_GENUS);
     }
 
 
