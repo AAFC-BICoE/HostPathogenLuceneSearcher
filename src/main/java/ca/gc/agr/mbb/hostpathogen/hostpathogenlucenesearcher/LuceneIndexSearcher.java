@@ -83,7 +83,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	return UtilLucene.topDocsToIds(all(), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
 
-    private TopDocs runQuery(final Query query, final IndexSearcher searcher, false) throws IndexFailureException{
+    private TopDocs runQuery(final Query query, final IndexSearcher searcher) throws IndexFailureException{
 	try{
 	    LOG.info("Lucene query run: " + query);
 	    return searcher.search(query, MAX_IDS);

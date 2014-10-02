@@ -95,6 +95,27 @@ public class HPSearcherPathogenTest{
 	Assert.assertTrue(results.size() > 0);
     }
 
+    @Test
+    public void searchPathogensGenusUnSuccessfully() throws InitializationException{
+	LOG.info("************************");
+	Searcher s = HPSearcherTest.goodSearcher();
+
+	List<Long>results = null;
+	try{
+	    results = s.searchPathogens(HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, "BasidiodendronZZZZZZZZZZZz"), 0, 20);
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}
+	LOG.info("Num pathogens in search: " +results.size());
+	Assert.assertTrue(results.size() == 0);
+    }
+
 
     private Map<String,List<String>>goodPathogenGenusParameters(){
 	return HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, "Basidiodendron");

@@ -125,6 +125,12 @@ public class HPSearcher implements Searcher{
 	return hostLis.getAll(offset, limit);
     }
 
+    public long getAllHostsCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+	return hostLis.countAll();
+    }
+
+
+
     // country=x*
     // provState=y
     // enumerate=true

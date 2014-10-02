@@ -110,6 +110,10 @@ public class HPSearcherMock implements Searcher{
 	return 17l;
     }
 
+    public long getAllHostsCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+	return 100l;
+    }
+
     public long searchHostsCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException{
 	if(true){
 	    throw new NullPointerException();
