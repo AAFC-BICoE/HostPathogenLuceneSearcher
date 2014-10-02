@@ -12,14 +12,14 @@ public class HostPopulator<T> extends BasePopulator{
     public final T populate(Document doc) throws FailedPopulateException{
 	Host h = new Host();
 	// obligatory
-	h.setId(longValue(doc, primaryKeyField, true));
-	h.setGenus(stringValue(doc, HOST_GENUS, true));
-	h.setSpecies(stringValue(doc, HOST_SPECIES, true));
+	h.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
+	h.setGenus(stringValue(doc, HOST_GENUS+STORED_SUFFIX, true));
+	h.setSpecies(stringValue(doc, HOST_SPECIES+STORED_SUFFIX, true));
 	//
-	h.setHigherTaxaId(longValue(doc, FK_HIGHER_TAXA_ID));
-	h.setIdAccepted(longValue(doc, FK_HOST_ID_ACCEPTED));
-	h.setCultivar(stringValue(doc, CULTIVAR));
-	h.setAuthor(stringValue(doc, HOST_AUTHOR));
+	h.setHigherTaxaId(longValue(doc, FK_HIGHER_TAXA_ID+STORED_SUFFIX));
+	h.setIdAccepted(longValue(doc, FK_HOST_ID_ACCEPTED+STORED_SUFFIX));
+	h.setCultivar(stringValue(doc, CULTIVAR+STORED_SUFFIX));
+	h.setAuthor(stringValue(doc, HOST_AUTHOR+STORED_SUFFIX));
 	return (T)h;
     }
 

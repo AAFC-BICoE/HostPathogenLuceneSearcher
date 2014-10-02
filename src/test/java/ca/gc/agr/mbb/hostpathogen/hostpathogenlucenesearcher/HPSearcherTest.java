@@ -21,10 +21,12 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 public class HPSearcherTest{
     private final static Logger LOG = Logger.getLogger(HPSearcherTest.class.getName()); 
 
-    private final String GOOD_LUCENE_DIR="./luceneIndexes";
-    private final String BAD_LUCENE_DIR="/88888/444/bhgjrueww/../22/%^$";
-    private final String TMP_DIR="./testDir_" + System.nanoTime();
-    private final String TMP_FILE="./testFile_" + System.nanoTime();
+    protected static final String GOOD_LUCENE_DIR="./luceneIndexes";
+    protected static final String BAD_LUCENE_DIR="/88888/444/bhgjrueww/../22/%^$";
+    protected static final String TMP_DIR="./testDir_" + System.nanoTime();
+    protected static final String TMP_FILE="./testFile_" + System.nanoTime();
+
+    protected static final Long HUGE_ID = new Long(99999999999999l);
 
     //@BeforeClass
     //    public static void init()
@@ -187,7 +189,23 @@ public class HPSearcherTest{
 	    throw new NullPointerException();
 	}
 	Assert.assertTrue(results != null);
-	Assert.assertTrue(results.size() == 0);
+	Assert.assertTrue(results.size() >= 0);
+    }
+
+
+    protected static final  Map<String,List<String>>makeParameters(final String fieldName, final String parameterValue){
+	Map<String,List<String>>queryParameters = new HashMap<String, List<String>>();
+	List<String>queryParameter = new ArrayList<String>();
+	queryParameter.add(parameterValue);
+	queryParameters.put(fieldName, queryParameter);
+
+	return queryParameters;
+    }
+
+    protected static Searcher goodSearcher() throws InitializationException{
+	Properties p = new Properties();
+	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, HPSearcherTest.GOOD_LUCENE_DIR);
+	return HPSearcher.newSearcher(p);
     }
 
 }

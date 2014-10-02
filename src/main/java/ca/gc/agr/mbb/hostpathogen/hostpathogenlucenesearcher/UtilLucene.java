@@ -12,7 +12,7 @@ import org.apache.lucene.search.IndexSearcher;
 public class UtilLucene{
 
     public static final String makeLuceneQueryPair(final String key, final String value){
-	return key + ":" + value;
+	return key + ":" + value.toLowerCase();
     }
 
 
@@ -38,12 +38,14 @@ public class UtilLucene{
 		    e.printStackTrace();
 		    throw new IndexFailureException(e);
 		}
-		ids.add(new Long(doc.getValues(primaryKeyField)[0]));
+		ids.add(new Long(doc.getValues(storedName(primaryKeyField))[0]));
 	    }
 	}
 	return ids;
     }
 
-
+    public static final String storedName(String name){
+	return name + LuceneFields.STORED_SUFFIX;
+    }
 
 }

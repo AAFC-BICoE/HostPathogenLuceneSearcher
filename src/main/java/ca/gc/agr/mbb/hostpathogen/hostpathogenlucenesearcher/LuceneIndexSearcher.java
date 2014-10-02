@@ -120,13 +120,17 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	return (long)all().scoreDocs.length;
     }
 
-    public long countSearch(final Map<String,List<String>>queryPrameters) throws IndexFailureException{
-	return (long)all().totalHits;
+    public long countSearch(final Map<String,List<String>>queryParameters) throws IndexFailureException{
+	Util.checkQueryParameters(queryParameters);
+	//return (long)all().totalHits;
+	return runQuery(buildQuery(queryParameters), analyzer, searcher).totalHits;
     }
 
 
 
-    public List<Long> search(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IndexFailureException{
+    public List<Long> search(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IndexFailureException, IllegalOffsetLimitException, IllegalArgumentException{
+	Util.checkOffsetAndLimit(offset, limit);
+	Util.checkQueryParameters(queryParameters);
 	return UtilLucene.topDocsToIds(runQuery(buildQuery(queryParameters), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
 

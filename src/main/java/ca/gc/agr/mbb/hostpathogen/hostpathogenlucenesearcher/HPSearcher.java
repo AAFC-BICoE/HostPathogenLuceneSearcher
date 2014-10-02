@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
+import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 
 
 public class HPSearcher implements Searcher{
@@ -18,6 +19,7 @@ public class HPSearcher implements Searcher{
 
     private LuceneIndexSearcher<Pathogen> pathogenLis = null;
     private LuceneIndexSearcher<Host> hostLis = null;
+    private LuceneIndexSearcher<Reference> referenceLis = null;
 
     public static final Searcher newSearcher(final Properties p) throws InitializationException{
 	if (p==null){
@@ -61,6 +63,8 @@ public class HPSearcher implements Searcher{
 	pathogenLis.init(luceneDir + "/luceneIndex.pathogens", new PathogenPopulator<Pathogen>());
 	hostLis = new LuceneIndexSearcher<Host>();
 	hostLis.init(luceneDir + "/luceneIndex.hosts", new HostPopulator<Host>());
+	referenceLis = new LuceneIndexSearcher<Reference>();
+	referenceLis.init(luceneDir + "/luceneIndex.references", new ReferencePopulator<Reference>());
 	return this;
     }
 
