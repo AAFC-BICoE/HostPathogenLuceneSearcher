@@ -62,7 +62,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	List<T>pathogens = null;
 	try{
 	    LOG.info("**** query=" + queryString);
-	    TopDocs td = runQuery(queryString, analyzer, searcher);
+	    TopDocs td = runQuery(queryString, analyzer, searcher, false);
 	    LOG.info("**** Totalhits=" + td.totalHits);
 	    pathogens = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
@@ -83,7 +83,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	return UtilLucene.topDocsToIds(all(), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
 
-    private TopDocs runQuery(final Query query, final IndexSearcher searcher) throws IndexFailureException{
+    private TopDocs runQuery(final Query query, final IndexSearcher searcher, false) throws IndexFailureException{
 	try{
 	    LOG.info("Lucene query run: " + query);
 	    return searcher.search(query, MAX_IDS);
@@ -93,9 +93,14 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	}
     }
 
-    
+    // Allow leadingWildCard by default
     private TopDocs runQuery(final String queryString, final Analyzer analyzer, final IndexSearcher searcher) throws IndexFailureException{
+	return runQuery(queryString, analyzer, searcher, true);
+    }
+    
+    private TopDocs runQuery(final String queryString, final Analyzer analyzer, final IndexSearcher searcher, boolean allowLeadingWildcard) throws IndexFailureException{
 	QueryParser queryParser = new QueryParser("tmp", analyzer); // not thread safe
+	queryParser.setAllowLeadingWildcard(allowLeadingWildcard);
 	// see https://stackoverflow.com/questions/5527868/exact-phrase-search-using-lucene
 	//queryParser.setDefaultOperator(QueryParser.Operator.AND);
 	//queryParser.setPhraseSlop(0);
