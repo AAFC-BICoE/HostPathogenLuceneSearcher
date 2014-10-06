@@ -3,6 +3,8 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 import java.util.Properties;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.io.File;
@@ -31,6 +33,10 @@ public class Util{
     }
 
     public static final void checkQueryParameters(final Map<String,List<String>>queryParameters) throws IllegalArgumentException{
+	checkQueryParameters(queryParameters, null);
+    }
+
+    public static final void checkQueryParameters(final Map<String,List<String>>queryParameters, Set<String> acceptableFields) throws IllegalArgumentException{
 	if(queryParameters == null){
 	    throw new IllegalArgumentException("queryParameters is null");
 	} 
@@ -42,6 +48,10 @@ public class Util{
 	    if(key == null || key.length() == 0){
 		throw new IllegalArgumentException("queryParameters key=" + key + " is null or is zero length");
 	    }
+	    if(acceptableFields != null && !acceptableFields.contains(key)){
+		throw new IllegalArgumentException("Illegal search field:" + key);
+	    }
+
 	    List<String>values = queryParameters.get(key);
 	    if(values == null || values.size() == 0){
 		throw new IllegalArgumentException("queryParameters key=" + key + " has null values or is zero length");
@@ -116,6 +126,13 @@ public class Util{
 	    writer.close();
     }
 
+    public static final Set<String>strings2Set(String[] strings){
+	Set<String> stringSet = new HashSet<String>(strings.length);
+	for(String str: strings){
+	    stringSet.add(str);
+	}
+	return stringSet;
+    }
 
 
 }//
