@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
+import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 
 
@@ -20,6 +21,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 
     private LuceneIndexSearcher<Pathogen> pathogenLis = null;
     private LuceneIndexSearcher<Host> hostLis = null;
+    private LuceneIndexSearcher<HostPathogen> hostPathogenLis = null;
     private LuceneIndexSearcher<Reference> referenceLis = null;
 
     public static final Searcher newSearcher(final Properties p) throws InitializationException{
@@ -67,6 +69,9 @@ public class HPSearcher implements Searcher, LuceneFields{
 	hostLis.init(luceneDir + "/luceneIndex.hosts", new HostPopulator<Host>());
 	referenceLis = new LuceneIndexSearcher<Reference>();
 	referenceLis.init(luceneDir + "/luceneIndex.references", new ReferencePopulator<Reference>());
+
+	hostPathogenLis = new LuceneIndexSearcher<HostPathogen>();
+	hostPathogenLis.init(luceneDir + "/luceneIndex.host_pathogens", new HostPathogenPopulator<HostPathogen>());
 	return this;
     }
 
@@ -96,12 +101,6 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return pathogenLis.get(ids);
     }
 
-    public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException{
-	if(true){
-	    throw new NullPointerException();
-	}
-	return null;
-    }
 
 
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
@@ -141,12 +140,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return hostLis.get(ids);
     }
 
-    public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException{
-	if(true){
-	    throw new NullPointerException();
-	}
-	return null;
-    }
+
 
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkOffsetAndLimit(offset, limit);
@@ -180,7 +174,18 @@ public class HPSearcher implements Searcher, LuceneFields{
     }
 
 
-    
+    // Host-Pathogen
+    public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
+	Util.checkId(hostId);
+	Map<String, List<String>> query = UtilLucene.makeIdQueryMap(FK_HOST_ID, hostId);
+	return hostPathogenLis.search(query, offset, limit);
+    }
+
+    public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
+	Util.checkId(pathogenId);
+	Map<String, List<String>> query = UtilLucene.makeIdQueryMap(FK_PATHOGEN_ID, pathogenId);
+	return hostPathogenLis.search(query, offset, limit);
+    }
 
 
 

@@ -76,6 +76,12 @@ public class Util{
 	    }
     }
 
+    public static final void checkId(final Long id) throws IllegalArgumentException{
+	List<Long> ids = new ArrayList<Long>(1);
+	ids.add(id);
+	checkIds(ids);
+    }
+
     public static final void checkIds(final List<Long> ids) throws IllegalArgumentException{
 	if(ids == null){
 	    throw new IllegalArgumentException("ids List<Long> is null");

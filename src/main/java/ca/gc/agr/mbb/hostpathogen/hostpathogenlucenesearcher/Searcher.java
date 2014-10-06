@@ -22,14 +22,12 @@ public interface Searcher{
     // PATHOGEN
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Long>searchPathogens(Map<String,List<String>>queryParmeters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException;
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
     public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
 
 
     // HOST
-    public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException;
     public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException, IndexFailureException;
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Long>searchHosts(Map<String,List<String>>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
@@ -39,7 +37,8 @@ public interface Searcher{
 
     
     // HOST-PATHOGEN
-
+    public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
+    public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
 
     // CONSTANTS1
     public static final String MOCK_PROPERTY = "mock";

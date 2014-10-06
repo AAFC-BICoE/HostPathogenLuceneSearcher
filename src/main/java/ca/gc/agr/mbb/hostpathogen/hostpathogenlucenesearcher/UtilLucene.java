@@ -15,6 +15,11 @@ public class UtilLucene{
 	return key + ":" + value.toLowerCase();
     }
 
+    public static final Map<String, List<String>> makeIdQueryMap(final String fieldName, final Long id){
+	List<Long>ids = new ArrayList<Long>(1);
+	ids.add(id);
+	return makeIdsQueryMap(fieldName, ids);
+    }
 
     public static final Map<String, List<String>> makeIdsQueryMap(final String fieldName, final List<Long> ids){
 	Map<String, List<String>> queryMap = new HashMap<String, List<String>>();
