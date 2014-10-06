@@ -47,11 +47,6 @@
 
   <dependencies>
 
-    <dependency>
-      <groupId>ca.gc.agr.mbb.hostpathogen.ws</groupId>
-      <artifactId>HostPathWS</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
 
     <dependency>
       <groupId>ca.gc.agr.mbb.hostpathogen.nouns</groupId>
