@@ -51,7 +51,7 @@ public class HPSearcher implements Searcher, LuceneFields{
      */
     public Searcher init(Properties prop) throws InitializationException{
 	if(!prop.containsKey(LUCENE_INDICES_BASE_DIR)){
-	    throw new InitializationException("Missing LUCENE_INDICES_BASE_DIR property for location of Lucene indices");
+	    throw new InitializationException("Missing Searcher.LUCENE_INDICES_BASE_DIR property for location of Lucene indices");
 	}
 	luceneDir = prop.getProperty(LUCENE_INDICES_BASE_DIR);
 	LOG.info("Lucene directory=" + luceneDir);
@@ -90,12 +90,13 @@ public class HPSearcher implements Searcher, LuceneFields{
 	VIRUS_MPLO_NAMES,
     };
 
+
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException{
 	Util.checkIds(ids);
 	return pathogenLis.get(ids);
     }
 
-    public List<Pathogen>getPathogenByHost(long hostId) throws IllegalArgumentException, IndexFailureException{
+    public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException{
 	if(true){
 	    throw new NullPointerException();
 	}
@@ -140,7 +141,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return hostLis.get(ids);
     }
 
-    public List<Host>getHostByPathogen(long pathogenId) throws IllegalArgumentException, IndexFailureException{
+    public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException{
 	if(true){
 	    throw new NullPointerException();
 	}
