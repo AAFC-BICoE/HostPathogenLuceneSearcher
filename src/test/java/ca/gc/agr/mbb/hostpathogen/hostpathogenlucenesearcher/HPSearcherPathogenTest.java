@@ -140,7 +140,7 @@ public class HPSearcherPathogenTest{
 			    if(lastPathogen.getGenus().equals(thisPathogen.getGenus()) && lastPathogen.getSpecies() != null && thisPathogen.getSpecies() != null){
 				Assert.assertTrue(lastPathogen.getSpecies().compareTo(thisPathogen.getSpecies())<=0);
 				if(lastPathogen.getSpecies().equals(thisPathogen.getSpecies()) && lastPathogen.getSubSpecificTaxa() != null && thisPathogen.getSubSpecificTaxa() != null){
-				    Assert.assertTrue(lastPathogen.getSubSpecificTaxa().compareTo(thisPathogen.getSubSpecificTaxa())<=0);
+				    Assert.assertTrue(lastPathogen.getSubSpecificTaxa().compareTo(thisPathogen.getSubSpecificTaxa())<=0); 
 				}
 			    }
 			}
