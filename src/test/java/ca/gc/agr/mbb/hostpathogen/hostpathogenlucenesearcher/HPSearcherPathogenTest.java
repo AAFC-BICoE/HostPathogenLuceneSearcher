@@ -127,12 +127,25 @@ public class HPSearcherPathogenTest{
 
 	List<Long>results = null;
 	try{
-	    int numHits = (int)s.searchPathogensCount(allAsPathogenGenusParameters());
+	    int numHits = (int)s.getAllPathogensCount();
 	    LOG.info("Num results: " + numHits);
 	    for(int i=0; i<numHits; i+=LuceneIndexSearcher.MAX_IDS){
-		results = s.searchPathogens(allAsPathogenGenusParameters(), i, LuceneIndexSearcher.MAX_IDS);
+		results = s.getAllPathogens(i, LuceneIndexSearcher.MAX_IDS);
+		Pathogen lastPathogen = null;
 		for(Long id: results){
-		    Pathogen p = s.getPathogen(id);
+		    Pathogen thisPathogen = s.getPathogen(id);
+		    if(lastPathogen != null){
+			if(lastPathogen.getGenus() != null && thisPathogen.getGenus() != null){
+			    Assert.assertTrue(lastPathogen.getGenus().compareTo(thisPathogen.getGenus())<=0);
+			    if(lastPathogen.getGenus().equals(thisPathogen.getGenus()) && lastPathogen.getSpecies() != null && thisPathogen.getSpecies() != null){
+				Assert.assertTrue(lastPathogen.getSpecies().compareTo(thisPathogen.getSpecies())<=0);
+				if(lastPathogen.getSpecies().equals(thisPathogen.getSpecies()) && lastPathogen.getSubSpecificTaxa() != null && thisPathogen.getSubSpecificTaxa() != null){
+				    Assert.assertTrue(lastPathogen.getSubSpecificTaxa().compareTo(thisPathogen.getSubSpecificTaxa())<=0);
+				}
+			    }
+			}
+		    }
+		    lastPathogen = thisPathogen;
 		}
 	    }
 	}catch(IndexFailureException e){
