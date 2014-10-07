@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Properties;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -98,6 +99,11 @@ public class HPSearcher implements Searcher, LuceneFields{
 	VIRUS_MPLO_NAMES,
     };
 
+    public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
+	List<Long>ids = new ArrayList<Long>(1);
+	ids.add(id);
+	return getPathogens(ids).get(0);
+    }
 
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException{
 	Util.checkIds(ids);

@@ -122,6 +122,31 @@ public class HPSearcherPathogenTest{
     }
 
     @Test
+    public void verifySortOrderingIsWorking() throws InitializationException{
+	Searcher s = HPSearcherTest.goodSearcher();
+
+	List<Long>results = null;
+	try{
+	    int numHits = (int)s.searchPathogensCount(allAsPathogenGenusParameters());
+	    LOG.info("Num results: " + numHits);
+	    for(int i=0; i<numHits; i+=LuceneIndexSearcher.MAX_IDS){
+		results = s.searchPathogens(allAsPathogenGenusParameters(), i, LuceneIndexSearcher.MAX_IDS);
+		for(Long id: results){
+		    Pathogen p = s.getPathogen(id);
+		}
+	    }
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}
+    }
+
+    @Test
     public void searchPathogensGenusUnSuccessfully() throws InitializationException{
 	Searcher s = HPSearcherTest.goodSearcher();
 

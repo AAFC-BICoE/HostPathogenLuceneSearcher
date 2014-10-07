@@ -80,6 +80,12 @@ public class HPSearcherMock implements Searcher{
 	return pathogens.subList(0, NUM_IDS);
     }
 
+    public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
+	List<Long>ids = new ArrayList<Long>(1);
+	ids.add(id);
+	return getPathogens(ids).get(0);
+    }
+
     public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException{
 	if(true){
 	    throw new NullPointerException();

@@ -23,6 +23,7 @@ public interface Searcher{
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Long>searchPathogens(Map<String,List<String>>queryParmeters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
+    public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException;
     public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
 
