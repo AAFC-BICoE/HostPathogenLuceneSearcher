@@ -100,6 +100,28 @@ public class HPSearcherPathogenTest{
     }
 
     @Test
+    public void searchPathogensGenusAndPageSuccessfully() throws InitializationException{
+	Searcher s = HPSearcherTest.goodSearcher();
+
+	List<Long>results = null;
+	try{
+	    int numHits = (int)s.searchPathogensCount(allAsPathogenGenusParameters());
+	    LOG.info("Num results: " + numHits);
+	    for(int i=0; i<numHits; i+=LuceneIndexSearcher.MAX_IDS){
+		results = s.searchPathogens(allAsPathogenGenusParameters(), i, LuceneIndexSearcher.MAX_IDS);
+	    }
+	}catch(IndexFailureException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}catch(IllegalOffsetLimitException e){
+	    // Not supposed to happen
+	    e.printStackTrace();
+	    throw new NullPointerException();
+	}
+    }
+
+    @Test
     public void searchPathogensGenusUnSuccessfully() throws InitializationException{
 	Searcher s = HPSearcherTest.goodSearcher();
 
@@ -122,6 +144,10 @@ public class HPSearcherPathogenTest{
 
     private Map<String,List<String>>goodPathogenGenusParameters(){
 	return HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, HPSearcherTest.GOOD_PATHOGEN_GENUS);
+    }
+
+    private Map<String,List<String>>allAsPathogenGenusParameters(){
+	return HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, "a*");
     }
 
 

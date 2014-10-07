@@ -32,7 +32,7 @@ import org.apache.lucene.util.Version;
 
 public class LuceneIndexSearcher<T> implements LuceneFields{
     private final static Logger LOG = Logger.getLogger(LuceneIndexSearcher.class.getName()); 
-    private final static int MAX_IDS = 50;
+    public final static int MAX_IDS = 50;
 
     private IndexSearcher searcher = null;
     private Analyzer analyzer = null;
@@ -114,17 +114,11 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     }
 
 
-
     public List<Long> search(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IndexFailureException, IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
 	Util.checkQueryParameters(queryParameters);
 	return UtilLucene.topDocsToIds(UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters), populator.getDefaultSortFields(), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
-
-
-
-
-    
 
 
 }
