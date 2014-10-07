@@ -7,6 +7,13 @@ public class HostPopulator<T> extends BasePopulator{
 
     public HostPopulator(){
 	recordType = HOST_TYPE;
+
+	addSortField(HOST_GENUS);
+	addSortField(HOST_SPECIES);
+
+	addDefaultSortField(HOST_GENUS);
+	addDefaultSortField(HOST_SPECIES);
+	addDefaultSortField(HOST_SUBSPECIFIC_TAXA);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{

@@ -15,10 +15,16 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher.PathogenPopulator;
 
 @RunWith(JUnit4.class)
 public class HPSearcherPathogenTest{
     private final Logger LOG = Logger.getLogger(this.getClass().getName()); 
+
+    @Test
+    public void verifyNotNullDefaultSortField() throws InitializationException{
+	PathogenPopulator<Pathogen> pathogenPopulator = new PathogenPopulator<Pathogen>();
+    }
 
     @Test(expected=TooManyIdsException.class)
     public void requestTooManyPathogenIds() throws InitializationException{
@@ -55,7 +61,6 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void getPathogensByIdSuccessfully() throws InitializationException{
-	LOG.info("************************");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long> ids = new ArrayList<Long>();
@@ -76,7 +81,6 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void searchPathogensGenusSuccessfully() throws InitializationException{
-	LOG.info("************************");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
@@ -97,7 +101,6 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void searchPathogensGenusUnSuccessfully() throws InitializationException{
-	LOG.info("************************");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;

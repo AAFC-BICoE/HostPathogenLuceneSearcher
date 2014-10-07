@@ -54,7 +54,6 @@ public class HPSearcherHostTest{
 
     @Test
     public void getHostsByIdSuccessfully() throws InitializationException{
-	LOG.info("************************");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long> ids = new ArrayList<Long>();
@@ -75,7 +74,6 @@ public class HPSearcherHostTest{
 
     @Test
     public void searchHostsGenusSuccessfully() throws InitializationException{
-	LOG.info("************************");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
@@ -96,7 +94,6 @@ public class HPSearcherHostTest{
 
     @Test
     public void searchHostsGenusUnSuccessfully() throws InitializationException{
-	LOG.info("************************");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;

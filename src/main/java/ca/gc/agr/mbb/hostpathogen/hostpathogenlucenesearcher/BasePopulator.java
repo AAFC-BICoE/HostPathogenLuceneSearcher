@@ -3,32 +3,43 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 import org.apache.lucene.document.Document;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashSet;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 abstract public class BasePopulator<T> implements Populator{
-    protected Set<String> validSortField = new HashSet<String>();
-    protected String defaultSortField = null;
+    private final static Logger LOG = Logger.getLogger(BasePopulator.class.getName()); 
+
+    protected Set<String> validSortFieldSet = new HashSet<String>();
+    protected List<String> defaultSortFields = new ArrayList<String>();
     protected String primaryKeyField = PK;
     protected String recordType = null;
 
-    public void setDefaultSortField(final String defaultString){
-	this.defaultSortField = defaultSortField;
+
+    public void addDefaultSortField(final String field){
+	defaultSortFields.add(field);
     }
-    public String getDefaultSortField(){
-	return defaultSortField;
+
+    public List<String> getDefaultSortFields(){
+	return defaultSortFields;
     }
 
     public String getPrimaryKeyField(){
 	return primaryKeyField;
     }
 
+    public Set<String>getValidSortFieldSet(){
+	return validSortFieldSet;
+    }
+
     public void addSortField(final String s){
-	validSortField.add(s);
+	validSortFieldSet.add(s);
     }
 
     public boolean isValidSortField(String s){
-	return validSortField.contains(s);
+	return validSortFieldSet.contains(s);
     }
 
     static final long longValue(Document doc, String fieldName) throws FailedPopulateException{

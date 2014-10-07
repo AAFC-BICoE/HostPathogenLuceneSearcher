@@ -31,13 +31,6 @@ public class HPSearcherTest{
 
     protected static final Long HUGE_ID = new Long(99999999999999l);
 
-    //@BeforeClass
-    //    public static void init()
-    // {
-    // 	tmpDir = File.createTempFile("temp", Long.toString(System.nanoTime()));
-	
-    // }
-
 
     // init
     // FAIL tests
@@ -69,7 +62,6 @@ public class HPSearcherTest{
 
     @Test(expected=InitializationException.class)
     public void luceneDirNotDir() throws InitializationException{
-	LOG.info("************************");
 	File tmpDir = new File(TMP_DIR);
 	tmpDir.deleteOnExit();
 	if(!tmpDir.mkdir()){
@@ -127,7 +119,6 @@ public class HPSearcherTest{
 
     @Test
     public void getPathogensdByIdSuccessfully() throws InitializationException{
-	LOG.info("************************");
 	Properties p = new Properties();
 	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, GOOD_LUCENE_DIR);
 	Searcher s = HPSearcher.newSearcher(p);

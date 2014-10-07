@@ -13,7 +13,9 @@ public class HostPathogenPopulator<T> extends BasePopulator{
 	addSortField(HOST_GENUS);
 	addSortField(HOST_SPECIES);
 
-	setDefaultSortField(HOST_GENUS);
+	addDefaultSortField(HOST_GENUS);
+	addDefaultSortField(HOST_SPECIES);
+	addDefaultSortField(HOST_SUBSPECIFIC_TAXA);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{

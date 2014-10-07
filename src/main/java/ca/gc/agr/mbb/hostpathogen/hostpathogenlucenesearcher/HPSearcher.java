@@ -65,13 +65,16 @@ public class HPSearcher implements Searcher, LuceneFields{
 
 	pathogenLis = new LuceneIndexSearcher<Pathogen>();
 	pathogenLis.init(luceneDir + "/luceneIndex.pathogens", new PathogenPopulator<Pathogen>());
+
 	hostLis = new LuceneIndexSearcher<Host>();
 	hostLis.init(luceneDir + "/luceneIndex.hosts", new HostPopulator<Host>());
+
 	referenceLis = new LuceneIndexSearcher<Reference>();
 	referenceLis.init(luceneDir + "/luceneIndex.references", new ReferencePopulator<Reference>());
 
 	hostPathogenLis = new LuceneIndexSearcher<HostPathogen>();
 	hostPathogenLis.init(luceneDir + "/luceneIndex.host_pathogens", new HostPathogenPopulator<HostPathogen>());
+
 	return this;
     }
 
