@@ -77,11 +77,11 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	    throw new TooManyIdsException("Too many ids: " + ids.size() +"; larger than max=" + MAX_IDS);
 	}
 
-	String queryString = buildQuery(UtilLucene.makeIdsQueryMap(populator.getPrimaryKeyField(), ids));
+	String queryString = UtilLucene.buildQuery(UtilLucene.makeIdsQueryMap(populator.getPrimaryKeyField(), ids));
 	List<T>pathogens = null;
 	try{
 	    LOG.info("**** query=" + queryString);
-	    TopDocs td = runQuery(queryString, analyzer, searcher, false);
+	    TopDocs td = UtilLucene.runQuery(queryString, populator.getDefaultSortFields(), analyzer, searcher, false);
 	    LOG.info("**** Totalhits=" + td.totalHits);
 	    pathogens = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
@@ -99,55 +99,18 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 
 
     public List<Long>getAll(final long offset, final int limit) throws IndexFailureException{
-	return UtilLucene.topDocsToIds(all(), searcher, populator.getPrimaryKeyField(), offset, limit);
+	return UtilLucene.topDocsToIds(UtilLucene.all(populator.getDefaultSortFields(), searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
 
-    private TopDocs runQuery(final Query query, final IndexSearcher searcher) throws IndexFailureException{
-	try{
-	    LOG.info("Lucene query run: " + query);
-	    return searcher.search(query, MAX_IDS);
-	}catch(java.io.IOException e){
-	    e.printStackTrace();
-	    throw new IndexFailureException(e);
-	}
-    }
-
-    // Allow leadingWildCard by default
-    private TopDocs runQuery(final String queryString, final Analyzer analyzer, final IndexSearcher searcher) throws IndexFailureException{
-	return runQuery(queryString, analyzer, searcher, true);
-    }
-    
-    private TopDocs runQuery(final String queryString, final Analyzer analyzer, final IndexSearcher searcher, boolean allowLeadingWildcard) throws IndexFailureException{
-	QueryParser queryParser = new QueryParser("tmp", analyzer); // not thread safe
-	queryParser.setAllowLeadingWildcard(allowLeadingWildcard);
-	// see https://stackoverflow.com/questions/5527868/exact-phrase-search-using-lucene
-	//queryParser.setDefaultOperator(QueryParser.Operator.AND);
-	//queryParser.setPhraseSlop(0);
-	Query query = null;
-	try{
-	    query = queryParser.parse(queryString);
-	}catch(org.apache.lucene.queryparser.classic.ParseException e){
-	    e.printStackTrace();
-	    throw new IndexFailureException(e);
-	}
-	return runQuery(query, searcher);
-    }
-
-
-    private TopDocs all() throws IndexFailureException{
-	Query allQuery = new MatchAllDocsQuery();
-	return runQuery(allQuery, searcher);
-    }
-    
 
     public long countAll()throws IndexFailureException{
-	return (long)all().scoreDocs.length;
+	return (long)UtilLucene.all(populator.getDefaultSortFields(), searcher).scoreDocs.length;
     }
 
     public long countSearch(final Map<String,List<String>>queryParameters) throws IndexFailureException{
 	Util.checkQueryParameters(queryParameters);
 	//return (long)all().totalHits;
-	return runQuery(buildQuery(queryParameters), analyzer, searcher).totalHits;
+	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters), populator.getDefaultSortFields(), analyzer, searcher).totalHits;
     }
 
 
@@ -155,39 +118,12 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     public List<Long> search(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IndexFailureException, IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
 	Util.checkQueryParameters(queryParameters);
-	return UtilLucene.topDocsToIds(runQuery(buildQuery(queryParameters), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
+	return UtilLucene.topDocsToIds(UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters), populator.getDefaultSortFields(), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
 
 
 
 
-    private final String buildQuery(final Map<String,List<String>>queryParameters){
-	if(queryParameters == null || queryParameters.size() == 0){
-	    return "";
-	}
-	
-	StringBuilder sb = new StringBuilder();
-	boolean first = true;
-	for(String key:queryParameters.keySet()){
-	    if(key.equals(SORT_FIELD)){
-		continue;
-	    }
-
-	    if (first){
-		first = false;
-	    }else{
-		sb.append(" ");
-	    }
-	    List<String>values = queryParameters.get(key);
-	    for(String value: values){
-		sb.append(UtilLucene.makeLuceneQueryPair(key, value));
-		sb.append(" ");
-	    }
-	}
-	LOG.info("Lucene QueryParemeters: " + queryParameters);
-	LOG.info("Lucene Query: " + sb.toString());
-	return sb.toString();
-    }
     
 
 
