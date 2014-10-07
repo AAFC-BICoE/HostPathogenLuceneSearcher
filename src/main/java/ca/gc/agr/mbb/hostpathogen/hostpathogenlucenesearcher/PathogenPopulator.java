@@ -7,6 +7,9 @@ public class PathogenPopulator<T> extends BasePopulator{
     
     public PathogenPopulator(){
 	recordType = PATHOGEN_TYPE;
+	addSortField(PATHOGEN_GENUS);
+	addSortField(PATHOGEN_SPECIES);
+	setDefaultSortField(PATHOGEN_GENUS);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{

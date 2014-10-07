@@ -2,13 +2,33 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import org.apache.lucene.document.Document;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
+import java.util.Set;
+import java.util.HashSet;
+
 
 abstract public class BasePopulator<T> implements Populator{
+    protected Set<String> validSortField = new HashSet<String>();
+    protected String defaultSortField = null;
     protected String primaryKeyField = PK;
     protected String recordType = null;
 
+    public void setDefaultSortField(final String defaultString){
+	this.defaultSortField = defaultSortField;
+    }
+    public String getDefaultSortField(){
+	return defaultSortField;
+    }
+
     public String getPrimaryKeyField(){
 	return primaryKeyField;
+    }
+
+    public void addSortField(final String s){
+	validSortField.add(s);
+    }
+
+    public boolean isValidSortField(String s){
+	return validSortField.contains(s);
     }
 
     static final long longValue(Document doc, String fieldName) throws FailedPopulateException{

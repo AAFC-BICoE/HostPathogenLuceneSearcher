@@ -3,6 +3,8 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 
 public interface LuceneFields{
+    public static final String SORT_FIELD = "sortField";
+
     public static final String ID_SUFFIX= "_ID";
 
     public static final String STORED_SUFFIX= "_stored";

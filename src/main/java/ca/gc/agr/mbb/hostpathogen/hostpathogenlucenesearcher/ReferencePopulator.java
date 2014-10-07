@@ -3,8 +3,9 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 import org.apache.lucene.document.Document;
 import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 
-public class ReferencePopulator<T> extends BasePopulator{
 
+public class ReferencePopulator<T> extends BasePopulator{
+    
     public ReferencePopulator(){
 	recordType = REFERENCE_TYPE;
     }

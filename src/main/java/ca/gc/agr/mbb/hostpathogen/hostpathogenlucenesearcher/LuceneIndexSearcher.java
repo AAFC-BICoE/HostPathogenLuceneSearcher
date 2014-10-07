@@ -150,6 +150,10 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	StringBuilder sb = new StringBuilder();
 	boolean first = true;
 	for(String key:queryParameters.keySet()){
+	    if(key.equals(SORT_FIELD)){
+		continue;
+	    }
+
 	    if (first){
 		first = false;
 	    }else{

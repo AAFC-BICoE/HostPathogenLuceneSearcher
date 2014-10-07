@@ -7,6 +7,13 @@ public class HostPathogenPopulator<T> extends BasePopulator{
     
     public HostPathogenPopulator(){
 	recordType = HOST_PATHOGEN_TYPE;
+	addSortField(PATHOGEN_GENUS);
+	addSortField(PATHOGEN_SPECIES);
+
+	addSortField(HOST_GENUS);
+	addSortField(HOST_SPECIES);
+
+	setDefaultSortField(HOST_GENUS);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
