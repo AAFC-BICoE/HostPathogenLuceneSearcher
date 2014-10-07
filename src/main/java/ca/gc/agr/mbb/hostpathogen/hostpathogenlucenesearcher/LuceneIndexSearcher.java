@@ -39,12 +39,23 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     private Populator populator = null;
 
     public void init(final String indexDir, final Populator populator) throws InitializationException{
-	if(populator.getDefaultSortFields() == null || populator.getDefaultSortFields().size() == 0){
-	    throw new InitializationException("Populator (" + populator.getClass().getName() + ") has null default sort field");
+	try{
+	    Util.isNullOrZero(indexDir);
+	    Util.isNull(populator);
+	}catch(IllegalArgumentException e){
+	    throw new InitializationException(e);
 	}
 
-	if(populator.getValidSortFieldSet() == null){
-	    throw new InitializationException("Populator has null default sort field map");
+	if(populator.getDefaultSortFields() == null || populator.getDefaultSortFields().size() == 0){
+	    throw new InitializationException("Populator (" + populator.getClass().getName() + ") has null or zero length default sort field");
+	}
+
+	if(populator.getValidSortFieldSet() == null || populator.getValidSortFieldSet().size() == 0){
+	    throw new InitializationException("Populator has null or zero length default sort field map");
+	}
+
+	if(!Util.listInSet(populator.getDefaultSortFields(), populator.getValidSortFieldSet())){
+	    throw new InitializationException("Default sort fields not in valid sort fields");
 	}
 
 	this.populator = populator;

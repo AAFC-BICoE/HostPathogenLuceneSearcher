@@ -32,6 +32,19 @@ public class Util{
 
     }
 
+    public static final void isNullOrZero(String s) throws IllegalArgumentException{
+	isNull(s);
+	if(s.length() == 0){
+	    throw new IllegalArgumentException("String is null or zero length");
+	}
+    }
+
+    public static final void isNull(Object s) throws IllegalArgumentException{
+	if(s==null){
+	    throw new IllegalArgumentException("String is null or zero length");
+	}
+    }
+
     public static final void checkQueryParameters(final Map<String,List<String>>queryParameters) throws IllegalArgumentException{
 	checkQueryParameters(queryParameters, null);
     }
@@ -138,6 +151,10 @@ public class Util{
 	    stringSet.add(str);
 	}
 	return stringSet;
+    }
+
+    public static boolean listInSet(List<Object> list, Set<Object> set){
+	return true;
     }
 
 

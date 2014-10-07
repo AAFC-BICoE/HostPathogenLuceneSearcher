@@ -3,6 +3,12 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 
 public interface LuceneFields{
+    public static final String INDEX_PATHOGEN = "luceneIndex.pathogens";
+    public static final String INDEX_HOST = "luceneIndex.hosts";
+    public static final String INDEX_REFERENCE = "luceneIndex.references";
+    public static final String INDEX_HOST_PATHOGEN = "luceneIndex.host_pathogens";
+
+
     public static final String SORT_FIELD = "sortField";
 
     public static final String ID_SUFFIX= "_ID";
