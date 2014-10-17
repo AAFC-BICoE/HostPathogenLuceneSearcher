@@ -210,6 +210,11 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return hostPathogenLis.search(queryParameters, offset, limit);
     }
 
+    public long searchHostPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException{
+	Util.checkQueryParameters(queryParameters, pathogenSearchFields);
+	return hostPathogenLis.countSearch(queryParameters);
+    }
+
     public HostPathogen getHostPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
 	List<Long>ids = new ArrayList<Long>(1);
 	ids.add(id);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
+import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 
 public class HPSearcherMock implements Searcher{
     public static final int NUM_IDS = 100;
@@ -19,24 +20,34 @@ public class HPSearcherMock implements Searcher{
     static List<Long>hostIds = null;
     static List<Host>hosts = null;
 
+    // 200-299
+    static List<Long>hostPathogenIds = null;
+    static List<HostPathogen>hostPathogens = null;
+
     static{
 	pathogenIds = new ArrayList<Long>(NUM_IDS);
 	pathogens = new ArrayList<Pathogen>(NUM_IDS);
 
 	hostIds = new ArrayList<Long>(NUM_IDS);
 	hosts = new ArrayList<Host>(NUM_IDS);
+
+	hostPathogenIds = new ArrayList<Long>(NUM_IDS);
+	hostPathogens = new ArrayList<HostPathogen>(NUM_IDS);
+
+
 	for(int i=0; i<NUM_IDS; i++){
 	    long hid = (long)(100+i);
 	    long pid = (long)(2000+i);
+	    long phid = (long)(200+i);
 
 	    hostIds.add(new Long(hid));
+	    hostPathogenIds.add(new Long(phid));
 	    pathogenIds.add(new Long(pid));
 
 	    Pathogen pathogen = new Pathogen();
 	    pathogen.setId(pid);
 	    pathogen.setGenus("genus" + pid);
 	    pathogen.setSpecies("species" + pid);
-
 	    pathogens.add(pathogen);
 
 	    Host host = new Host();
@@ -44,6 +55,10 @@ public class HPSearcherMock implements Searcher{
 	    host.setGenus("genus" + pid);
 	    host.setSpecies("species" + pid);
 	    hosts.add(host);
+
+	    HostPathogen hostPathogen = new HostPathogen();
+	    hostPathogen.setId(pid);
+	    hostPathogens.add(hostPathogen);
 	}
     }
 
@@ -66,13 +81,7 @@ public class HPSearcherMock implements Searcher{
     }
 
 
-/** 
-  * Get Pathogens by ID
-  * 
-  * @param ids         List of ids wanted
-  * @return List<Long> List of ids found
-  * @exception IllegalArgumentException
-  */ 
+    // PATHOGEN
     public List<Pathogen>getPathogens(final List<Long> ids)
 	throws IllegalArgumentException{
 	
@@ -98,7 +107,7 @@ public class HPSearcherMock implements Searcher{
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
-    public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException{
+    public long getAllPathogensCount() throws  IllegalArgumentException{
 	return pathogenIds.size();
     }
 
@@ -109,18 +118,20 @@ public class HPSearcherMock implements Searcher{
 	return Util.sliceList(pathogenIds, offset, limit);
     }
 
-    public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalArgumentException{
 	if(true){
 	    throw new NullPointerException();
 	}
 	return 17l;
     }
 
-    public long getAllHostsCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+
+    // HOST
+    public long getAllHostsCount() throws IndexFailureException{
 	return 100l;
     }
 
-    public long searchHostsCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException{
+    public long searchHostsCount(Map<String,List<String>>queryParmeters) throws IllegalArgumentException{
 	if(true){
 	    throw new NullPointerException();
 	}
@@ -150,5 +161,30 @@ public class HPSearcherMock implements Searcher{
 	return Util.sliceList(hostIds, offset, limit);
     }
 
+
+    // HOST-PATHOGEN
+    public List<Long>getAllHostPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+	return null;
+    }
+
+    public long getAllHostPathogensCount() throws IndexFailureException{
+	return 0l;
+    }
+
+    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+	return null;
+    }
+
+    public long searchHostPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException{
+	return 0l;
+    }
+
+    public List<HostPathogen>getHostPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException{
+	return null;
+    }
+
+    public HostPathogen getHostPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
+	return null;
+    }
 
 }
