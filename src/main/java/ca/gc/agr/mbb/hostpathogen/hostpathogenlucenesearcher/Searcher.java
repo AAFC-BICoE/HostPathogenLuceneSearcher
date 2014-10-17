@@ -3,6 +3,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
+import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 
 import java.util.List;
 import java.util.Map;
@@ -24,22 +25,32 @@ public interface Searcher{
     public List<Long>searchPathogens(Map<String,List<String>>queryParmeters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
     public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException;
-    public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
+    public long getAllPathogensCount() throws IndexFailureException;
+    public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalArgumentException, IndexFailureException;
 
 
     // HOST
     public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException, IndexFailureException;
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Long>searchHosts(Map<String,List<String>>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public long getAllHostsCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public long searchHostsCount(Map<String,List<String>>queryParmeters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
+    public long getAllHostsCount() throws IndexFailureException;
+    public long searchHostsCount(Map<String,List<String>>queryParmeters) throws IllegalArgumentException, IndexFailureException;
 
 
     
     // HOST-PATHOGEN
+    public List<Long>getAllHostPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
+    public long getAllHostPathogensCount() throws IndexFailureException;
+    public List<Long>searchHostPathogens(Map<String,List<String>>queryParmeters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
+    public List<HostPathogen>getHostPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
+    public HostPathogen getHostPathogen(final Long id) throws IllegalArgumentException, IndexFailureException;
+    // // Relations
     public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
     public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
+
+
+    // Reference
+
 
     // CONSTANTS1
     public static final String MOCK_PROPERTY = "mock";

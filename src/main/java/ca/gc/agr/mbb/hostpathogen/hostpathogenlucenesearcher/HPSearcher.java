@@ -83,6 +83,7 @@ public class HPSearcher implements Searcher, LuceneFields{
     private void initializeAllowableSearchFields(){
 	pathogenSearchFields = Util.strings2Set(pathogenSearchFieldsList);
 	hostSearchFields = Util.strings2Set(hostSearchFieldsList);
+	hostPathogenSearchFields = Util.strings2Set(hostPathogenSearchFieldsList);
     }
 
     //////////// Pathogens  /////////////////
@@ -117,7 +118,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return pathogenLis.getAll(offset, limit);
     }
 
-    public long getAllPathogensCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public long getAllPathogensCount() throws IndexFailureException{
 	return pathogenLis.countAll();
     }
 
@@ -129,7 +130,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return pathogenLis.search(queryParameters, offset, limit);
     }
 
-    public long searchPathogensCount(Map<String,List<String>>queryParameters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public long searchPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException{
 	Util.checkQueryParameters(queryParameters, pathogenSearchFields);
 	return pathogenLis.countSearch(queryParameters);
     }
@@ -143,6 +144,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 	HOST_GENUS,
 	HOST_SPECIES,
     };
+
     public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException, IndexFailureException{
 	Util.checkIds(ids);
 	LOG.info("Getting hosts by id: " + ids);
@@ -156,12 +158,12 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return hostLis.getAll(offset, limit);
     }
 
-    public long getAllHostsCount() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public long getAllHostsCount() throws IndexFailureException{
 	return hostLis.countAll();
     }
 
 
-    public long searchHostsCount(Map<String,List<String>>queryParameters) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public long searchHostsCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException{
 	Util.checkQueryParameters(queryParameters, hostSearchFields);
 	return hostLis.countSearch(queryParameters);
     }
@@ -183,7 +185,43 @@ public class HPSearcher implements Searcher, LuceneFields{
     }
 
 
-    // Host-Pathogen
+    // HOST-PATHOGEN
+    Set<String> hostPathogenSearchFields;
+
+    public static String[] hostPathogenSearchFieldsList = {
+	PATHOGEN_GENUS,
+	PATHOGEN_SPECIES,
+	CULTIVAR,
+	HOST_GENUS,
+	HOST_SPECIES,
+    };
+    public List<Long>getAllHostPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+	Util.checkOffsetAndLimit(offset, limit );
+	return hostPathogenLis.getAll(offset, limit);
+    }
+
+    public long getAllHostPathogensCount() throws IndexFailureException{
+	return hostPathogenLis.countAll();
+    }
+
+    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+	Util.checkQueryParameters(queryParameters, hostPathogenSearchFields);
+	Util.checkOffsetAndLimit(offset, limit);
+	return hostPathogenLis.search(queryParameters, offset, limit);
+    }
+
+    public HostPathogen getHostPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
+	List<Long>ids = new ArrayList<Long>(1);
+	ids.add(id);
+	return getHostPathogens(ids).get(0);
+    }
+
+    public List<HostPathogen>getHostPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException{
+	Util.checkIds(ids);
+	return hostPathogenLis.get(ids);
+    }
+
+    // // Relations
     public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
 	Util.checkId(hostId);
 	Map<String, List<String>> query = UtilLucene.makeIdQueryMap(FK_HOST_ID, hostId);
