@@ -23,7 +23,8 @@ public interface LuceneFields{
     public static final String AUTHOR_TYPE = "author";
     public static final String LOCALITY_TYPE = "locality";
     public static final String HOST_PATHOGEN_TYPE = "hostPathogen";
-    public static final String HIGHER_TAXA_TYPE = "higher_taxa";
+    public static final String HIGHER_TAXA_TYPE = "higherTaxa";
+    public static final String HP_LOCALITY_JOIN_TYPE = "hpLocalityJoin";
 
     // FIELDS
     public static final String RECORD_TYPE = "recordType";

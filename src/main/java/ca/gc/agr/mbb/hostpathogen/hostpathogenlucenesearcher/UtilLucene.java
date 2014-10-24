@@ -1,5 +1,7 @@
 package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,16 +9,29 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField.Type;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.Sort;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
+import org.apache.lucene.document.Field;
+
 
 public class UtilLucene{
     private final static Logger LOG = Logger.getLogger(UtilLucene.class.getName()); 
@@ -49,7 +64,7 @@ public class UtilLucene{
 		Document doc = null;
 		try{
 		    doc  = searcher.doc(scoreDocs[i].doc);
-		}catch(java.io.IOException e){
+		}catch(IOException e){
 		    e.printStackTrace();
 		    throw new IndexFailureException(e);
 		}
@@ -108,7 +123,7 @@ public class UtilLucene{
 	try{
 	    LOG.info("Lucene query run: " + query);
 	    return searcher.search(query, Integer.MAX_VALUE, sort);
-	}catch(java.io.IOException e){
+	}catch(IOException e){
 	    e.printStackTrace();
 	    throw new IndexFailureException(e);
 	}
@@ -136,6 +151,46 @@ public class UtilLucene{
 	return UtilLucene.runQuery(query, sortFields, searcher);
     }
 
+    
+    public static final IndexSearcher makeIndexSearcher(String dir) throws IOException{
+	IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(dir)));
+	LOG.info("Num docs in " + dir + "=" + reader.maxDoc());
+	return new IndexSearcher(reader);
+    }
 
+    public static final Analyzer makeAnalyzer(){
+	return new StandardAnalyzer(luceneVersion()); // thread safe
+    }
+
+    public static final Version luceneVersion(){
+	return Version.LUCENE_4_10_0;
+    }
+
+    public static final IndexWriter makeIndexWriter(final String indexDir, final Analyzer analyzer) throws IOException{
+	LOG.info("Opening Lucene index: " + indexDir);
+	Directory dir = FSDirectory.open(new File(indexDir));
+	IndexWriterConfig iwc = new IndexWriterConfig(UtilLucene.luceneVersion(), analyzer);
+
+	iwc.setOpenMode(OpenMode.CREATE);
+
+	IndexWriter writer = new IndexWriter(dir, iwc);
+	LOG.info("Success opening Lucene index: " + indexDir);
+	return writer;
+    }
+
+    public static final void openAndWriteLuceneIndex(String dir) throws IOException{
+	IndexWriter writer = makeIndexWriter(dir, UtilLucene.makeAnalyzer());
+
+	Document doc = new Document();
+	doc.add(new StringField("testFieldName", "test field", Field.Store.YES));
+	writer.addDocument(doc);
+	try{
+	    System.err.println("Closing index ");
+	    writer.close();
+	}catch(Exception e){
+	    e.printStackTrace();
+	}
+	
+    }
 
 }

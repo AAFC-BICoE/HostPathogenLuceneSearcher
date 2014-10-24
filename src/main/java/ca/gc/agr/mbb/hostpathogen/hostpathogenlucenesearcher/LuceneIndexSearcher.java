@@ -12,8 +12,6 @@ import java.util.logging.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
@@ -25,10 +23,10 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.FSDirectory;
+
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.NumericUtils;
-import org.apache.lucene.util.Version;
+
 
 public class LuceneIndexSearcher<T> implements LuceneFields{
     private final static Logger LOG = Logger.getLogger(LuceneIndexSearcher.class.getName()); 
@@ -38,9 +36,10 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     private Analyzer analyzer = null;
     private Populator populator = null;
 
-    public void init(final String indexDir, final Populator populator) throws InitializationException{
+    public void init(final IndexSearcher searcher, final Analyzer analyzer, final Populator populator) throws InitializationException{
 	try{
-	    Util.isNullOrZero(indexDir);
+	    Util.isNull(searcher);
+	    Util.isNull(analyzer);
 	    Util.isNull(populator);
 	}catch(IllegalArgumentException e){
 	    throw new InitializationException(e);
@@ -59,16 +58,10 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	}
 
 	this.populator = populator;
-	LOG.info("Opening Lucene index for directory: " + indexDir);
-	try{
-	    IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(indexDir)));
-	    analyzer = new StandardAnalyzer(Version.LUCENE_4_10_0); // thread safe
-	    LOG.info("*** Num docs in " + indexDir + "=" + reader.maxDoc());
-	    searcher = new IndexSearcher(reader);
-	}catch(Throwable t){
-	    throw new InitializationException(t);
-	}
+	this.searcher = searcher;
+	this.analyzer = analyzer;
     }
+
 
 
     public List<T>get(final List<Long> ids)throws TooManyIdsException, IllegalArgumentException, IndexFailureException{

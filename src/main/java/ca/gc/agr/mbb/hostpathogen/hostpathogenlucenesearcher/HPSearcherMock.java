@@ -187,4 +187,8 @@ public class HPSearcherMock implements Searcher{
 	return null;
     }
 
+    public List<Long>getLocationsByHostPathogen(long hostPathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
+	return null;
+    }
+
 }

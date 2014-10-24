@@ -8,11 +8,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.lucene.search.IndexSearcher;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
-
+import org.apache.lucene.analysis.Analyzer;
 
 public class HPSearcher implements Searcher, LuceneFields{
     private final static Logger LOG = Logger.getLogger(HPSearcher.class.getName()); 
@@ -24,6 +25,9 @@ public class HPSearcher implements Searcher, LuceneFields{
     private LuceneIndexSearcher<Host> hostLis = null;
     private LuceneIndexSearcher<HostPathogen> hostPathogenLis = null;
     private LuceneIndexSearcher<Reference> referenceLis = null;
+
+    private IndexSearcher searcher = null;
+    private Analyzer analyzer = null;
 
     public static final Searcher newSearcher(final Properties p) throws InitializationException{
 	if (p==null){
@@ -57,7 +61,14 @@ public class HPSearcher implements Searcher, LuceneFields{
 	    throw new InitializationException("Missing Searcher.LUCENE_INDICES_BASE_DIR property for location of Lucene indices");
 	}
 	luceneDir = prop.getProperty(LUCENE_INDICES_BASE_DIR);
-	LOG.info("Lucene directory=" + luceneDir);
+
+	LOG.info("Opening Lucene index for directory: " + luceneDir);
+	try{
+	    searcher = UtilLucene.makeIndexSearcher(luceneDir);
+	    analyzer = UtilLucene.makeAnalyzer();
+	}catch(Throwable t){
+	    throw new InitializationException(t);
+	}
 
 	String errorString = Util.existsIsDirIsReadable(luceneDir);
 	if(errorString != null){
@@ -65,16 +76,16 @@ public class HPSearcher implements Searcher, LuceneFields{
 	}
 
 	pathogenLis = new LuceneIndexSearcher<Pathogen>();
-	pathogenLis.init(luceneDir + "/" + INDEX_PATHOGEN, new PathogenPopulator<Pathogen>());
+	pathogenLis.init(searcher, analyzer, new PathogenPopulator<Pathogen>());
 
 	hostLis = new LuceneIndexSearcher<Host>();
-	hostLis.init(luceneDir + "/" + INDEX_HOST, new HostPopulator<Host>());
+	hostLis.init(searcher, analyzer, new HostPopulator<Host>());
 
 	referenceLis = new LuceneIndexSearcher<Reference>();
-	referenceLis.init(luceneDir + "/" + INDEX_REFERENCE, new ReferencePopulator<Reference>());
+	referenceLis.init(searcher, analyzer, new ReferencePopulator<Reference>());
 
 	hostPathogenLis = new LuceneIndexSearcher<HostPathogen>();
-	hostPathogenLis.init(luceneDir + "/" + INDEX_HOST_PATHOGEN, new HostPathogenPopulator<HostPathogen>());
+	hostPathogenLis.init(searcher, analyzer, new HostPathogenPopulator<HostPathogen>());
 
 	return this;
     }
@@ -239,6 +250,11 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return hostPathogenLis.search(query, offset, limit);
     }
 
+    public List<Long>getLocationsByHostPathogen(long hostPathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
+	Util.checkId(hostPathogenId);
+	Map<String, List<String>> query = UtilLucene.makeIdQueryMap(HPLocalityJoin.FK_HOST_PATHOGEN_ID, hostPathogenId);
+	return hostPathogenLis.search(query, offset, limit);
+    }
 
 
 }
