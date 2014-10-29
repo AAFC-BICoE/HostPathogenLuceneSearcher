@@ -22,7 +22,7 @@ public interface Searcher{
 
     // PATHOGEN
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
+    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
     public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException;
     public long getAllPathogensCount() throws IndexFailureException;
@@ -32,7 +32,7 @@ public interface Searcher{
     // HOST
     public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException, IndexFailureException;
     public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public List<Long>searchHosts(Map<String,List<String>>queryPrameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
+    public List<Long>searchHosts(Map<String,List<String>>queryPrameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public long getAllHostsCount() throws IndexFailureException;
     public long searchHostsCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException;
 
@@ -41,7 +41,7 @@ public interface Searcher{
     // HOST-PATHOGEN
     public List<Long>getAllHostPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public long getAllHostPathogensCount() throws IndexFailureException;
-    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
+    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public long searchHostPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException;
     public List<HostPathogen>getHostPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
     public HostPathogen getHostPathogen(final Long id) throws IllegalArgumentException, IndexFailureException;

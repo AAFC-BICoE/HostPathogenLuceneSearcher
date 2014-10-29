@@ -7,6 +7,7 @@ public class HostPathogenPopulator<T> extends BasePopulator{
     
     public HostPathogenPopulator(){
 	recordType = HOST_PATHOGEN_TYPE;
+
 	addSortField(PATHOGEN_GENUS);
 	addSortField(PATHOGEN_SPECIES);
 

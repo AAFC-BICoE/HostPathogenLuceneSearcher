@@ -135,7 +135,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 
     
 
-    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkQueryParameters(queryParameters, pathogenSearchFields);
 	Util.checkOffsetAndLimit(offset, limit);
 	return pathogenLis.search(queryParameters, offset, limit);
@@ -189,7 +189,7 @@ public class HPSearcher implements Searcher, LuceneFields{
     // pathogenVirus=x
     // pathogenGenus=x
     // pathogenSpecies=x
-    public List<Long>searchHosts(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public List<Long>searchHosts(final Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkOffsetAndLimit(offset, limit);
 	Util.checkQueryParameters(queryParameters, hostSearchFields);
 	return hostLis.search(queryParameters, offset, limit);
@@ -215,7 +215,7 @@ public class HPSearcher implements Searcher, LuceneFields{
 	return hostPathogenLis.countAll();
     }
 
-    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkQueryParameters(queryParameters, hostPathogenSearchFields);
 	Util.checkOffsetAndLimit(offset, limit);
 	return hostPathogenLis.search(queryParameters, offset, limit);
