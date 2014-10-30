@@ -22,6 +22,7 @@ public class HPSearcherHostPathogenTest{
 
     @Test
     public void getPathogenByHostIdSuccessfully() throws InitializationException{
+	LOG.info("Start getPathogenByHostIdSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 	Long hostId = 5157l;
 	List<Long>results = null;
@@ -42,6 +43,7 @@ public class HPSearcherHostPathogenTest{
 
     @Test
     public void getHostByPathogenIdSuccessfully() throws InitializationException{
+	LOG.info("Start getHostByPathogenIdSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 	Long pathogenId = 74462l;
 	List<Long>results = null;

@@ -23,11 +23,13 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void verifyNotNullDefaultSortField() throws InitializationException{
+	LOG.info("Start verifyNotNullDefaultSortField");
 	PathogenPopulator<Pathogen> pathogenPopulator = new PathogenPopulator<Pathogen>();
     }
 
     @Test(expected=TooManyIdsException.class)
     public void requestTooManyPathogenIds() throws InitializationException{
+	LOG.info("Start requestTooManyPathogenIds");
 	Searcher s = HPSearcherTest.goodSearcher();
 	List<Long> ids = new ArrayList<Long>();
 	for(int i=21; i<1000; i++){
@@ -44,6 +46,7 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void requestMissingPathogenIds() throws InitializationException{
+	LOG.info("Start requestMissingPathogenIds");
 	Searcher s = HPSearcherTest.goodSearcher();
 	List<Long> ids = new ArrayList<Long>();
 	ids.add(HPSearcherTest.HUGE_ID);
@@ -61,6 +64,7 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void getPathogensByIdSuccessfully() throws InitializationException{
+	LOG.info("Start getPathogensByIdSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long> ids = new ArrayList<Long>();
@@ -81,11 +85,12 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void searchPathogensGenusSuccessfully() throws InitializationException{
+	LOG.info("Start searchPathogensGenusSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
 	try{
-	    results = s.searchPathogens(goodPathogenGenusParameters(), 0, 20);
+	    results = s.searchPathogens(goodPathogenGenusParameters(), null, 0, 20);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    e.printStackTrace();
@@ -101,6 +106,7 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void searchPathogensGenusAndPageSuccessfully() throws InitializationException{
+	LOG.info("Start searchPathogensGenusAndPageSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
@@ -108,7 +114,7 @@ public class HPSearcherPathogenTest{
 	    int numHits = (int)s.searchPathogensCount(allAsPathogenGenusParameters());
 	    LOG.info("Num results: " + numHits);
 	    for(int i=0; i<numHits; i+=LuceneIndexSearcher.MAX_IDS){
-		results = s.searchPathogens(allAsPathogenGenusParameters(), i, LuceneIndexSearcher.MAX_IDS);
+		results = s.searchPathogens(allAsPathogenGenusParameters(), null, i, LuceneIndexSearcher.MAX_IDS);
 	    }
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
@@ -123,6 +129,7 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void verifySortOrderingIsWorking() throws InitializationException{
+	LOG.info("Start verifySortOrderingIsWorking");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
@@ -161,11 +168,12 @@ public class HPSearcherPathogenTest{
 
     @Test
     public void searchPathogensGenusUnSuccessfully() throws InitializationException{
+	LOG.info("Start searchPathogensGenusUnSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
 	try{
-	    results = s.searchPathogens(HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, HPSearcherTest.GOOD_PATHOGEN_GENUS + "ZZZZZZZZZZZz"), 0, 20);
+	    results = s.searchPathogens(HPSearcherTest.makeParameters(LuceneFields.PATHOGEN_GENUS, HPSearcherTest.GOOD_PATHOGEN_GENUS + "ZZZZZZZZZZZz"), null, 0, 20);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    e.printStackTrace();

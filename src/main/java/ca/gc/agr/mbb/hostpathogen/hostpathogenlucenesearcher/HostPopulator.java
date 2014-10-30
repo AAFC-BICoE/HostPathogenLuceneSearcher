@@ -18,6 +18,7 @@ public class HostPopulator<T> extends BasePopulator{
 
     public final T populate(Document doc) throws FailedPopulateException{
 	Host h = new Host();
+
 	// obligatory
 	h.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
 	h.setGenus(stringValue(doc, HOST_GENUS+STORED_SUFFIX, true));

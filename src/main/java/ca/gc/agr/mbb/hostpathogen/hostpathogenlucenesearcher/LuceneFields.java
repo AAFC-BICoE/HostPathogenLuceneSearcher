@@ -19,15 +19,15 @@ public interface LuceneFields{
     public static final String PATHOGEN_TYPE = "pathogen";
     public static final String HOST_TYPE = "host";
     public static final String REFERENCE_TYPE = "reference";
-    public static final String REF_SOURCES_TYPE = "refSources";
+    public static final String REF_SOURCES_TYPE = "ref_sources";
     public static final String AUTHOR_TYPE = "author";
     public static final String LOCALITY_TYPE = "locality";
-    public static final String HOST_PATHOGEN_TYPE = "hostPathogen";
-    public static final String HIGHER_TAXA_TYPE = "higherTaxa";
-    public static final String HP_LOCALITY_JOIN_TYPE = "hpLocalityJoin";
+    public static final String HOST_PATHOGEN_TYPE = "host_pathogen";
+    public static final String HIGHER_TAXA_TYPE = "higher_taxa";
+    public static final String HP_LOCALITY_JOIN_TYPE = "hp_locality_join";
 
     // FIELDS
-    public static final String RECORD_TYPE = "recordType";
+    public static final String RECORD_TYPE = "record_type";
     public static final String BOOK_AUTHOR="book_author";
     public static final String BOOK_EDITOR="book_editor";
     public static final String BOOK_PAGES="book_pages";

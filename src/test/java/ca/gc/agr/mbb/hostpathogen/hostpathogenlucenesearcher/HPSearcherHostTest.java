@@ -22,6 +22,7 @@ public class HPSearcherHostTest{
 
     @Test
     public void requestMissingHostIds() throws InitializationException{
+	LOG.info("Start requestMissingHostIds");
 	Searcher s = HPSearcherTest.goodSearcher();
 	List<Long> ids = new ArrayList<Long>();
 	ids.add(HPSearcherTest.HUGE_ID);
@@ -38,6 +39,7 @@ public class HPSearcherHostTest{
 
     @Test(expected=TooManyIdsException.class)
     public void requestTooManyHostIds() throws InitializationException{
+	LOG.info("Start requestTooManyHostIds");
 	Searcher s = HPSearcherTest.goodSearcher();
 	List<Long> ids = new ArrayList<Long>();
 	for(int i=21; i<1000; i++){
@@ -54,6 +56,7 @@ public class HPSearcherHostTest{
 
     @Test
     public void getHostsByIdSuccessfully() throws InitializationException{
+	LOG.info("Start getHostsByIdSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long> ids = new ArrayList<Long>();
@@ -74,11 +77,12 @@ public class HPSearcherHostTest{
 
     @Test
     public void searchHostsGenusSuccessfully() throws InitializationException{
+	LOG.info("Start searchHostsGenusSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
 	try{
-	    results = s.searchHosts(goodHostGenusParameters(), 0, 20);
+	    results = s.searchHosts(goodHostGenusParameters(), null, 0, 20);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    e.printStackTrace();
@@ -94,11 +98,12 @@ public class HPSearcherHostTest{
 
     @Test
     public void searchHostsGenusUnSuccessfully() throws InitializationException{
+	LOG.info("Start searchHostsGenusUnSuccessfully");
 	Searcher s = HPSearcherTest.goodSearcher();
 
 	List<Long>results = null;
 	try{
-	    results = s.searchHosts(HPSearcherTest.makeParameters(LuceneFields.HOST_GENUS, HPSearcherTest.GOOD_HOST_GENUS + "ZZZZZZZZZZz"), 0, 20);
+	    results = s.searchHosts(HPSearcherTest.makeParameters(LuceneFields.HOST_GENUS, HPSearcherTest.GOOD_HOST_GENUS + "ZZZZZZZZZZz"), null, 0, 20);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    e.printStackTrace();

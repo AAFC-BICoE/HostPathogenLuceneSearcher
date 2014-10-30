@@ -6,6 +6,7 @@ import org.apache.lucene.document.Document;
 
 public interface Populator<T> extends LuceneFields{
     public T populate(Document d);
+    public String getRecordType();
     public String getPrimaryKeyField();
 
     public void addSortField(String s);

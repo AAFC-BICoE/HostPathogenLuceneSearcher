@@ -18,6 +18,10 @@ abstract public class BasePopulator<T> implements Populator{
     protected String recordType = null;
 
 
+    public String getRecordType(){
+	return recordType;
+    }
+
     public void addDefaultSortField(final String field){
 	defaultSortFields.add(field);
     }
@@ -75,7 +79,7 @@ abstract public class BasePopulator<T> implements Populator{
 	String[] values = doc.getValues(fieldName);
 	if(values == null || values.length == 0){
 	    if(mustExist){
-		throw new NullPointerException("Field " + fieldName + " cannot be empty/null");
+		throw new NullPointerException("Field " + fieldName + " cannot be empty/null; doc=" + doc.toString() );
 	    }
 	    return null;
 	}

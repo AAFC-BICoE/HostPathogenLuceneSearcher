@@ -172,7 +172,7 @@ public class HPSearcherTest{
 
 	List<Long>results = null;
 	try{
-	    results = s.searchHosts(queryParameters, 0, 20);
+	    results = s.searchHosts(queryParameters, null, 0, 20);
 	}catch(IndexFailureException e){
 	    // Not supposed to happen
 	    e.printStackTrace();

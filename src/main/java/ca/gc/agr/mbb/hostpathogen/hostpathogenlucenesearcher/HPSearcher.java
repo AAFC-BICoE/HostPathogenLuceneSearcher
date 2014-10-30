@@ -218,6 +218,7 @@ public class HPSearcher implements Searcher, LuceneFields{
     public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	Util.checkQueryParameters(queryParameters, hostPathogenSearchFields);
 	Util.checkOffsetAndLimit(offset, limit);
+	hostPathogenLis.checkSortFields(sortFields);
 	return hostPathogenLis.search(queryParameters, offset, limit);
     }
 

@@ -79,17 +79,19 @@ public class UtilLucene{
     }
 
 
-    protected final static TopDocs all(final List<String> sortFields, final IndexSearcher searcher) throws IndexFailureException{
-	Query allQuery = new MatchAllDocsQuery();
-	return runQuery(allQuery, sortFields, searcher);
+    protected final static TopDocs all(final String recordType, final List<String> sortFields, final Analyzer analyzer, final IndexSearcher searcher) throws IndexFailureException{
+	return runQuery(recordTypeFilter(recordType), sortFields, analyzer,searcher);
     }
 
-    protected final static String buildQuery(final Map<String,List<String>>queryParameters){
+    protected final static String buildQuery(final Map<String,List<String>>queryParameters, String recordType){
+	if (recordType == null || recordType.length() == 0){
+	    throw new NullPointerException("record type cannot be null");
+	}
 	if(queryParameters == null || queryParameters.size() == 0){
-	    return "";
+	    return recordTypeFilter(recordType);
 	}
 	
-	StringBuilder sb = new StringBuilder();
+	StringBuilder sb = new StringBuilder("(");
 	boolean first = true;
 	for(String key:queryParameters.keySet()){
 	    if(key.equals(LuceneFields.SORT_FIELD)){
@@ -107,6 +109,8 @@ public class UtilLucene{
 		sb.append(" ");
 	    }
 	}
+	sb.append(") AND ");
+	sb.append(recordTypeFilter(recordType));
 	LOG.info("Lucene QueryParemeters: " + queryParameters);
 	LOG.info("Lucene Query: " + sb.toString());
 	return sb.toString();
@@ -191,6 +195,10 @@ public class UtilLucene{
 	    e.printStackTrace();
 	}
 	
+    }
+
+    public static final String recordTypeFilter(final String recordType){
+	return LuceneFields.RECORD_TYPE + ":" + recordType;
     }
 
 }
