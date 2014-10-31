@@ -7,17 +7,15 @@ public class PathogenPopulator<T> extends BasePopulator{
     
     public PathogenPopulator(){
 	recordType = PATHOGEN_TYPE;
-	addSortField(PATHOGEN_GENUS);
-	addSortField(PATHOGEN_SPECIES);
-	addSortField(PATHOGEN_SUBSPECIFIC_TAXA);
-
-	addDefaultSortField(PATHOGEN_GENUS);
-	addDefaultSortField(PATHOGEN_SPECIES);
-	addDefaultSortField(PATHOGEN_SUBSPECIFIC_TAXA);
+	classType = Pathogen.class;
+	addSortFields(PATHOGEN_GENUS, PATHOGEN_SPECIES, PATHOGEN_SUBSPECIFIC_TAXA);
+	addDefaultSortFields(PATHOGEN_GENUS, PATHOGEN_SPECIES, PATHOGEN_SUBSPECIFIC_TAXA);
+	addSearchFields(FUNGAL_STATE, PATHOGEN_AUTHOR, PATHOGEN_GENUS, PATHOGEN_SPECIES, PATHOGEN_SUBSPECIFIC_TAXA, PK_PATHOGEN_ID, VIRUS_MPLO_NAMES);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
 	Pathogen p = new Pathogen();
+
 	// obligatory
 	p.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
 

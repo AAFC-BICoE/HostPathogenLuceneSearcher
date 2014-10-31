@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 
 @RunWith(JUnit4.class)
 public class LuceneIndexSearcherTest{
@@ -19,14 +19,14 @@ public class LuceneIndexSearcherTest{
     // FAIL tests
     @Test(expected=InitializationException.class)
     public void initWithNullLuceneSearcher() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher();
+	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
 	PathogenPopulator pap = new PathogenPopulator();
 	lis.init(null, UtilLucene.makeAnalyzer(), pap);
     }
 
     @Test(expected=InitializationException.class)
     public void initWithNullLuceneAnalyzer() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher();
+	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
 	PathogenPopulator pap = new PathogenPopulator();
 	try{
 	    UtilLucene.openAndWriteLuceneIndex(luceneIndex);
@@ -40,7 +40,7 @@ public class LuceneIndexSearcherTest{
 
     @Test(expected=InitializationException.class)
     public void initWithNullPopulator() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher();
+	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
 	try{
 	    UtilLucene.openAndWriteLuceneIndex(luceneIndex);
 	    lis.init(UtilLucene.makeIndexSearcher(luceneIndex), UtilLucene.makeAnalyzer(), null);
@@ -53,7 +53,7 @@ public class LuceneIndexSearcherTest{
     // SUCCESS tests
     @Test
     public void goodLuceneDirAndGoodPopulator() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher();
+	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
 	PathogenPopulator pap = new PathogenPopulator();
 	try{
 	    lis.init(UtilLucene.makeIndexSearcher(luceneIndex), UtilLucene.makeAnalyzer(), pap);

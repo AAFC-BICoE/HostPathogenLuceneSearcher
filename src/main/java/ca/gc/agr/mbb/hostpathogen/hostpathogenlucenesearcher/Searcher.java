@@ -21,6 +21,7 @@ public interface Searcher{
     public Searcher init(Properties p) throws InitializationException;
 
     // PATHOGEN
+    // NEW public List<Long>getAll(String noun, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Long>searchPathogens(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;

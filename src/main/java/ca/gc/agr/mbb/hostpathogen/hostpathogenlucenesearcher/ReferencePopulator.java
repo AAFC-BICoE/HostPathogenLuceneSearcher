@@ -9,11 +9,9 @@ public class ReferencePopulator<T> extends BasePopulator{
     public ReferencePopulator(){
 	recordType = REFERENCE_TYPE;
 
-	addSortField(REFERENCE_YEAR);
-	addSortField(REFERENCE_AUTHORS);
+	addSortFields(REFERENCE_YEAR, REFERENCE_AUTHORS);
 
-	addDefaultSortField(REFERENCE_AUTHORS);
-	addDefaultSortField(REFERENCE_YEAR);
+	addDefaultSortFields(REFERENCE_AUTHORS, REFERENCE_YEAR);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{

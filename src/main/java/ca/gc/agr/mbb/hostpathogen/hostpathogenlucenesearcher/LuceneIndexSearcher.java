@@ -1,11 +1,13 @@
 package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 
+
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import java.io.File;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,21 +25,40 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.NumericUtils;
 
 
 public class LuceneIndexSearcher<T> implements LuceneFields{
+
+
     private final static Logger LOG = Logger.getLogger(LuceneIndexSearcher.class.getName()); 
     public final static int MAX_IDS = 50;
+
+    private Class<T> type;
 
     private IndexSearcher searcher = null;
     private Analyzer analyzer = null;
     private Populator populator = null;
 
+    private LuceneIndexSearcher(){
+
+    }
+
+    public LuceneIndexSearcher(final Class<T> type){
+	if (type == null){
+	    throw new NullPointerException("Type cannot be null");
+	}
+	this.type = type;
+    }
+
+    public T newInstance() throws InstantiationException, IllegalAccessException{
+      return type.newInstance();
+    }
+
     public void init(final IndexSearcher searcher, final Analyzer analyzer, final Populator populator) throws InitializationException{
 	try{
+	    //LOG.info(getClass().getGenericSuperclass().getActualTypeArguments()[0]).toString())
 	    Util.isNull(searcher);
 	    Util.isNull(analyzer);
 	    Util.isNull(populator);
@@ -130,6 +151,10 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	recordType.add(populator.getRecordType());
 
 	return UtilLucene.topDocsToIds(UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType()), populator.getDefaultSortFields(), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
+    }
+
+    public Populator getPopulator(){
+	return populator;
     }
 
 

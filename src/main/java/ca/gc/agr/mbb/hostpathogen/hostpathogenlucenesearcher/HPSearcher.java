@@ -4,6 +4,7 @@ import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +16,7 @@ import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 import org.apache.lucene.analysis.Analyzer;
 
-public class HPSearcher implements Searcher, LuceneFields{
+public class HPSearcher<T> implements Searcher, LuceneFields{
     private final static Logger LOG = Logger.getLogger(HPSearcher.class.getName()); 
     public static int LIMIT_MAX = 50;
     
@@ -25,6 +26,7 @@ public class HPSearcher implements Searcher, LuceneFields{
     private LuceneIndexSearcher<Host> hostLis = null;
     private LuceneIndexSearcher<HostPathogen> hostPathogenLis = null;
     private LuceneIndexSearcher<Reference> referenceLis = null;
+
 
     private IndexSearcher searcher = null;
     private Analyzer analyzer = null;
@@ -46,6 +48,12 @@ public class HPSearcher implements Searcher, LuceneFields{
 
     private HPSearcher(){
 
+    }
+
+    private Map<String, LuceneIndexSearcher<T>> searchMap = new HashMap<String, LuceneIndexSearcher<T>>();
+
+    private void addSearchMapping(final String name, LuceneIndexSearcher<T> lis){
+	searchMap.put(name, lis);
     }
 
 
@@ -75,16 +83,18 @@ public class HPSearcher implements Searcher, LuceneFields{
 	    throw new InitializationException(errorString);
 	}
 
-	pathogenLis = new LuceneIndexSearcher<Pathogen>();
+	pathogenLis = new LuceneIndexSearcher<Pathogen>(Pathogen.class);
 	pathogenLis.init(searcher, analyzer, new PathogenPopulator<Pathogen>());
+	//addSearchMapping(PATHOGEN_TYPE, pathogenLis);
 
-	hostLis = new LuceneIndexSearcher<Host>();
+	hostLis = new LuceneIndexSearcher<Host>(Host.class);
 	hostLis.init(searcher, analyzer, new HostPopulator<Host>());
+	//addSearchMapping(HOST_TYPE, hostLis);
 
-	referenceLis = new LuceneIndexSearcher<Reference>();
+	referenceLis = new LuceneIndexSearcher<Reference>(Reference.class);
 	referenceLis.init(searcher, analyzer, new ReferencePopulator<Reference>());
 
-	hostPathogenLis = new LuceneIndexSearcher<HostPathogen>();
+	hostPathogenLis = new LuceneIndexSearcher<HostPathogen>(HostPathogen.class);
 	hostPathogenLis.init(searcher, analyzer, new HostPathogenPopulator<HostPathogen>());
 
 	return this;
@@ -92,24 +102,9 @@ public class HPSearcher implements Searcher, LuceneFields{
 
 
     private void initializeAllowableSearchFields(){
-	pathogenSearchFields = Util.strings2Set(pathogenSearchFieldsList);
 	hostSearchFields = Util.strings2Set(hostSearchFieldsList);
 	hostPathogenSearchFields = Util.strings2Set(hostPathogenSearchFieldsList);
     }
-
-    //////////// Pathogens  /////////////////
-
-    Set<String> pathogenSearchFields;
-
-    public static String[] pathogenSearchFieldsList = {
-	FUNGAL_STATE,
-	PATHOGEN_AUTHOR,
-	PATHOGEN_GENUS,
-	PATHOGEN_SPECIES,
-	PATHOGEN_SUBSPECIFIC_TAXA,
-	PK_PATHOGEN_ID,
-	VIRUS_MPLO_NAMES,
-    };
 
     public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
 	List<Long>ids = new ArrayList<Long>(1);
@@ -120,6 +115,13 @@ public class HPSearcher implements Searcher, LuceneFields{
     public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException{
 	Util.checkIds(ids);
 	return pathogenLis.get(ids);
+	//return searchMap.get(PATHOGEN_TYPE).get(ids);
+	//return get(PATHOGEN_TYPE, ids);
+    }
+
+    public List<T>get(final String nounType, final List<Long> ids) throws IllegalArgumentException, IndexFailureException{
+	Util.checkIds(ids);
+	return searchMap.get(nounType).get(ids);
     }
 
 
@@ -136,13 +138,13 @@ public class HPSearcher implements Searcher, LuceneFields{
     
 
     public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
-	Util.checkQueryParameters(queryParameters, pathogenSearchFields);
+	Util.checkQueryParameters(queryParameters, pathogenLis.getPopulator().getValidSearchFieldSet());
 	Util.checkOffsetAndLimit(offset, limit);
 	return pathogenLis.search(queryParameters, offset, limit);
     }
 
     public long searchPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException{
-	Util.checkQueryParameters(queryParameters, pathogenSearchFields);
+	Util.checkQueryParameters(queryParameters, pathogenLis.getPopulator().getValidSearchFieldSet());
 	return pathogenLis.countSearch(queryParameters);
     }
 
@@ -223,7 +225,7 @@ public class HPSearcher implements Searcher, LuceneFields{
     }
 
     public long searchHostPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException{
-	Util.checkQueryParameters(queryParameters, pathogenSearchFields);
+	Util.checkQueryParameters(queryParameters, hostPathogenSearchFields);
 	return hostPathogenLis.countSearch(queryParameters);
     }
 

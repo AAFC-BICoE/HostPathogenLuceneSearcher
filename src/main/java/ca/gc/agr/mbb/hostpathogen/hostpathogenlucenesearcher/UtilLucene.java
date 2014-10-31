@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,9 +32,9 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.lucene.document.Field;
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 
-
-public class UtilLucene{
+public class UtilLucene implements LuceneFields{
     private final static Logger LOG = Logger.getLogger(UtilLucene.class.getName()); 
 
     public static final String makeLuceneQueryPair(final String key, final String value){
@@ -199,6 +200,55 @@ public class UtilLucene{
 
     public static final String recordTypeFilter(final String recordType){
 	return LuceneFields.RECORD_TYPE + ":" + recordType;
+    }
+
+    public static final LuceneConfig luceneConfig(final String noun, final Properties prop) throws InitializationException, IllegalArgumentException{
+	Util.isNullOrZero(noun);
+	Util.isNull(prop);
+	String luceneDir = prop.getProperty(Searcher2.LUCENE_INDICES_BASE_DIR);
+	
+	if(luceneDir == null){
+	    throw new IllegalArgumentException("luceneDir is null: LUCENE_INDICES_BASE_DIR is not set in properties?");
+	}
+	LOG.info("Opening Lucene index for directory: " + luceneDir);
+
+	LuceneConfig lc = new LuceneConfig();
+	lc.noun = noun;
+	try{
+	    lc.searcher = UtilLucene.makeIndexSearcher(luceneDir);
+	    lc.analyzer = UtilLucene.makeAnalyzer();
+	}catch(Throwable t){
+	    throw new InitializationException(t);
+	}
+	switch(noun){
+
+	case PATHOGEN_TYPE:
+	    lc.populator = new PathogenPopulator<Pathogen>();
+	    break;
+
+	case HOST_TYPE:
+	    lc.populator = new HostPopulator();
+	    break;
+
+
+	case HOST_PATHOGEN_TYPE:
+	    lc.populator = new HostPathogenPopulator();
+	    break;
+
+	case HIGHER_TAXA_TYPE:
+	case REFERENCE_TYPE:
+	case REF_SOURCES_TYPE:
+	case AUTHOR_TYPE:
+	case LOCALITY_TYPE:
+	case HP_LOCALITY_JOIN_TYPE:
+	default:
+	    throw new InitializationException("Unimplemented Populator for: " + noun);
+	}
+	if (lc.populator.getProductClass() == null){
+	    throw new InitializationException("Populator.productClass is null");
+	}
+
+	return lc;
     }
 
 }

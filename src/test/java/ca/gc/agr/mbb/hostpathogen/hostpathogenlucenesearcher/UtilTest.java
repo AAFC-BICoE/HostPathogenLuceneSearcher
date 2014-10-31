@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.Properties;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,6 +76,49 @@ public class UtilTest{
 	Util.sliceList(null, 0,10);
     }
 
+
+    //////////////////////////////
+    // luceneConfig
+
+    static Properties goodProperties = new Properties();
+    static Properties emptyProperties = new Properties();
+    static Properties badDirProperties = new Properties();
+    static{
+	goodProperties.put(Searcher2.LUCENE_INDICES_BASE_DIR, HPSearcher2Test.GOOD_LUCENE_DIR);
+	badDirProperties.put(Searcher2.LUCENE_INDICES_BASE_DIR, HPSearcher2Test.BAD_LUCENE_DIR);
+    }
+    
+    ///NEGATIVE
+    @Test(expected=IllegalArgumentException.class)
+    public void nullNounLuceneConfig()  throws InitializationException
+    {
+	UtilLucene.luceneConfig(null, goodProperties);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void nullPropertiesLuceneConfig()  throws InitializationException
+    {
+	UtilLucene.luceneConfig(LuceneFields.PATHOGEN_TYPE, null);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void missingLuceneDirPropertyLuceneConfig()  throws InitializationException
+    {
+	UtilLucene.luceneConfig(LuceneFields.PATHOGEN_TYPE, null);
+    }
+
+    @Test(expected=InitializationException.class)
+    public void badLuceneDirPropertyLuceneConfig() throws InitializationException
+    {
+	UtilLucene.luceneConfig(LuceneFields.PATHOGEN_TYPE, badDirProperties);
+    }
+    
+    //POSITIVE
+    @Test
+    public void succesfulLuceneConfig() throws InitializationException
+    {
+	UtilLucene.luceneConfig(LuceneFields.PATHOGEN_TYPE, goodProperties);
+    }
 
 
 }

@@ -8,12 +8,9 @@ public class LocationPopulator<T> extends BasePopulator{
     public LocationPopulator(){
 	recordType = HOST_TYPE;
 
-	addSortField(HOST_GENUS);
-	addSortField(HOST_SPECIES);
+	addSortFields(HOST_GENUS, HOST_SPECIES);
 
-	addDefaultSortField(HOST_GENUS);
-	addDefaultSortField(HOST_SPECIES);
-	addDefaultSortField(HOST_SUBSPECIFIC_TAXA);
+	addDefaultSortFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{

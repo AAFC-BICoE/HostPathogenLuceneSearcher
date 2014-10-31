@@ -13,17 +13,25 @@ abstract public class BasePopulator<T> implements Populator{
     private final static Logger LOG = Logger.getLogger(BasePopulator.class.getName()); 
 
     protected Set<String> validSortFieldSet = new HashSet<String>();
+    protected Set<String> validSearchFieldSet = new HashSet<String>();
     protected List<String> defaultSortFields = new ArrayList<String>();
     protected String primaryKeyField = PK;
-    protected String recordType = null;
 
+    protected String recordType = null;
+    protected Class classType = null;
+
+    public Class getProductClass(){
+	return classType;
+    }
 
     public String getRecordType(){
 	return recordType;
     }
 
-    public void addDefaultSortField(final String field){
-	defaultSortFields.add(field);
+    public void addDefaultSortFields(final String... sf){
+	for(String field: sf){
+	    defaultSortFields.add(field);
+	}
     }
 
     public List<String> getDefaultSortFields(){
@@ -38,12 +46,28 @@ abstract public class BasePopulator<T> implements Populator{
 	return validSortFieldSet;
     }
 
-    public void addSortField(final String s){
-	validSortFieldSet.add(s);
+    public void addSortFields(final String... sf){
+	for(String field: sf){
+	    validSortFieldSet.add(field);
+	}
     }
 
     public boolean isValidSortField(String s){
 	return validSortFieldSet.contains(s);
+    }
+
+    public Set<String>getValidSearchFieldSet(){
+	return validSearchFieldSet;
+    }
+
+    public void addSearchFields(final String... sf){
+	for(String field: sf){
+	    validSearchFieldSet.add(field);
+	}
+    }
+
+    public boolean isValidSearchField(String s){
+	return validSearchFieldSet.contains(s);
     }
 
     static final long longValue(Document doc, String fieldName) throws FailedPopulateException{

@@ -5,14 +5,19 @@ import java.util.List;
 import org.apache.lucene.document.Document;
 
 public interface Populator<T> extends LuceneFields{
+    public Class getProductClass();
     public T populate(Document d);
     public String getRecordType();
     public String getPrimaryKeyField();
 
-    public void addSortField(String s);
+    public void addSearchFields(String... s);
+    public boolean isValidSearchField(String s);
+    public Set<String>getValidSearchFieldSet();
+
+    public void addSortFields(String... s);
     public boolean isValidSortField(String s);
     public Set<String>getValidSortFieldSet();
 
-    public void addDefaultSortField(String s);
+    public void addDefaultSortFields(String... s);
     public List<String> getDefaultSortFields();
 }

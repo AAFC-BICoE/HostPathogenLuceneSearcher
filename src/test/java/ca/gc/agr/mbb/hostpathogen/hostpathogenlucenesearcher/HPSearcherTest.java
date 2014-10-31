@@ -39,6 +39,7 @@ public class HPSearcherTest{
 	Properties p = new Properties();
 	Searcher s = HPSearcher.newSearcher(p);
     }
+
     @Test(expected=InitializationException.class)
     public void luceneDirDoesNotExist() throws InitializationException{
 	Properties p = new Properties();
