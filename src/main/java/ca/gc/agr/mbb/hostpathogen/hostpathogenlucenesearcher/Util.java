@@ -45,35 +45,50 @@ public class Util{
 	}
     }
 
-    public static final void checkQueryParameters(final Map<String,List<String>>queryParameters) throws IllegalArgumentException{
-	checkQueryParameters(queryParameters, null);
-    }
-
-    public static final void checkQueryParameters(final Map<String,List<String>>queryParameters, Set<String> acceptableFields) throws IllegalArgumentException{
-	if(queryParameters == null){
-	    throw new IllegalArgumentException("queryParameters is null");
-	} 
-
-	if(queryParameters.size() == 0){
-	    throw new IllegalArgumentException("queryParameters  is zero length");
-	} 
-	for(String key: queryParameters.keySet()){
-	    if(key == null || key.length() == 0){
-		throw new IllegalArgumentException("queryParameters key=" + key + " is null or is zero length");
-	    }
-	    if(acceptableFields != null && !acceptableFields.contains(key)){
-		throw new IllegalArgumentException("Illegal search field:" + key);
-	    }
-
-	    List<String>values = queryParameters.get(key);
-	    if(values == null || values.size() == 0){
-		throw new IllegalArgumentException("queryParameters key=" + key + " has null values or is zero length");
-	    }
-	    for(String value: values){
-		
+    public static final void checkSortFields(final List<String>sortFields, Set<String> acceptableFields) throws IllegalArgumentException{
+	
+	for(String field: sortFields){
+	    if (! acceptableFields.contains(field)){
+		throw new IllegalArgumentException("Sort fields: [" + field + "] is not allowed; allowed fields:" + acceptableFields);	    
 	    }
 	}
     }
+
+
+    public static final void checkQueryParameters(final Map<String,List<String>>parameters, Set<String> acceptableFields) throws IllegalArgumentException{
+	if(parameters == null){
+	    throw new IllegalArgumentException("query parameters is null");
+	} 
+
+	if(parameters.size() == 0){
+	    throw new IllegalArgumentException("parameters  is zero length");
+	} 
+
+	if (acceptableFields == null || acceptableFields.size() == 0){
+	    return;
+	}
+
+	for(String key: parameters.keySet()){
+	    if(key == null || key.length() == 0){
+		throw new IllegalArgumentException("parameters key=" + key + " is null or is zero length");
+	    }
+	    if(acceptableFields != null && acceptableFields.size() != 0 && !acceptableFields.contains(key)){
+		throw new IllegalArgumentException("Illegal field:" + key);
+	    }
+
+	    List<String>values = parameters.get(key);
+	    if(values == null || values.size() == 0){
+		throw new IllegalArgumentException("parameters key=" + key + " has null values or is zero length");
+	    }
+	    for(String value: values){
+		if (value == null){
+		    throw new IllegalArgumentException("parameter value for key=" + key + " is null");
+		}
+	    }
+	}
+    }
+
+    
 
     public static final void checkList(List list, int limit){
 	if(list == null){
@@ -153,10 +168,31 @@ public class Util{
 	return stringSet;
     }
 
-    public static boolean listInSet(List<Object> list, Set<Object> set){
+    public static final boolean listInSet(List<Object> list, Set<Object> set){
 	return true;
     }
 
+    public static final void checkPopulator(Populator p, Class type) throws InitializationException{
+	
+	if (type != p.getProductClass()){
+	    throw new InitializationException("Search type does not match Populator class: type=" + type.getName() + "  productClass=" + p.getProductClass().getName());
+	}
+
+
+	if(p.getDefaultSortFields() == null || p.getDefaultSortFields().size() == 0){
+	    throw new InitializationException("Populator (" + p.getClass().getName() + ") has null or zero length default sort field");
+	}
+
+	if(p.getValidSortFieldSet() == null || p.getValidSortFieldSet().size() == 0){
+	    throw new InitializationException("Populator has null or zero length default sort field map");
+	}
+
+	if(!Util.listInSet(p.getDefaultSortFields(), p.getValidSortFieldSet())){
+	    throw new InitializationException("Default sort fields not in valid sort fields");
+	}
+
+    }
+    
 
 }//
 

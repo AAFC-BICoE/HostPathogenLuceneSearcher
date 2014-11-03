@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.List;
 import java.util.Properties;
@@ -49,12 +50,12 @@ public class UtilTest{
     @Test(expected=IllegalArgumentException.class)
     public void queryIsNull() throws IllegalArgumentException
     {
-	Util.checkQueryParameters(null);
+	Util.checkQueryParameters(null, new HashSet<String>());
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void queryIsZeroLength() throws IllegalArgumentException{
-	Util.checkQueryParameters(new HashMap<String,List<String>>());
+	Util.checkQueryParameters(new HashMap<String,List<String>>(), new HashSet<String>());
     }
 
     @Test
@@ -63,7 +64,7 @@ public class UtilTest{
 	List<String>values = new ArrayList<String>();
 	values.add("ali*");
 	queries.put("genus", values);
-	Util.checkQueryParameters(queries);
+	Util.checkQueryParameters(queries, null);
     }
 
 
@@ -84,8 +85,8 @@ public class UtilTest{
     static Properties emptyProperties = new Properties();
     static Properties badDirProperties = new Properties();
     static{
-	goodProperties.put(Searcher2.LUCENE_INDICES_BASE_DIR, HPSearcher2Test.GOOD_LUCENE_DIR);
-	badDirProperties.put(Searcher2.LUCENE_INDICES_BASE_DIR, HPSearcher2Test.BAD_LUCENE_DIR);
+	goodProperties.put(Searcher.LUCENE_INDICES_BASE_DIR, HPSearcherTest.GOOD_LUCENE_DIR);
+	badDirProperties.put(Searcher.LUCENE_INDICES_BASE_DIR, HPSearcherTest.BAD_LUCENE_DIR);
     }
     
     ///NEGATIVE

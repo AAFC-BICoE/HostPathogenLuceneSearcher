@@ -9,7 +9,7 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 
-public class HPSearcherMock implements Searcher
+public class HPSearcherMock //implements Searcher
 {
     public static final int NUM_IDS = 100;
 
@@ -76,10 +76,11 @@ public class HPSearcherMock implements Searcher
   * @return Searcher 
   * @exception InitializationException
   */ 
-    public Searcher init(Properties p) throws InitializationException{
-	// get 
-	return this;
-    }
+    
+    // public Searcher init(Properties p) throws InitializationException{
+    // 	// get 
+    // 	return this;
+    // }
 
 
     // PATHOGEN
@@ -114,7 +115,7 @@ public class HPSearcherMock implements Searcher
 
 
     public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final List<String> sortFields,final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkQueryParameters(queryParameters);
+	//Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(pathogenIds, offset, limit);
     }
@@ -157,7 +158,7 @@ public class HPSearcherMock implements Searcher
 
     }
     public List<Long>searchHosts(final Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkQueryParameters(queryParameters);
+	//Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
 	Util.checkOffsetAndLimit(offset, limit);
 	return Util.sliceList(hostIds, offset, limit);
     }

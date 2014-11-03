@@ -137,7 +137,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     }
 
     public long countSearch(final Map<String,List<String>>queryParameters) throws IndexFailureException{
-	Util.checkQueryParameters(queryParameters);
+	Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
 	//return (long)all().totalHits;
 	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType()), populator.getDefaultSortFields(), analyzer, searcher).totalHits;
     }
@@ -145,7 +145,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 
     public List<Long> search(final Map<String,List<String>>queryParameters, final long offset, final int limit) throws IndexFailureException, IllegalOffsetLimitException, IllegalArgumentException{
 	Util.checkOffsetAndLimit(offset, limit);
-	Util.checkQueryParameters(queryParameters);
+	Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
 	
 	List<String> recordType = new ArrayList<String>(1);
 	recordType.add(populator.getRecordType());

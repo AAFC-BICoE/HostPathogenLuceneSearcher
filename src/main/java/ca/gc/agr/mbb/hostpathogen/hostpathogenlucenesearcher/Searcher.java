@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public interface Searcher{
+public interface Searcher<T>{
 
      /**
      * Initialize the Searcher. Must be run before any other methods.
@@ -18,45 +18,15 @@ public interface Searcher{
      * @return Searcher
      * @throws InitializationException <<Description>>
      */
-    public Searcher init(Properties p) throws InitializationException;
+    public void init(LuceneConfig lc) throws InitializationException;
 
-    // PATHOGEN
-    // NEW public List<Long>getAll(String noun, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public List<Pathogen>getPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
-    public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException;
-    public long getAllPathogensCount() throws IndexFailureException;
-    public long searchPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException;
+    public List<Long>getAll(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException;
+    public List<Long>search(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException;
+    public List<T>get(final List<Long> ids) throws IllegalArgumentException, IndexFailureException, InitializationException;
+    public T get(final Long id) throws IllegalArgumentException, IndexFailureException, InitializationException;
+    public long getAllCount() throws IndexFailureException, InitializationException;
+    public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException, InitializationException;
 
-
-    // HOST
-    public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException, IndexFailureException;
-    public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public List<Long>searchHosts(Map<String,List<String>>queryPrameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public long getAllHostsCount() throws IndexFailureException;
-    public long searchHostsCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException;
-
-
-    
-    // HOST-PATHOGEN
-    public List<Long>getAllHostPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public long getAllHostPathogensCount() throws IndexFailureException;
-    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException;
-    public long searchHostPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException;
-    public List<HostPathogen>getHostPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException;
-    public HostPathogen getHostPathogen(final Long id) throws IllegalArgumentException, IndexFailureException;
-    // // Relations
-    public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
-    public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
-    public List<Long>getLocationsByHostPathogen(long hostPathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
-
-
-    // Reference
-
-
-    // CONSTANTS1
-    public static final String MOCK_PROPERTY = "mock";
     public static final String LUCENE_INDICES_BASE_DIR = "lucene_indices_base_dir";
 
     public static final int MAX_REQUESTED_IDS = 100;

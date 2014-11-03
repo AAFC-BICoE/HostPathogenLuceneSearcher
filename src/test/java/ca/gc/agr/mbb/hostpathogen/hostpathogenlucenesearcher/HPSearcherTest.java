@@ -27,180 +27,232 @@ public class HPSearcherTest{
     protected static final String TMP_FILE="./testFile_" + System.nanoTime();
 
     protected static final String GOOD_HOST_GENUS="Abies";
+    protected static final String BAD_HOST_GENUS="ABCDEFGHIJK555";
     protected static final String GOOD_PATHOGEN_GENUS="Basidiodendron";
+
+    protected static final String A_STAR_WILDCARD="a*";
 
     protected static final Long HUGE_ID = new Long(99999999999999l);
 
-
-    // init
-    // FAIL tests
-    @Test(expected=InitializationException.class)
-    public void missingLuceneDirProperty() throws InitializationException{
-	Properties p = new Properties();
-	Searcher s = HPSearcher.newSearcher(p);
-    }
-
-    @Test(expected=InitializationException.class)
-    public void luceneDirDoesNotExist() throws InitializationException{
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, BAD_LUCENE_DIR);
-	Searcher s = HPSearcher.newSearcher(p);
-    }
-
-    @Test(expected=InitializationException.class)
-    public void luceneDirUnreadable() throws InitializationException{
-	File newDir = null;
+    static LuceneConfig pathogenConfig;
+    static LuceneConfig hostConfig;
+    static{
 	try{
-	    newDir = File.createTempFile("temp", Long.toString(System.nanoTime()));
-	}catch(java.io.IOException e){
-	    return; // This should not happen, but if does returning now will cause the test to fail...
+	    pathogenConfig = UtilLucene.luceneConfig(LuceneFields.PATHOGEN_TYPE, UtilTest.goodProperties);
+	    hostConfig = UtilLucene.luceneConfig(LuceneFields.HOST_TYPE, UtilTest.goodProperties);
+	}catch(InitializationException e){
+	    e.printStackTrace();
 	}
-	newDir.setReadable(false);
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, BAD_LUCENE_DIR);
-	Searcher s = HPSearcher.newSearcher(p);
     }
 
-    @Test(expected=InitializationException.class)
-    public void luceneDirNotDir() throws InitializationException{
-	File tmpDir = new File(TMP_DIR);
-	tmpDir.deleteOnExit();
-	if(!tmpDir.mkdir()){
-	    return;
-	}
-	File tmpFile = new File(tmpDir, TMP_FILE);
+    @Test
+    public void shouldConstructOK() throws InitializationException{
+	HPSearcher<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
+	Assert.assertTrue(hps != null);
+    }
+
+   @Test
+    public void shouldInitOKWithGoodConfig() throws InitializationException{
+       HPSearcher<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
+       hps.init(pathogenConfig);
 	
-	try{
-	    Util.touch(tmpFile);
-	}catch(Exception e){
-	    return; // this will cause the test to fail
-	}
-	tmpFile.deleteOnExit();
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, tmpFile.getAbsolutePath());
-	Searcher s = HPSearcher.newSearcher(p);
+    }
+
+    @Test(expected=InitializationException.class)
+   public void shouldFailWithNullConfig() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(null);
+    }
+
+   @Test
+   public void shouldGetAllPathogens() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
+       hps.init(pathogenConfig);
+       List<Long> all = hps.getAll(1,10);	   
+       Assert.assertTrue(all != null && all.size() >0);
+    }
+
+   @Test
+   public void shouldGetAllHosts() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(hostConfig);
+       List<Long> all = hps.getAll(1,10);	   
+       Assert.assertTrue(all != null && all.size() >0);
+    }
+
+    @Test(expected=IllegalOffsetLimitException.class)
+    public void shouldFailWithNegativeOffset() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(hostConfig);
+       List<Long> all = hps.getAll(-1,10);	   
+    }
+
+    @Test(expected=IllegalOffsetLimitException.class)
+    public void shouldFailWithBadLimit() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(hostConfig);
+       List<Long> all = hps.getAll(10,-1);	   
+    }
+
+    @Test(expected=IllegalOffsetLimitException.class)
+    public void shouldFailWithTooLargeOffset() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(hostConfig);
+       List<Long> all = hps.getAll(10,1000);	   
     }
 
 
-    @Test(expected=TooManyIdsException.class)
-    public void requestTooManyPathogenIds() throws InitializationException{
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, "./luceneIndexes");
-	Searcher s = HPSearcher.newSearcher(p);
-	List<Long> ids = new ArrayList<Long>();
-	for(int i=21; i<1000; i++){
-	    ids.add(new Long(i));
-	}
-	try{
-	    s.getPathogens(ids);
-	}catch(IndexFailureException e){
-	    // Not supposed to happen
-	    e.printStackTrace();
-	    throw new NullPointerException();
-	}
+
+   @Test
+   public void shouldGetAllHostsCount() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(hostConfig);
+       long allCount = hps.getAllCount();	   
+       Assert.assertTrue(allCount >0);
     }
 
-    @Test(expected=TooManyIdsException.class)
-    public void requestTooManyHostIds() throws InitializationException{
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, "./luceneIndexes");
-	Searcher s = HPSearcher.newSearcher(p);
-	List<Long> ids = new ArrayList<Long>();
-	for(int i=21; i<1000; i++){
-	    ids.add(new Long(i));
-	}
-	try{
-	    s.getHosts(ids);
-	}catch(IndexFailureException e){
-	    // Not supposed to happen
-	    e.printStackTrace();
-	    throw new NullPointerException();
-	}
+    @Test(expected=InitializationException.class)
+   public void shouldFailGetAllWithMismatcheNouns() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(pathogenConfig);
+       List<Long> all = hps.getAll(1,10);	   
+       Assert.assertTrue(all != null && all.size() >0);
     }
 
-    @Test
-    public void getPathogensdByIdSuccessfully() throws InitializationException{
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, GOOD_LUCENE_DIR);
-	Searcher s = HPSearcher.newSearcher(p);
-	List<Long> ids = new ArrayList<Long>();
-	for(int i=21; i<40; i++){
-	    ids.add(new Long(i));
-	}
-	List<Pathogen>results = null;
-	try{
-	    results = s.getPathogens(ids);
-	}catch(IndexFailureException e){
-	    // Not supposed to happen
-	    e.printStackTrace();
-	    throw new NullPointerException();
-	}
-	LOG.info("Num pathogens in search: " +results.size());
-	//Assert.assertTrue(results.size() > 0);
+   @Test
+   public void shouldGetSinglePathogenById() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
+       hps.init(pathogenConfig);
+       List<Long> all = hps.getAll(1,10);	
+
+       Pathogen pathogen = hps.get(all.get(0));
+       Assert.assertTrue(pathogen != null);
     }
 
-    @Test
-    public void getHostByIdSuccessfully() throws InitializationException{
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, GOOD_LUCENE_DIR);
-	Searcher s = HPSearcher.newSearcher(p);
-	List<Long> ids = new ArrayList<Long>();
-	for(int i=21; i<40; i++){
-	    ids.add(new Long(i));
-	}
-	List<Host>results = null;
-	try{
-	    results = s.getHosts(ids);
-	}catch(IndexFailureException e){
-	    // Not supposed to happen
-	    e.printStackTrace();
-	    throw new NullPointerException();
-	}
-	Assert.assertTrue(results.size() > 0);
+   @Test
+   public void shouldGetSingleHostById() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(hostConfig);
+       List<Long> all = hps.getAll(1,10);	
+
+       Host host = hps.get(all.get(0));
+       Assert.assertTrue(host != null);
     }
 
 
     @Test
-    public void searchHostSuccessfully() throws InitializationException{
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, GOOD_LUCENE_DIR);
-	Searcher s = HPSearcher.newSearcher(p);
+    public void searchHostSuccessfully() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 1,3);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
 
+    @Test
+    public void searchHostCountSuccessfully() throws IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	long results = hps.searchCount(queryParameters);
+	Assert.assertTrue(results>0l);
+    }
+
+    @Test
+    public void searchHostSuccessfullyWithSorting() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 1,20);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+    public void shouldFailWithSearchHostWithBadSortField() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, badHostSortFields(), 1,20);
+    }
+
+    @Test
+    public void searchHostSuccessfullyWithSortingValidated() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, A_STAR_WILDCARD);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 1,3);
+	Assert.assertTrue(results != null && results.size()>1 );
+    }
+
+    @Test(expected=IllegalOffsetLimitException.class)
+    public void searchShouldFailWithBadOffset() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), -1,3);
+    }
+
+    @Test(expected=IllegalOffsetLimitException.class)
+    public void searchShouldFailWithBadLimit() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 10,-3);
+    }
+
+    @Test(expected=IllegalOffsetLimitException.class)
+    public void searchShouldFailWithTooBigLimit() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 10,9999);
+    }
+
+
+    @Test(expected=IllegalArgumentException.class)
+    public void searchShouldFailwithBadSearchFields() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.PATHOGEN_GENUS, null);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 1,3);
+    }
+
+    @Test
+    public void searchShouldReturnZeroResultsWithBadSearch() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, BAD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 1,15);
+	Assert.assertTrue(results != null && results.size()==0);
+    }
+
+    @Test
+    public void searchShouldReturnResultsWithGoodSearch() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = makeSimpleQuery(LuceneFields.HOST_GENUS, GOOD_HOST_GENUS);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	hps.init(hostConfig);
+	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 1,15);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+    Map<String, List<String>> makeSimpleQuery(String queryField, String queryString){
 	List<String> values = new ArrayList<String>();
-	values.add("Abies");
+	values.add(queryString);
+
 	Map<String, List<String>> queryParameters = new HashMap<String, List<String>>();
-	queryParameters.put(LuceneFields.HOST_GENUS, values);
-
-	List<Long>results = null;
-	try{
-	    results = s.searchHosts(queryParameters, null, 0, 20);
-	}catch(IndexFailureException e){
-	    // Not supposed to happen
-	    e.printStackTrace();
-	    throw new NullPointerException();
-	}catch(IllegalOffsetLimitException e){
-	    // Not supposed to happen
-	    e.printStackTrace();
-	    throw new NullPointerException();
-	}
-	Assert.assertTrue(results != null);
-	Assert.assertTrue(results.size() >= 0);
-    }
-
-
-    protected static final  Map<String,List<String>>makeParameters(final String fieldName, final String parameterValue){
-	Map<String,List<String>>queryParameters = new HashMap<String, List<String>>();
-	List<String>queryParameter = new ArrayList<String>();
-	queryParameter.add(parameterValue);
-	queryParameters.put(fieldName, queryParameter);
-
+	queryParameters.put(queryField, values);
 	return queryParameters;
+	
     }
 
-    protected static Searcher goodSearcher() throws InitializationException{
-	Properties p = new Properties();
-	p.setProperty(Searcher.LUCENE_INDICES_BASE_DIR, HPSearcherTest.GOOD_LUCENE_DIR);
-	return HPSearcher.newSearcher(p);
+    private List<String> goodHostSortFields(){
+	List<String> sf = new ArrayList<String>();
+	sf.add(LuceneFields.HOST_GENUS);
+	return sf;
     }
 
+    private List<String> badHostSortFields(){
+	List<String> sf = new ArrayList<String>();
+	sf.add(LuceneFields.PATHOGEN_GENUS);
+	return sf;
+    }
 }
