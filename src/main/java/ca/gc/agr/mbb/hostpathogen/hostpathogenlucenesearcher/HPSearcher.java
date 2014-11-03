@@ -45,6 +45,7 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
     }
 
 
+    @Override
     public void init(LuceneConfig lc) throws InitializationException{
 	lock.lock();
 	try{
@@ -73,12 +74,13 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 	}
     }
 
-    public void checkInit() throws InitializationException{
+    private void checkInit() throws InitializationException{
 	if(!initted){
 	    throw new InitializationException("init() not called");
 	}
     }
 
+    @Override
     public List<Long>getAll(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
 	checkInit();
 	Util.checkOffsetAndLimit(offset, limit );
@@ -100,6 +102,7 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 
     }
 
+    @Override
     public List<T>get(final List<Long> ids) throws IllegalArgumentException, IndexFailureException,InitializationException{
 	checkInit();
 	Util.checkIds(ids);
@@ -129,6 +132,7 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 	return nouns;
     }
 
+    @Override
     public T get(final Long id) throws IllegalArgumentException, IndexFailureException,InitializationException{
 	checkInit();
 	List<Long>ids = new ArrayList<Long>(1);
@@ -143,11 +147,13 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 	return listOfNouns.get(0);
     }
 
+    @Override
     public long getAllCount() throws IndexFailureException,InitializationException{
 	checkInit();
 	return (long)UtilLucene.all(populator.getRecordType(), populator.getDefaultSortFields(), analyzer, searcher).scoreDocs.length;
     }
 
+    @Override
     public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException,InitializationException{
 	checkInit();
 	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType()), populator.getDefaultSortFields(), analyzer, searcher).totalHits;

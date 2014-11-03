@@ -96,7 +96,7 @@ public class HPSearcherTest{
 
     @Test(expected=IllegalOffsetLimitException.class)
     public void shouldFailWithTooLargeOffset() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
-       HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
+	HPSearcher<Host> hps = new HPSearcher<Host>(Host.class);
        hps.init(hostConfig);
        List<Long> all = hps.getAll(10,1000);	   
     }

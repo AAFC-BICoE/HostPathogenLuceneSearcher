@@ -9,7 +9,7 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 
-public class HPSearcherMock //implements Searcher
+public class HPSearcherMock<T> implements Searcher<T>
 {
     public static final int NUM_IDS = 100;
 
@@ -77,120 +77,44 @@ public class HPSearcherMock //implements Searcher
   * @exception InitializationException
   */ 
     
-    // public Searcher init(Properties p) throws InitializationException{
-    // 	// get 
-    // 	return this;
-    // }
+    public Searcher init(Properties p) throws InitializationException{
+    	// get 
+    	return this;
+    }
 
-
-    // PATHOGEN
-    public List<Pathogen>getPathogens(final List<Long> ids)
-	throws IllegalArgumentException{
+    @Override
+    public void init(LuceneConfig lc) throws InitializationException{
 	
-	Util.checkList(ids, NUM_IDS);
-	return pathogens.subList(0, NUM_IDS);
     }
 
-    public Pathogen getPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
-	List<Long>ids = new ArrayList<Long>(1);
-	ids.add(id);
-	return getPathogens(ids).get(0);
+    @Override
+    public List<Long>getAll(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	return new ArrayList<Long>();
+    }
+   
+    @Override
+    public List<Long>search(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	return new ArrayList<Long>();
     }
 
-    public List<Long>getPathogenByHost(long hostId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException{
-	if(true){
-	    throw new NullPointerException();
-	}
+
+    public List<T>get(final List<Long> ids) throws IllegalArgumentException, IndexFailureException, InitializationException{
+	return new ArrayList<T>();
+    }
+
+    @Override
+     public T get(final Long id) throws IllegalArgumentException, IndexFailureException, InitializationException{
 	return null;
     }
-
-    public List<Long>getAllPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffsetAndLimit(offset, limit);
-	return Util.sliceList(pathogenIds, offset, limit);
+    
+    @Override
+    public long getAllCount() throws IndexFailureException, InitializationException{
+	return 10l;
     }
-
-    public long getAllPathogensCount() throws  IllegalArgumentException{
-	return pathogenIds.size();
+    
+    @Override
+	public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException, InitializationException{
+	return 10l;
     }
-
-
-    public List<Long>searchPathogens(Map<String,List<String>>queryParameters, final List<String> sortFields,final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	//Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
-	Util.checkOffsetAndLimit(offset, limit);
-	return Util.sliceList(pathogenIds, offset, limit);
-    }
-
-    public long searchPathogensCount(Map<String,List<String>>queryParmeters) throws IllegalArgumentException{
-	if(true){
-	    throw new NullPointerException();
-	}
-	return 17l;
-    }
-
-
-    // HOST
-    public long getAllHostsCount() throws IndexFailureException{
-	return 100l;
-    }
-
-    public long searchHostsCount(Map<String,List<String>>queryParmeters) throws IllegalArgumentException{
-	if(true){
-	    throw new NullPointerException();
-	}
-	return 17l;
-    }
-
-    public List<Host>getHosts(List<Long> ids) throws IllegalArgumentException{
-	Util.checkList(ids, NUM_IDS);
-	return hosts.subList(0, ids.size());
-    }
-
-    public List<Long>getHostByPathogen(long pathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException{
-	if(true){
-	    throw new NullPointerException();
-	}
-	return null;
-    }
-
-    public List<Long>getAllHosts(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	Util.checkOffsetAndLimit(offset, limit);
-	return Util.sliceList(hostIds, offset, limit);
-
-    }
-    public List<Long>searchHosts(final Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException{
-	//Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
-	Util.checkOffsetAndLimit(offset, limit);
-	return Util.sliceList(hostIds, offset, limit);
-    }
-
-
-    // HOST-PATHOGEN
-    public List<Long>getAllHostPathogens(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
-	return null;
-    }
-
-    public long getAllHostPathogensCount() throws IndexFailureException{
-	return 0l;
-    }
-
-    public List<Long>searchHostPathogens(Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
-	return null;
-    }
-
-    public long searchHostPathogensCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException{
-	return 0l;
-    }
-
-    public List<HostPathogen>getHostPathogens(final List<Long> ids) throws IllegalArgumentException, IndexFailureException{
-	return null;
-    }
-
-    public HostPathogen getHostPathogen(final Long id) throws IllegalArgumentException, IndexFailureException{
-	return null;
-    }
-
-    public List<Long>getLocationsByHostPathogen(long hostPathogenId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
-	return null;
-    }
-
 }
+
