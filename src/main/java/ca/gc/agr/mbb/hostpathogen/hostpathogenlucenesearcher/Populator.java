@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import java.util.Set;
 import java.util.List;
+import java.util.Map;
 import org.apache.lucene.document.Document;
 
 public interface Populator<T> extends LuceneFields{
@@ -18,6 +19,13 @@ public interface Populator<T> extends LuceneFields{
     public boolean isValidSortField(String s);
     public Set<String>getValidSortFieldSet();
 
+
+
     public void addDefaultSortFields(String... s);
     public List<String> getDefaultSortFields();
+
+    public void addRelation(Class type, String field);
+    public String getRelationField(Class type);
+    public boolean isValidRelation(Class type);
+    public Map<Class, String>getValidRelations();
 }

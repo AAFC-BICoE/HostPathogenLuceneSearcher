@@ -19,14 +19,16 @@ public class LuceneIndexSearcherTest{
     // FAIL tests
     @Test(expected=InitializationException.class)
     public void initWithNullLuceneSearcher() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	//LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	LuceneIndexSearcher<Pathogen> lis = new LuceneIndexSearcher<Pathogen>();
 	PathogenPopulator pap = new PathogenPopulator();
 	lis.init(null, UtilLucene.makeAnalyzer(), pap);
     }
 
     @Test(expected=InitializationException.class)
     public void initWithNullLuceneAnalyzer() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	//LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	LuceneIndexSearcher lis = new LuceneIndexSearcher();
 	PathogenPopulator pap = new PathogenPopulator();
 	try{
 	    UtilLucene.openAndWriteLuceneIndex(luceneIndex);
@@ -40,7 +42,8 @@ public class LuceneIndexSearcherTest{
 
     @Test(expected=InitializationException.class)
     public void initWithNullPopulator() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	//LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	LuceneIndexSearcher lis = new LuceneIndexSearcher();
 	try{
 	    UtilLucene.openAndWriteLuceneIndex(luceneIndex);
 	    lis.init(UtilLucene.makeIndexSearcher(luceneIndex), UtilLucene.makeAnalyzer(), null);
@@ -53,7 +56,8 @@ public class LuceneIndexSearcherTest{
     // SUCCESS tests
     @Test
     public void goodLuceneDirAndGoodPopulator() throws InitializationException{
-	LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	//LuceneIndexSearcher lis = new LuceneIndexSearcher(Pathogen.class);
+	LuceneIndexSearcher lis = new LuceneIndexSearcher();
 	PathogenPopulator pap = new PathogenPopulator();
 	try{
 	    lis.init(UtilLucene.makeIndexSearcher(luceneIndex), UtilLucene.makeAnalyzer(), pap);

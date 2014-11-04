@@ -57,7 +57,9 @@ public class UtilLucene implements LuceneFields{
 	return queryMap;
     }
 
-    public static final List<Long> topDocsToIds(final TopDocs td, final IndexSearcher searcher, final String primaryKeyField, final long offset, final int limit) throws IndexFailureException{
+
+    public static final List<Long> topDocsToIds(final TopDocs td, final IndexSearcher searcher, 
+						final String primaryKeyField, final long offset, final int limit) throws IndexFailureException{
 	List<Long> ids = new ArrayList<Long>();
 	ScoreDoc[] scoreDocs = td.scoreDocs;
 	if (offset <= scoreDocs.length){
@@ -212,6 +214,7 @@ public class UtilLucene implements LuceneFields{
 	}
 	LOG.info("Opening Lucene index for directory: " + luceneDir);
 
+	// FIXX analyzer and indexSearcher need to be singletons
 	LuceneConfig lc = new LuceneConfig();
 	lc.noun = noun;
 	try{
@@ -251,4 +254,12 @@ public class UtilLucene implements LuceneFields{
 	return lc;
     }
 
+    public static final List<Long> runQueryForIds(final Map<String,List<String>>queryParameters, long offset, int limit, LuceneConfig lc) throws IllegalArgumentException, IndexFailureException{
+	String query = buildQuery(queryParameters, lc.populator.getRecordType());
+	TopDocs td = runQuery(query, lc.populator.getDefaultSortFields(), lc.analyzer, lc.searcher);
+	List<Long> resultIds = topDocsToIds(td, lc.searcher, lc.populator.getPrimaryKeyField(), offset, limit);
+	//return topDocsToIds(lc.populator.getDefaultSortFields(), lc.analyzer, lc.searcher), lc.searcher, lc.populator.getPrimaryKeyField(), offset, limit);
+	return resultIds;
+	
+    }
 }

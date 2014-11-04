@@ -116,5 +116,11 @@ public class HPSearcherMock<T> implements Searcher<T>
 	public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException, InitializationException{
 	return 10l;
     }
+
+    @Override public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
+	return null;
+    }
+
+
 }
 

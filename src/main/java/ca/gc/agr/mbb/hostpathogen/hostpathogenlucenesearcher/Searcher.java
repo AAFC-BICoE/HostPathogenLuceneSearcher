@@ -21,11 +21,18 @@ public interface Searcher<T>{
     public void init(LuceneConfig lc) throws InitializationException;
 
     public List<Long>getAll(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException;
+
     public List<Long>search(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException;
+
     public List<T>get(final List<Long> ids) throws IllegalArgumentException, IndexFailureException, InitializationException;
+
     public T get(final Long id) throws IllegalArgumentException, IndexFailureException, InitializationException;
+
     public long getAllCount() throws IndexFailureException, InitializationException;
+
     public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException, InitializationException;
+
+    public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
 
     public static final String LUCENE_INDICES_BASE_DIR = "lucene_indices_base_dir";
 

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import org.apache.lucene.search.IndexSearcher;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
@@ -27,10 +29,7 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
     private final static Logger LOG = Logger.getLogger(HPSearcher.class.getName()); 
     public final static int MAX_IDS = 50;
 
-    private IndexSearcher searcher = null;
-    private Analyzer analyzer = null;
-    private Populator populator = null;
-
+    private LuceneConfig luceneConfig = null;
     public static int LIMIT_MAX = 50;
     
     private String luceneDir = null;
@@ -40,10 +39,12 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 
     private final ReentrantLock lock = new ReentrantLock();
     
-    public HPSearcher(Class type){
-	this.type = type;
+    public HPSearcher(){
+
     }
 
+
+    
 
     @Override
     public void init(LuceneConfig lc) throws InitializationException{
@@ -62,11 +63,9 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 		throw new InitializationException(e);
 	    }
 
-	    Util.checkPopulator(lc.populator, type);
+	    //Util.checkPopulator(lc.populator, type);
 
-	    this.populator = lc.populator;
-	    this.searcher = lc.searcher;
-	    this.analyzer = lc.analyzer;
+	    this.luceneConfig = lc;
 	    initted = true;
 	}
 	finally {
@@ -83,23 +82,19 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
     @Override
     public List<Long>getAll(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
 	checkInit();
-	Util.checkOffsetAndLimit(offset, limit );
-	return UtilLucene.topDocsToIds(UtilLucene.all(populator.getRecordType(), populator.getDefaultSortFields(), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
+	Util.checkOffsetAndLimit(offset, limit);
+	return UtilLucene.runQueryForIds(null, offset, limit, luceneConfig);
     }
 
     @Override
-	public List<Long>search(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException,InitializationException{
+    public List<Long>search(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException,InitializationException{
 	checkInit();
-	Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
-	Util.checkSortFields(sortFields, populator.getValidSortFieldSet());
+	Util.checkQueryParameters(queryParameters, luceneConfig.populator.getValidSearchFieldSet());
+	Util.checkSortFields(sortFields, luceneConfig.populator.getValidSortFieldSet());
 	Util.checkOffsetAndLimit(offset, limit);
 	Util.checkOffsetAndLimit(offset, limit);
 	
-	List<String> recordType = new ArrayList<String>(1);
-	recordType.add(populator.getRecordType());
-
-	return UtilLucene.topDocsToIds(UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType()), populator.getDefaultSortFields(), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
-
+	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig);
     }
 
     @Override
@@ -113,16 +108,16 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 	    throw new TooManyIdsException("Too many ids: " + ids.size() +"; larger than max=" + MAX_IDS);
 	}
 
-	String queryString = UtilLucene.buildQuery(UtilLucene.makeIdsQueryMap(populator.getPrimaryKeyField(), ids), populator.getRecordType());
+	String queryString = UtilLucene.buildQuery(UtilLucene.makeIdsQueryMap(luceneConfig.populator.getPrimaryKeyField(), ids), luceneConfig.populator.getRecordType());
 	LOG.info("**** query=" + queryString);
 	List<T>nouns = null;
 	try{
-	    TopDocs td = UtilLucene.runQuery(queryString, populator.getDefaultSortFields(), analyzer, searcher, false);
+	    TopDocs td = UtilLucene.runQuery(queryString, luceneConfig.populator.getDefaultSortFields(), luceneConfig.analyzer, luceneConfig.searcher, false);
 	    LOG.info("**** Totalhits=" + td.totalHits);
 	    nouns = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
-		Document doc = searcher.doc(sd.doc);
-		nouns.add((T)populator.populate(doc));
+		Document doc = luceneConfig.searcher.doc(sd.doc);
+		nouns.add((T)luceneConfig.populator.populate(doc));
 		LOG.info(sd.doc + ":" + doc);
 	    }
 	}catch(Exception e){
@@ -150,13 +145,27 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
     @Override
     public long getAllCount() throws IndexFailureException,InitializationException{
 	checkInit();
-	return (long)UtilLucene.all(populator.getRecordType(), populator.getDefaultSortFields(), analyzer, searcher).scoreDocs.length;
+	return (long)UtilLucene.all(luceneConfig.populator.getRecordType(), luceneConfig.populator.getDefaultSortFields(), luceneConfig.analyzer, luceneConfig.searcher).scoreDocs.length;
     }
 
     @Override
     public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException,InitializationException{
 	checkInit();
-	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType()), populator.getDefaultSortFields(), analyzer, searcher).totalHits;
+	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, luceneConfig.populator.getRecordType()), luceneConfig.populator.getDefaultSortFields(), luceneConfig.analyzer, luceneConfig.searcher).totalHits;
     }
 
+    @Override
+    public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
+	if(!luceneConfig.populator.isValidRelation(type)){
+	    throw new IllegalArgumentException("Not valid relation class: " + type.getName());
+	}
+
+	Map<String,List<String>>queryParameters = new HashMap<String,List<String>>();
+	List<String> fieldQuery = new ArrayList<String>();
+	fieldQuery.add(Long.toString(foreignKeyId));
+
+	queryParameters.put(luceneConfig.populator.getRelationField(type), fieldQuery);
+
+	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig);
+    }
 }

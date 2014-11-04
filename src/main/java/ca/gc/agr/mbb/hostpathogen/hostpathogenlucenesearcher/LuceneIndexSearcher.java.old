@@ -35,13 +35,13 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     private final static Logger LOG = Logger.getLogger(LuceneIndexSearcher.class.getName()); 
     public final static int MAX_IDS = 50;
 
-    //private Class<T> type;
+    private Class<T> type;
 
     private IndexSearcher searcher = null;
     private Analyzer analyzer = null;
     private Populator populator = null;
 
-    public LuceneIndexSearcher(){
+    private LuceneIndexSearcher(){
 
     }
 
@@ -49,12 +49,11 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	if (type == null){
 	    throw new NullPointerException("Type cannot be null");
 	}
-	//this.type = type;
+	this.type = type;
     }
 
     public T newInstance() throws InstantiationException, IllegalAccessException{
-	//return type.newInstance();
-	return null;
+      return type.newInstance();
     }
 
     public void init(final IndexSearcher searcher, final Analyzer analyzer, final Populator populator) throws InitializationException{
