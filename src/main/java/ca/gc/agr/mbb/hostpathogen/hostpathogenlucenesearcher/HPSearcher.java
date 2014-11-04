@@ -25,7 +25,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-public class HPSearcher<T> implements Searcher<T>, LuceneFields{
+public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     private final static Logger LOG = Logger.getLogger(HPSearcher.class.getName()); 
     public final static int MAX_IDS = 50;
 
@@ -33,14 +33,17 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
     public static int LIMIT_MAX = 50;
     
     private String luceneDir = null;
-    private Class type;
-
     private boolean initted=false;
 
     private final ReentrantLock lock = new ReentrantLock();
+    private Class genericClass;
     
-    public HPSearcher(){
+    private HPSearcher(){
 
+    }
+
+    public HPSearcher(Class genericClass){
+	this.genericClass = genericClass;
     }
 
 
@@ -53,7 +56,6 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 	    if (initted == true){
 		throw new InitializationException("init() already called!");
 	    }
-
 	    try{
 		Util.isNull(lc);
 		Util.isNull(lc.searcher);
@@ -63,12 +65,13 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 		throw new InitializationException(e);
 	    }
 
-	    //Util.checkPopulator(lc.populator, type);
+	    Util.checkPopulator(lc.populator, genericClass);
 
 	    this.luceneConfig = lc;
 	    initted = true;
-	}
-	finally {
+	}catch(Exception e){
+	    throw new InitializationException(e);
+	}finally {
 	    lock.unlock();
 	}
     }
@@ -168,4 +171,6 @@ public class HPSearcher<T> implements Searcher<T>, LuceneFields{
 
 	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig);
     }
+
 }
+

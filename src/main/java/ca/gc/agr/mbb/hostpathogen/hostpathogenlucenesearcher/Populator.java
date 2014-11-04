@@ -19,8 +19,6 @@ public interface Populator<T> extends LuceneFields{
     public boolean isValidSortField(String s);
     public Set<String>getValidSortFieldSet();
 
-
-
     public void addDefaultSortFields(String... s);
     public List<String> getDefaultSortFields();
 

@@ -9,7 +9,7 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
 
-public class HPSearcherMock<T> implements Searcher<T>
+public class HPSearcherMock<T> implements SearcherDao<T>
 {
     public static final int NUM_IDS = 100;
 
@@ -77,7 +77,7 @@ public class HPSearcherMock<T> implements Searcher<T>
   * @exception InitializationException
   */ 
     
-    public Searcher init(Properties p) throws InitializationException{
+    public SearcherDao init(Properties p) throws InitializationException{
     	// get 
     	return this;
     }

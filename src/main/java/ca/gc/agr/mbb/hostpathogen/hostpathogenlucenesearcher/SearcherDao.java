@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public interface Searcher<T>{
+public interface SearcherDao<T>{
 
      /**
      * Initialize the Searcher. Must be run before any other methods.

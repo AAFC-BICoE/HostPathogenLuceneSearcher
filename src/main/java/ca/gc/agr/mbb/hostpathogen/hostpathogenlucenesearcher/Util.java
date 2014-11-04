@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.PrintWriter;
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 
 public class Util{
 
@@ -172,12 +173,13 @@ public class Util{
 	return true;
     }
 
-    public static final void checkPopulator(Populator p, Class type) throws InitializationException{
+    public static final void checkPopulator(Populator p, Class generic) throws InitializationException{
+	isNull(p);
+	isNull(generic);
 	
-	if (type != p.getProductClass()){
-	    throw new InitializationException("Search type does not match Populator class: type=" + type.getName() + "  productClass=" + p.getProductClass().getName());
+	if (generic != p.getProductClass()){
+	    throw new InitializationException("Search type does not match Populator class: type=" + generic.getName() + "  productClass=" + p.getProductClass().getName());
 	}
-
 
 	if(p.getDefaultSortFields() == null || p.getDefaultSortFields().size() == 0){
 	    throw new InitializationException("Populator (" + p.getClass().getName() + ") has null or zero length default sort field");

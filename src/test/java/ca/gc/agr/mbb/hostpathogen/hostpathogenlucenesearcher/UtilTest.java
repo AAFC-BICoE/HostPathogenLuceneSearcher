@@ -85,8 +85,8 @@ public class UtilTest{
     static Properties emptyProperties = new Properties();
     static Properties badDirProperties = new Properties();
     static{
-	goodProperties.put(Searcher.LUCENE_INDICES_BASE_DIR, HPSearcherTest.GOOD_LUCENE_DIR);
-	badDirProperties.put(Searcher.LUCENE_INDICES_BASE_DIR, HPSearcherTest.BAD_LUCENE_DIR);
+	goodProperties.put(SearcherDao.LUCENE_INDICES_BASE_DIR, HPSearcherTest.GOOD_LUCENE_DIR);
+	badDirProperties.put(SearcherDao.LUCENE_INDICES_BASE_DIR, HPSearcherTest.BAD_LUCENE_DIR);
     }
     
     ///NEGATIVE

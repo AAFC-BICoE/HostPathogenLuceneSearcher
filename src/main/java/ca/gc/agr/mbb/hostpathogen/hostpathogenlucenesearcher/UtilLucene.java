@@ -207,7 +207,7 @@ public class UtilLucene implements LuceneFields{
     public static final LuceneConfig luceneConfig(final String noun, final Properties prop) throws InitializationException, IllegalArgumentException{
 	Util.isNullOrZero(noun);
 	Util.isNull(prop);
-	String luceneDir = prop.getProperty(Searcher2.LUCENE_INDICES_BASE_DIR);
+	String luceneDir = prop.getProperty(SearcherDao.LUCENE_INDICES_BASE_DIR);
 	
 	if(luceneDir == null){
 	    throw new IllegalArgumentException("luceneDir is null: LUCENE_INDICES_BASE_DIR is not set in properties?");
