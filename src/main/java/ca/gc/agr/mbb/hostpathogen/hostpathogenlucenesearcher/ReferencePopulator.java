@@ -10,8 +10,8 @@ public class ReferencePopulator<T> extends BasePopulator{
 	recordType = REFERENCE_TYPE;
 
 	addSortFields(REFERENCE_YEAR, REFERENCE_AUTHORS);
-
 	addDefaultSortFields(REFERENCE_AUTHORS, REFERENCE_YEAR);
+	addSearchFields(REFERENCE_AUTHORS, REFERENCE_YEAR);
     }
 
     public final T populate(Document doc) throws FailedPopulateException{

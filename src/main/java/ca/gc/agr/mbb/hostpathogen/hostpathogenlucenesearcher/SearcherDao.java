@@ -32,7 +32,7 @@ public interface SearcherDao<T>{
 
     public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException, InitializationException;
 
-    public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException;
+    public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException,InitializationException;
 
     public static final String LUCENE_INDICES_BASE_DIR = "lucene_indices_base_dir";
 

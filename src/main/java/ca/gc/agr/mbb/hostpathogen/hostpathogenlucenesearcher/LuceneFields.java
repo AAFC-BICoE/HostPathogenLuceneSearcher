@@ -16,15 +16,16 @@ public interface LuceneFields{
     public static final String STORED_SUFFIX= "_stored";
 
     // Nouns
-    public static final String PATHOGEN_TYPE = "pathogen";
+    public static final String AUTHOR_TYPE = "author";
+    public static final String ANAMORPH_TYPE = "anamorph";
+    public static final String HIGHER_TAXA_TYPE = "higher_taxa";
+    public static final String HOST_PATHOGEN_TYPE = "host_pathogen";
     public static final String HOST_TYPE = "host";
+    public static final String HP_LOCALITY_JOIN_TYPE = "hp_locality_join";
+    public static final String LOCALITY_TYPE = "locality";
+    public static final String PATHOGEN_TYPE = "pathogen";
     public static final String REFERENCE_TYPE = "reference";
     public static final String REF_SOURCES_TYPE = "ref_sources";
-    public static final String AUTHOR_TYPE = "author";
-    public static final String LOCALITY_TYPE = "locality";
-    public static final String HOST_PATHOGEN_TYPE = "host_pathogen";
-    public static final String HIGHER_TAXA_TYPE = "higher_taxa";
-    public static final String HP_LOCALITY_JOIN_TYPE = "hp_locality_join";
 
     // FIELDS
     public static final String RECORD_TYPE = "record_type";

@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import org.apache.lucene.document.Document;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
+import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 
 public class HostPopulator<T> extends BasePopulator{
 
@@ -11,6 +12,8 @@ public class HostPopulator<T> extends BasePopulator{
 	addSortFields(HOST_GENUS, HOST_SPECIES);
 	addDefaultSortFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
 	addSearchFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
+
+
     }
 
     public final T populate(Document doc) throws FailedPopulateException{

@@ -158,7 +158,11 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     }
 
     @Override
-    public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException{
+    public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException,InitializationException{
+	checkInit();
+	Util.checkOffsetAndLimit(offset, limit);
+	Util.isNull(type);
+
 	if(!luceneConfig.populator.isValidRelation(type)){
 	    throw new IllegalArgumentException("Not valid relation class: " + type.getName());
 	}

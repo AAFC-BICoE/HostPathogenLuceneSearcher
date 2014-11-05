@@ -16,6 +16,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
+import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 
 @RunWith(JUnit4.class)
 public class HPSearcherTest{
@@ -30,16 +32,23 @@ public class HPSearcherTest{
     protected static final String BAD_HOST_GENUS="ABCDEFGHIJK555";
     protected static final String GOOD_PATHOGEN_GENUS="Basidiodendron";
 
+    protected static final long GOOD_HP_HOST_FK = 1698;
+    protected static final long GOOD_HP_PATHOGEN_FK = 74462;
+    protected static final long GOOD_HP_REFERENCE_FK = 2111;
+
     protected static final String A_STAR_WILDCARD="a*";
 
     protected static final Long HUGE_ID = new Long(99999999999999l);
 
     static LuceneConfig pathogenConfig;
     static LuceneConfig hostConfig;
+    static LuceneConfig hostPathogenConfig;
     static{
 	try{
+	    hostPathogenConfig = UtilLucene.luceneConfig(LuceneFields.HOST_PATHOGEN_TYPE, UtilTest.goodProperties);
 	    pathogenConfig = UtilLucene.luceneConfig(LuceneFields.PATHOGEN_TYPE, UtilTest.goodProperties);
 	    hostConfig = UtilLucene.luceneConfig(LuceneFields.HOST_TYPE, UtilTest.goodProperties);
+
 	}catch(InitializationException e){
 	    e.printStackTrace();
 	}
@@ -239,6 +248,51 @@ SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
 	SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
 	hps.init(hostConfig);
 	List<Long> results = hps.search(queryParameters, goodHostSortFields(), 1,15);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+
+    //////////////////////// getBy
+
+    @Test(expected=IllegalArgumentException.class)
+    public void getByShouldFailForBadClass() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	SearcherDao<HostPathogen> hps = new HPSearcher<HostPathogen>(HostPathogen.class);
+	hps.init(hostPathogenConfig);
+	List<Long> results = hps.getBy(HostPathogen.class, 43, 1,20);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+    /// HostPathogen
+    @Test
+    public void hostPathogenGetByHostShouldWorkWithGoodFK() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	SearcherDao<HostPathogen> hps = new HPSearcher<HostPathogen>(HostPathogen.class);
+	hps.init(hostPathogenConfig);
+	List<Long> results = hps.getBy(Host.class, GOOD_HP_HOST_FK, 1,20);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+    @Test
+    public void hostPathogenGetByPathogenShouldWorkWithGoodFK() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	SearcherDao<HostPathogen> hps = new HPSearcher<HostPathogen>(HostPathogen.class);
+	hps.init(hostPathogenConfig);
+	List<Long> results = hps.getBy(Pathogen.class, GOOD_HP_PATHOGEN_FK, 1,20);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+    @Test
+    public void hostPathogenGetByReferenceShouldWorkWithGoodFK() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	SearcherDao<HostPathogen> hps = new HPSearcher<HostPathogen>(HostPathogen.class);
+	hps.init(hostPathogenConfig);
+	List<Long> results = hps.getBy(Reference.class, GOOD_HP_REFERENCE_FK, 1,20);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+    /// Host
+    @Test
+    public void hostGetByReferenceShouldWorkWithGoodFK() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	SearcherDao<HostPathogen> hps = new HPSearcher<HostPathogen>(HostPathogen.class);
+	hps.init(hostPathogenConfig);
+	List<Long> results = hps.getBy(Reference.class, GOOD_HP_REFERENCE_FK, 1,20);
 	Assert.assertTrue(results != null && results.size()>0);
     }
 

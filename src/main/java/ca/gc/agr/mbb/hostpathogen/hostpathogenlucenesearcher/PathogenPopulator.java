@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
 import org.apache.lucene.document.Document;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 
 public class PathogenPopulator<T> extends BasePopulator{
     
