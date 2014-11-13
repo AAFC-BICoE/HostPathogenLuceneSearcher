@@ -15,21 +15,22 @@ public class PathogenPopulator<T> extends BasePopulator{
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
+	Util.isNull(doc);
 	Pathogen p = new Pathogen();
 
 	// obligatory
-	p.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
+	p.setId(longValue(doc, stored(primaryKeyField), true));
 
 	//
-	p.setGenus(stringValue(doc, PATHOGEN_GENUS+STORED_SUFFIX));
-	p.setSpecies(stringValue(doc, PATHOGEN_SPECIES+STORED_SUFFIX));
-	p.setHigherTaxaId(longValue(doc, FK_HIGHER_TAXA_ID+STORED_SUFFIX));
-	p.setIdAccepted(longValue(doc, FK_PATHOGEN_ID_ACCEPTED+STORED_SUFFIX));
-	p.setAnamorphId(longValue(doc, FK_ANAMORPH_ID+STORED_SUFFIX));
-	p.setFungalState(stringValue(doc, FUNGAL_STATE+STORED_SUFFIX));
-	p.setAuthor(stringValue(doc, PATHOGEN_AUTHOR+STORED_SUFFIX));
-	p.setSubSpecificTaxa(stringValue(doc, PATHOGEN_SUBSPECIFIC_TAXA+STORED_SUFFIX));
-	p.setVirusMPLO(stringValue(doc, VIRUS_MPLO_NAMES+STORED_SUFFIX));
+	p.setGenus(stringValue(doc, stored(PATHOGEN_GENUS)));
+	p.setSpecies(stringValue(doc, stored(PATHOGEN_SPECIES)));
+	p.setHigherTaxaId(longValue(doc, stored(FK_HIGHER_TAXA_ID)));
+	p.setIdAccepted(longValue(doc, stored(FK_PATHOGEN_ID_ACCEPTED)));
+	p.setAnamorphId(longValue(doc, stored(FK_ANAMORPH_ID)));
+	p.setFungalState(stringValue(doc, stored(FUNGAL_STATE)));
+	p.setAuthor(stringValue(doc, stored(PATHOGEN_AUTHOR)));
+	p.setSubSpecificTaxa(stringValue(doc, stored(PATHOGEN_SUBSPECIFIC_TAXA)));
+	p.setVirusMPLO(stringValue(doc, stored(VIRUS_MPLO_NAMES)));
 	return (T)p;
     }
 

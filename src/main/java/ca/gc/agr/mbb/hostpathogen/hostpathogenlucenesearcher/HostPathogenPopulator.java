@@ -22,17 +22,18 @@ public class HostPathogenPopulator<T> extends BasePopulator{
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
+	Util.isNull(doc);
 	HostPathogen p = new HostPathogen();
-	p.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
+	p.setId(longValue(doc, stored(primaryKeyField), true));
 
-	p.setReferenceId(longValue(doc, FK_REFERENCE_ID + STORED_SUFFIX, true));
-	p.setHostId(longValue(doc, FK_HOST_ID + STORED_SUFFIX, true));
-	p.setPathogenId(longValue(doc, FK_PATHOGEN_ID + STORED_SUFFIX, true));
+	p.setReferenceId(longValue(doc, stored(FK_REFERENCE_ID), true));
+	p.setHostId(longValue(doc, stored(FK_HOST_ID), true));
+	p.setPathogenId(longValue(doc, stored(FK_PATHOGEN_ID), true));
 	//
-	p.setRustState(stringValue(doc, RUST_STATE + STORED_SUFFIX));
-	p.setPlantPart(stringValue(doc, PLANT_PART + STORED_SUFFIX));
-	p.setSymptom(stringValue(doc, SYMPTOM + STORED_SUFFIX));
-	p.setNotes(stringValue(doc,  NOTES + STORED_SUFFIX));
+	p.setRustState(stringValue(doc, stored(RUST_STATE)));
+	p.setPlantPart(stringValue(doc, stored(PLANT_PART)));
+	p.setSymptom(stringValue(doc, stored(SYMPTOM)));
+	p.setNotes(stringValue(doc,  stored(NOTES)));
 	return (T)p;
     }
 

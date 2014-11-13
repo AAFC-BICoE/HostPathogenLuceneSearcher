@@ -17,17 +17,18 @@ public class HostPopulator<T> extends BasePopulator{
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
+	Util.isNull(doc);
 	Host h = new Host();
 
 	// obligatory
-	h.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
-	h.setGenus(stringValue(doc, HOST_GENUS+STORED_SUFFIX, true));
+	h.setId(longValue(doc, stored(primaryKeyField), true));
+	h.setGenus(stringValue(doc, stored(HOST_GENUS), true));
 	//
-	h.setSpecies(stringValue(doc, HOST_SPECIES+STORED_SUFFIX));
-	h.setHigherTaxaId(longValue(doc, FK_HIGHER_TAXA_ID+STORED_SUFFIX));
-	h.setIdAccepted(longValue(doc, FK_HOST_ID_ACCEPTED+STORED_SUFFIX));
-	h.setCultivar(stringValue(doc, CULTIVAR+STORED_SUFFIX));
-	h.setAuthor(stringValue(doc, HOST_AUTHOR+STORED_SUFFIX));
+	h.setSpecies(stringValue(doc, stored(HOST_SPECIES)));
+	h.setHigherTaxaId(longValue(doc, stored(FK_HIGHER_TAXA_ID)));
+	h.setIdAccepted(longValue(doc, stored(FK_HOST_ID_ACCEPTED)));
+	h.setCultivar(stringValue(doc, stored(CULTIVAR)));
+	h.setAuthor(stringValue(doc, stored(HOST_AUTHOR)));
 	return (T)h;
     }
 

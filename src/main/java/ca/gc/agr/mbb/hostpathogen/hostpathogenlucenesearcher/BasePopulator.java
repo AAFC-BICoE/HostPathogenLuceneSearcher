@@ -162,4 +162,7 @@ abstract public class BasePopulator<T> implements Populator{
     }
 
 
+    final String stored(String base){
+	return base + STORED_SUFFIX;
+    }
 }
