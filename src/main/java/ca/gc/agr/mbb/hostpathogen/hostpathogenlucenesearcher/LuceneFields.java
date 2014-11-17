@@ -30,6 +30,9 @@ public interface LuceneFields{
     // TimeStamp
     public static final String TIMESTAMP_TYPE = "time_stamp";
     public static final String TIMESTAMP_FIELD = TIMESTAMP_TYPE;
+    public static final String TIMESTAMP_FIELD_IN_MILLIS = TIMESTAMP_FIELD + "_millis";
+    public static final String TIMESTAMP_FORMAT = "yyyy.MM.dd  HH:mm:ss z"
+    
 
     // FIELDS
     public static final String RECORD_TYPE = "record_type";
