@@ -27,6 +27,9 @@ public interface LuceneFields{
     public static final String REFERENCE_TYPE = "reference";
     public static final String REF_SOURCES_TYPE = "ref_sources";
 
+    // TimeStamp
+    public static final String TIMESTAMP_TYPE = "time_stamp";
+
     // FIELDS
     public static final String RECORD_TYPE = "record_type";
     public static final String BOOK_AUTHOR="book_author";
