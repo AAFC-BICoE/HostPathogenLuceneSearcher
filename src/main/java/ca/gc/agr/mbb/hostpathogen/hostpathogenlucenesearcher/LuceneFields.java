@@ -29,6 +29,7 @@ public interface LuceneFields{
 
     // TimeStamp
     public static final String TIMESTAMP_TYPE = "time_stamp";
+    public static final String TIMESTAMP_FIELD = TIMESTAMP_TYPE;
 
     // FIELDS
     public static final String RECORD_TYPE = "record_type";
