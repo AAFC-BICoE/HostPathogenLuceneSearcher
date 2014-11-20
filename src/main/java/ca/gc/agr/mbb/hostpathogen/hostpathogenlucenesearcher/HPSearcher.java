@@ -6,8 +6,12 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,24 +53,24 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     
 
     @Override
-    public void init(LuceneConfig lc) throws InitializationException{
+    public void init(final LuceneConfig luceneConfig) throws InitializationException{
 	lock.lock();
 	try{
 	    if (initted == true){
 		throw new InitializationException("init() already called!");
 	    }
 	    try{
-		Util.isNull(lc);
-		Util.isNull(lc.searcher);
-		Util.isNull(lc.analyzer);
-		Util.isNull(lc.populator);
+		Util.isNull(luceneConfig);
+		Util.isNull(luceneConfig.searcher);
+		Util.isNull(luceneConfig.analyzer);
+		Util.isNull(luceneConfig.populator);
 	    }catch(IllegalArgumentException e){
 		throw new InitializationException(e);
 	    }
 
-	    Util.checkPopulator(lc.populator, genericClass);
+	    Util.checkPopulator(luceneConfig.populator, genericClass);
 
-	    this.luceneConfig = lc;
+	    this.luceneConfig = luceneConfig;
 	    initted = true;
 	}catch(Exception e){
 	    throw new InitializationException(e);
@@ -89,7 +93,7 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     }
 
     @Override
-    public List<Long>search(Map<String,List<String>>queryParameters, List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException,InitializationException{
+    public List<Long>search(final Map<String,List<String>>queryParameters, final List<String> sortFields, final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException,InitializationException{
 	checkInit();
 	Util.checkQueryParameters(queryParameters, luceneConfig.populator.getValidSearchFieldSet());
 	Util.checkSortFields(sortFields, luceneConfig.populator.getValidSortFieldSet());
@@ -157,7 +161,7 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     }
 
     @Override
-    public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException,InitializationException{
+    public List<Long> getBy(final Class type, final long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException,InitializationException{
 	checkInit();
 	Util.checkOffsetAndLimit(offset, limit);
 	Util.isNull(type);
@@ -177,10 +181,41 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
 
     // This is just temp: supposed to read this from Lucene index
     @Override
-    public Date getTimeStamp() throws IndexFailureException{
-	Calendar cal = Calendar.getInstance();
-	cal.roll(Calendar.MONTH, -1);
-	return cal.getTime();
+	public Date getTimeStamp() throws IndexFailureException, InitializationException{
+	checkInit();
+
+	Map<String,List<String>>queryParameters = new HashMap<String,List<String>>();
+
+	TopDocs all = UtilLucene.all(TIMESTAMP_TYPE, null, luceneConfig.analyzer, luceneConfig.searcher);
+
+	if (all.totalHits == 0){
+	    throw new IndexFailureException("Missing timestamp record");
+	}
+	if (all.totalHits >= 1){
+	    throw new IndexFailureException("More than one timestamp record returned: problem with index");
+	}
+	Document tsDoc = null;
+	try{
+	    tsDoc = luceneConfig.searcher.doc(all.scoreDocs[0].doc);
+	}catch(java.io.IOException e){
+	    e.printStackTrace();
+	    throw new IndexFailureException("Failure getting timestamp document from TopDocs (Lucene index)");
+	}
+
+	DateFormat df = new SimpleDateFormat(LuceneFields.TIMESTAMP_FORMAT, Locale.ENGLISH);
+
+	String tsString = tsDoc.get(TIMESTAMP_FIELD);
+
+	if (tsString == null){
+	    throw new IndexFailureException("Timestamp field in timestamp Lucene document is null");
+	}
+
+	try{
+	    return df.parse(tsString);
+	}catch(ParseException e){
+	    e.printStackTrace();
+	    throw new IndexFailureException("Timestamp field in timestamp Lucene document does not parse; [" + tsDoc.get(TIMESTAMP_FIELD) + "]");
+	}
     }
 
 }
