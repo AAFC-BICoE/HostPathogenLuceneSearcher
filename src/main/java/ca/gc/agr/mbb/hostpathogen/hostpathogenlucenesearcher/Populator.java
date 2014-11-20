@@ -6,8 +6,9 @@ import java.util.Map;
 import org.apache.lucene.document.Document;
 
 public interface Populator<T> extends LuceneFields{
-    public Class getProductClass();
     public T populate(Document d);
+
+    public Class getProductClass();
     public String getRecordType();
     public String getPrimaryKeyField();
 

@@ -1,29 +1,28 @@
 package ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher;
 
-import java.util.Properties;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
-import org.apache.lucene.search.IndexSearcher;
-import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.document.Document;
-
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 
 public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     private final static Logger LOG = Logger.getLogger(HPSearcher.class.getName()); 
@@ -174,6 +173,14 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
 	queryParameters.put(luceneConfig.populator.getRelationField(type), fieldQuery);
 
 	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig);
+    }
+
+    // This is just temp: supposed to read this from Lucene index
+    @Override
+    public Date getTimeStamp() throws IndexFailureException{
+	Calendar cal = Calendar.getInstance();
+	cal.roll(Calendar.MONTH, -1);
+	return cal.getTime();
     }
 
 }

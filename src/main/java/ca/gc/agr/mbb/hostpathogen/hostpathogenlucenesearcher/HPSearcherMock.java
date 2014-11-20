@@ -4,6 +4,8 @@ import java.util.Properties;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 import ca.gc.agr.mbb.hostpathogen.nouns.Host;
@@ -121,6 +123,12 @@ public class HPSearcherMock<T> implements SearcherDao<T>
 	return null;
     }
 
+    @Override
+    public Date getTimeStamp() throws IndexFailureException{
+	Calendar cal = Calendar.getInstance();
+	cal.roll(Calendar.MONTH, -1);
+	return cal.getTime();
+    }
 
 }
 
