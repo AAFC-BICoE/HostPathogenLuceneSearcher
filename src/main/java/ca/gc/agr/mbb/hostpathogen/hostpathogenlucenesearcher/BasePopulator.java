@@ -117,18 +117,18 @@ abstract public class BasePopulator<T> implements Populator{
 
     //////////
 
-    static final long longValue(Document doc, String fieldName) throws FailedPopulateException{
+    final long longValue(Document doc, String fieldName) throws FailedPopulateException{
 	return longValue(doc, fieldName, false);
     }
 
-    static final long longValue(Document doc, String fieldName, boolean mustExist) throws FailedPopulateException
+    final long longValue(Document doc, String fieldName, boolean mustExist) throws FailedPopulateException
     {
 	checkDocFieldName(doc, fieldName);
 
 	String[] values = doc.getValues(fieldName);
 	if(values == null || values.length == 0){
 	    if(mustExist){
-		throw new FailedPopulateException("Field " + fieldName + " is mandatory: cannot be empty/null");
+		throw new FailedPopulateException(this.getClass().getName() + ": Field " + fieldName + " is mandatory: cannot be empty/null");
 	    }
 	    return 0l;
 	}

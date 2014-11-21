@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
+import ca.gc.agr.mbb.hostpathogen.nouns.RefSources;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
@@ -23,13 +23,13 @@ import org.apache.lucene.document.StoredField;
 import ca.gc.agr.mbb.hostpathogen.hostpathogenlucenesearcher.LuceneFields;
 
 @RunWith(JUnit4.class)
-public class ReferencePopulatorTest{
-    private final static Logger LOG = Logger.getLogger(ReferencePopulatorTest.class.getName()); 
+public class RefSourcesPopulatorTest{
+    private final static Logger LOG = Logger.getLogger(RefSourcesPopulatorTest.class.getName()); 
 
     static LuceneConfig htConfig;
     static{
 	try{
-	    htConfig = UtilLucene.luceneConfig(LuceneFields.REFERENCE_TYPE, UtilTest.goodProperties);
+	    htConfig = UtilLucene.luceneConfig(LuceneFields.REF_SOURCES_TYPE, UtilTest.goodProperties);
 	}catch(InitializationException e){
 	    e.printStackTrace();
 	}
@@ -38,46 +38,46 @@ public class ReferencePopulatorTest{
     //@Test(expected=InitializationException.class)
     @Test()
     public void shouldConstructOK() throws IndexFailureException,InitializationException{
-	Populator<Reference> pop = new ReferencePopulator<Reference>();
+	Populator<RefSources> pop = new RefSourcesPopulator<RefSources>();
 	Assert.assertTrue(pop != null);
     }
     
     @Test(expected=FailedPopulateException.class)
     public void populateShouldFailWithNullDocument() throws IndexFailureException,InitializationException{
-	Populator<Reference> pop = new ReferencePopulator<Reference>();
-	Reference ht = pop.populate(null);
+	Populator<RefSources> pop = new RefSourcesPopulator<RefSources>();
+	RefSources ht = pop.populate(null);
     }
 
     @Test
     public void populateShouldSucceedWithValidDocument() throws IndexFailureException,InitializationException{
-	Populator<Reference> pop = new ReferencePopulator<Reference>();
-	Reference ht = pop.populate(makeValidDocument());
+	Populator<RefSources> pop = new RefSourcesPopulator<RefSources>();
+	RefSources ht = pop.populate(makeValidDocument());
 	Assert.assertTrue(ht != null);
     }
 
 
     @Test(expected=FailedPopulateException.class)
     public void populateShouldFailWithDocumentMissingPrimaryKey() throws IndexFailureException,InitializationException{
-	Populator<Reference> pop = new ReferencePopulator<Reference>();
+	Populator<RefSources> pop = new RefSourcesPopulator<RefSources>();
 	Document d = makeValidDocument();
 	d.removeField(BasePopulator.stored(LuceneFields.PK));
-	Reference ht = pop.populate(d);
+	RefSources ht = pop.populate(d);
     }
 
     @Test(expected=FailedPopulateException.class)
     public void populateShouldFailWithDocumentMissingMandatoryField() throws IndexFailureException,InitializationException{
-	Populator<Reference> pop = new ReferencePopulator<Reference>();
+	Populator<RefSources> pop = new RefSourcesPopulator<RefSources>();
 	Document d = makeValidDocument();
-	d.removeField(BasePopulator.stored(LuceneFields.FK_REF_SOURCE_ID));
-	Reference ht = pop.populate(d);
+	d.removeField(BasePopulator.stored(LuceneFields.FK_REFERENCE_ID));
+	RefSources ht = pop.populate(d);
     }
 
     @Test
     public void populateShouldSucceedWithDocumentMissingNonMandatoryField() throws IndexFailureException,InitializationException{
-	Populator<Reference> pop = new ReferencePopulator<Reference>();
+	Populator<RefSources> pop = new RefSourcesPopulator<RefSources>();
 	Document d = makeValidDocument();
-	d.removeField(BasePopulator.stored(LuceneFields.RUST_STATE));
-	Reference ht = pop.populate(d);
+	d.removeField(BasePopulator.stored(LuceneFields.VOLUME));
+	RefSources ht = pop.populate(d);
 	Assert.assertTrue(ht != null);
     }
 
@@ -91,6 +91,7 @@ public class ReferencePopulatorTest{
 	d.add(new StoredField(BasePopulator.stored(LuceneFields.CHAPTER_ARTICLE_TITLE), "chapter_article_title"));
 	d.add(new StoredField(BasePopulator.stored(LuceneFields.VOLUME), "volume"));
 	d.add(new StoredField(BasePopulator.stored(LuceneFields.PAGES), "pages"));
+	d.add(new StoredField(BasePopulator.stored(LuceneFields.FK_REFERENCE_ID), "199"));
 	return d;
     }
 }

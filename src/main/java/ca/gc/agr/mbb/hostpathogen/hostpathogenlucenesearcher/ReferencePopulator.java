@@ -8,6 +8,7 @@ public class ReferencePopulator<T> extends BasePopulator{
     
     public ReferencePopulator(){
 	recordType = REFERENCE_TYPE;
+	classType = Reference.class;
 
 	addSortFields(REFERENCE_YEAR, REFERENCE_AUTHORS);
 	addDefaultSortFields(REFERENCE_AUTHORS, REFERENCE_YEAR);

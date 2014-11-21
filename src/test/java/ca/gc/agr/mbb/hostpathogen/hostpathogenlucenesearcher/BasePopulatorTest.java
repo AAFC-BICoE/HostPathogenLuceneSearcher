@@ -7,6 +7,7 @@ import org.apache.lucene.document.Field;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,19 +33,22 @@ public class BasePopulatorTest{
     // longValue
     @Test(expected=FailedPopulateException.class)
     public void nullDocLong(){
-	BasePopulator.longValue(null, "fieldName", true);
+	HostPopulator p = new HostPopulator();
+	p.longValue(null, "fieldName", true);
     }
 
     // longValue
     @Test(expected=FailedPopulateException.class)
     public void nullFieldLong(){
-	BasePopulator.longValue(doc, null, true);
+	HostPopulator p = new HostPopulator();
+	p.longValue(doc, null, true);
     }
 
     // longValue
     @Test(expected=FailedPopulateException.class)
     public void zeroLengthFieldLong(){
-	BasePopulator.longValue(doc, "", true);
+	HostPopulator p = new HostPopulator();
+	p.longValue(doc, "", true);
     }
 
     

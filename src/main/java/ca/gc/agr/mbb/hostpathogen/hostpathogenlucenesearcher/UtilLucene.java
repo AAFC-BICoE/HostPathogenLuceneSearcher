@@ -249,7 +249,13 @@ public class UtilLucene implements LuceneFields{
 	    break;
 
 	case REFERENCE_TYPE:
+	    lc.populator = new ReferencePopulator();
+	    break;
+
 	case REF_SOURCES_TYPE:
+	    lc.populator = new RefSourcesPopulator();
+	    break;
+
 	case AUTHOR_TYPE:
 	case LOCALITY_TYPE:
 	case HP_LOCALITY_JOIN_TYPE:
