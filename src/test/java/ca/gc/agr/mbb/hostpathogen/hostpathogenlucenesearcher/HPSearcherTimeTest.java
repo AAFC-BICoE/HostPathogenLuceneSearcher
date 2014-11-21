@@ -40,6 +40,7 @@ public class HPSearcherTimeTest{
 	Date timeStamp = hps.getTimeStamp();
     }
 
+    @Test()
     public void shouldReturnNotNullTime() throws IndexFailureException,InitializationException{
 	SearcherDao<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
 	hps.init(pathogenConfig);

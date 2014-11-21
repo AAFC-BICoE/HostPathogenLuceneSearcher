@@ -191,8 +191,8 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
 	if (all.totalHits == 0){
 	    throw new IndexFailureException("Missing timestamp record");
 	}
-	if (all.totalHits >= 1){
-	    throw new IndexFailureException("More than one timestamp record returned: problem with index");
+	if (all.totalHits > 1){
+	    throw new IndexFailureException("More than one timestamp record returned(" + all.totalHits + ") : problem with index");
 	}
 	Document tsDoc = null;
 	try{
@@ -204,7 +204,7 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
 
 	DateFormat df = new SimpleDateFormat(LuceneFields.TIMESTAMP_FORMAT, Locale.ENGLISH);
 
-	String tsString = tsDoc.get(TIMESTAMP_FIELD);
+	String tsString = tsDoc.get(BasePopulator.stored(TIMESTAMP_FIELD));
 
 	if (tsString == null){
 	    throw new IndexFailureException("Timestamp field in timestamp Lucene document is null");

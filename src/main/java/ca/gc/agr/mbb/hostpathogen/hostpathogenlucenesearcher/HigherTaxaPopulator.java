@@ -6,21 +6,28 @@ import ca.gc.agr.mbb.hostpathogen.nouns.HigherTaxa;
 public class HigherTaxaPopulator<T> extends BasePopulator{
 
     public HigherTaxaPopulator(){
+	classType = HigherTaxa.class;
 	recordType = HIGHER_TAXA_TYPE;
 
-	//addSortFields(HOST_GENUS, HOST_SPECIES);
-
-	//addDefaultSortFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
+	addSortFields(KINGDOM, DIVISION, CLASS, ORDER, FAMILY);
+	addDefaultSortFields(FAMILY);
     }
 
+    @Override
     public final T populate(Document doc) throws FailedPopulateException{
-	throw new FailedPopulateException();
+	super.populate(doc);
 
-	// HigherTaxa h = new HigherTaxa();
-	// // obligatory
-	// h.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
+	HigherTaxa h = new HigherTaxa();
+	
+	// obligatory
+	h.setID(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
 
-	// return (T)h;
+	h.setKingdom(stringValue(doc, stored(KINGDOM)));
+	h.setDivision(stringValue(doc, stored(DIVISION)));
+	h.setClasses(stringValue(doc, stored(CLASS)));
+	h.setOrder(stringValue(doc, stored(ORDER)));
+	h.setFamily(stringValue(doc, stored(FAMILY)));
+	return (T)h;
     }
 
 

@@ -119,16 +119,23 @@ public class UtilLucene implements LuceneFields{
     }
 
     protected final static TopDocs runQuery(final Query query, final List<String> sortFields, final IndexSearcher searcher) throws IndexFailureException{
-	Sort sort = new Sort();
-	SortField[] sFields =new SortField[sortFields.size()];
-	
-	for(int i=0; i<sortFields.size(); i++){
-	    sFields[i] = new SortField(sortFields.get(i), SortField.Type.STRING_VAL);
+	Sort sort = null;
+	if (sortFields != null && sortFields.size() > 0){
+	    sort = new Sort();
+	    SortField[] sFields =new SortField[sortFields.size()];
+	    
+	    for(int i=0; i<sortFields.size(); i++){
+		sFields[i] = new SortField(sortFields.get(i), SortField.Type.STRING_VAL);
+	    }
+	    sort.setSort(sFields);
 	}
-	sort.setSort(sFields);
 	try{
 	    LOG.info("Lucene query run: " + query);
-	    return searcher.search(query, Integer.MAX_VALUE, sort);
+	    if (sort == null){
+		    return searcher.search(query, Integer.MAX_VALUE);
+		}else{
+		return searcher.search(query, Integer.MAX_VALUE, sort);
+	    }
 	}catch(IOException e){
 	    e.printStackTrace();
 	    throw new IndexFailureException(e);
@@ -238,6 +245,9 @@ public class UtilLucene implements LuceneFields{
 	    break;
 
 	case HIGHER_TAXA_TYPE:
+	    lc.populator = new HigherTaxaPopulator();
+	    break;
+
 	case REFERENCE_TYPE:
 	case REF_SOURCES_TYPE:
 	case AUTHOR_TYPE:

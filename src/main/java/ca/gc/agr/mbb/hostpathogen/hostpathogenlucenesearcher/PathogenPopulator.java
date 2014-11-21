@@ -15,7 +15,7 @@ public class PathogenPopulator<T> extends BasePopulator{
     }
 
     public final T populate(Document doc) throws FailedPopulateException{
-	Util.isNull(doc);
+	super.populate(doc);
 	Pathogen p = new Pathogen();
 
 	// obligatory

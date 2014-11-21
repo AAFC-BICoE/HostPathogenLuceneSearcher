@@ -14,8 +14,9 @@ public class ReferencePopulator<T> extends BasePopulator{
 	addSearchFields(REFERENCE_AUTHORS, REFERENCE_YEAR);
     }
 
+    @Override
     public final T populate(Document doc) throws FailedPopulateException{
-	Util.isNull(doc);
+	super.populate(doc);
 	Reference ref = new Reference();
 	// obligatory
 	ref.setId(longValue(doc, stored(primaryKeyField), true));

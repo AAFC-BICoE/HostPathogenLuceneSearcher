@@ -104,6 +104,16 @@ abstract public class BasePopulator<T> implements Populator{
 	return validRelations;
     }
 
+    @Override
+    public T populate(Document doc) throws FailedPopulateException{
+	try{
+	    Util.isNull(doc);
+	}catch(IllegalArgumentException e){
+	    e.printStackTrace();
+	    throw new FailedPopulateException("Document is null");
+	}
+	return null;
+    }
 
     //////////
 
@@ -118,7 +128,7 @@ abstract public class BasePopulator<T> implements Populator{
 	String[] values = doc.getValues(fieldName);
 	if(values == null || values.length == 0){
 	    if(mustExist){
-		throw new NullPointerException("Field " + fieldName + " cannot be empty/null");
+		throw new FailedPopulateException("Field " + fieldName + " is mandatory: cannot be empty/null");
 	    }
 	    return 0l;
 	}
@@ -162,7 +172,7 @@ abstract public class BasePopulator<T> implements Populator{
     }
 
 
-    final String stored(String base){
+    public static final String stored(String base){
 	return base + STORED_SUFFIX;
     }
 }

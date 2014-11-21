@@ -14,8 +14,9 @@ public class RefSourcePopulator<T> extends BasePopulator{
 	addSearchFields(JOURNAL_TITLE, BOOK_YEAR, BOOK_AUTHOR, BOOK_TITLE);
     }
 
+    @Override
     public final T populate(Document doc) throws FailedPopulateException{
-	Util.isNull(doc);
+	super.populate(doc);
 	RefSources rs = new RefSources();
 
 	rs.setId(longValue(doc, stored(primaryKeyField), true));

@@ -16,8 +16,9 @@ public class HostPopulator<T> extends BasePopulator{
 
     }
 
+    @Override
     public final T populate(Document doc) throws FailedPopulateException{
-	Util.isNull(doc);
+	super.populate(doc);
 	Host h = new Host();
 
 	// obligatory

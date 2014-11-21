@@ -13,7 +13,9 @@ public class AnamorphPopulator<T> extends BasePopulator{
 	//addDefaultSortFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
     }
 
+    @Override
     public final T populate(Document doc) throws FailedPopulateException{
+	super.populate(doc);
 	throw new FailedPopulateException();
 
 	// Anamorph h = new Anamorph();

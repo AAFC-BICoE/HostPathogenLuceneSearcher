@@ -12,17 +12,18 @@ public class HostPathogenPopulator<T> extends BasePopulator{
 	recordType = HOST_PATHOGEN_TYPE;
 	classType = HostPathogen.class;
 	addSortFields(PATHOGEN_GENUS, PATHOGEN_SPECIES, HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
-	addSortFields(HOST_GENUS, HOST_SPECIES);
-	addSearchFields(HOST_GENUS, HOST_SPECIES);
 	addDefaultSortFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
+
+	addSearchFields(HOST_GENUS, HOST_SPECIES);
 
 	addRelation(Host.class, FK_HOST_ID);
 	addRelation(Pathogen.class, FK_PATHOGEN_ID);
 	addRelation(Reference.class, FK_REFERENCE_ID);
     }
 
+    @Override
     public final T populate(Document doc) throws FailedPopulateException{
-	Util.isNull(doc);
+	super.populate(doc);
 	HostPathogen p = new HostPathogen();
 	p.setId(longValue(doc, stored(primaryKeyField), true));
 
