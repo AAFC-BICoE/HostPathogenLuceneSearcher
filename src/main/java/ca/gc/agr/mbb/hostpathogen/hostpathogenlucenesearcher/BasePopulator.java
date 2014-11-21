@@ -150,7 +150,7 @@ abstract public class BasePopulator<T> implements Populator{
 	String[] values = doc.getValues(fieldName);
 	if(values == null || values.length == 0){
 	    if(mustExist){
-		throw new NullPointerException("Field " + fieldName + " cannot be empty/null; doc=" + doc.toString() );
+		throw new FailedPopulateException("Field " + fieldName + " is mandatory: cannot be empty/null");
 	    }
 	    return null;
 	}
