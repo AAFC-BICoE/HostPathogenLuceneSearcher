@@ -44,7 +44,6 @@ public interface LuceneFields{
     public static final String BOOK_TITLE="book_title";
     public static final String BOOK_YEAR="book_year";
     public static final String CHAPTER_ARTICLE_TITLE = "chapter_article_title";
-    public static final String COUNTRY = "country";
     public static final String CULTIVAR="cultivar";
     public static final String DATA_SOURCE = "data_source";
     public static final String FK_ANAMORPH_ID = "fk_anamorph_id";
@@ -56,7 +55,6 @@ public interface LuceneFields{
     public static final String FK_REFERENCE_ID="fk_reference_id";
     public static final String FK_REF_SOURCE_ID = "fk_ref_source_id";
     public static final String FUNGAL_STATE = "fungal_state";
-    public static final String GEOGRAPHICAL_ABBREVIATION = "geographical_abbreviation";
     public static final String HOST_AUTHOR = "host_author";
     public static final String HOST_GENUS = "host_genus";
     public static final String HOST_ID = "host_id";
@@ -97,4 +95,8 @@ public interface LuceneFields{
     public static final String ORDER = "order";
     public static final String FAMILY = "family";
 
+
+    public static final String PROVINCE_STATE_TERRITORY_ABBREVIATION= "geographical_abbreviation";
+    public static final String PROVINCE_STATE_TERRITORY = "interpretation";
+    public static final String COUNTRY = "country";
 }

@@ -256,9 +256,13 @@ public class UtilLucene implements LuceneFields{
 	    lc.populator = new RefSourcesPopulator();
 	    break;
 
-	case AUTHOR_TYPE:
 	case LOCALITY_TYPE:
+	    lc.populator = new LocationPopulator();
+	    break;
+
+
 	case HP_LOCALITY_JOIN_TYPE:
+	case AUTHOR_TYPE:
 	default:
 	    throw new InitializationException("Unimplemented Populator for: " + noun);
 	}

@@ -7,10 +7,12 @@ public class LocationPopulator<T> extends BasePopulator{
 
     public LocationPopulator(){
 	recordType = LOCALITY_TYPE;
+	classType = Location.class;
 
-	//addSortFields(HOST_GENUS, HOST_SPECIES);
+	addSortFields(COUNTRY, PROVINCE_STATE_TERRITORY);
+	addDefaultSortFields(COUNTRY, PROVINCE_STATE_TERRITORY);
+	addSearchFields(COUNTRY);
 
-	//addDefaultSortFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
     }
 
     @Override
@@ -18,8 +20,9 @@ public class LocationPopulator<T> extends BasePopulator{
 	super.populate(doc);
 	Location h = new Location();
 	// obligatory
-	h.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
-
+	h.setId(longValue(doc, stored(primaryKeyField), true));
+	h.setProvinceStateTerritory(stringValue(doc, stored(PROVINCE_STATE_TERRITORY), true));
+	h.setCountry(stringValue(doc, stored(COUNTRY), true));
 	return (T)h;
     }
 
