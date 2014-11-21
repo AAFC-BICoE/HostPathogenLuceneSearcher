@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import ca.gc.agr.mbb.hostpathogen.nouns.HostPathogen;
+import ca.gc.agr.mbb.hostpathogen.nouns.Reference;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
@@ -29,7 +29,7 @@ public class ReferencePopulatorTest{
     static LuceneConfig htConfig;
     static{
 	try{
-	    htConfig = UtilLucene.luceneConfig(LuceneFields.HIGHER_TAXA_TYPE, UtilTest.goodProperties);
+	    htConfig = UtilLucene.luceneConfig(LuceneFields.REFERENCE_TYPE, UtilTest.goodProperties);
 	}catch(InitializationException e){
 	    e.printStackTrace();
 	}
@@ -38,46 +38,46 @@ public class ReferencePopulatorTest{
     //@Test(expected=InitializationException.class)
     @Test()
     public void shouldConstructOK() throws IndexFailureException,InitializationException{
-	Populator<HostPathogen> pop = new HostPathogenPopulator<HostPathogen>();
+	Populator<Reference> pop = new ReferencePopulator<Reference>();
 	Assert.assertTrue(pop != null);
     }
     
     @Test(expected=FailedPopulateException.class)
     public void populateShouldFailWithNullDocument() throws IndexFailureException,InitializationException{
-	Populator<HostPathogen> pop = new HostPathogenPopulator<HostPathogen>();
-	HostPathogen ht = pop.populate(null);
+	Populator<Reference> pop = new ReferencePopulator<Reference>();
+	Reference ht = pop.populate(null);
     }
 
     @Test
     public void populateShouldSucceedWithValidDocument() throws IndexFailureException,InitializationException{
-	Populator<HostPathogen> pop = new HostPathogenPopulator<HostPathogen>();
-	HostPathogen ht = pop.populate(makeValidDocument());
+	Populator<Reference> pop = new ReferencePopulator<Reference>();
+	Reference ht = pop.populate(makeValidDocument());
 	Assert.assertTrue(ht != null);
     }
 
 
     @Test(expected=FailedPopulateException.class)
     public void populateShouldFailWithDocumentMissingPrimaryKey() throws IndexFailureException,InitializationException{
-	Populator<HostPathogen> pop = new HostPathogenPopulator<HostPathogen>();
+	Populator<Reference> pop = new ReferencePopulator<Reference>();
 	Document d = makeValidDocument();
 	d.removeField(BasePopulator.stored(LuceneFields.PK));
-	HostPathogen ht = pop.populate(d);
+	Reference ht = pop.populate(d);
     }
 
     @Test(expected=FailedPopulateException.class)
     public void populateShouldFailWithDocumentMissingMandatoryField() throws IndexFailureException,InitializationException{
-	Populator<HostPathogen> pop = new HostPathogenPopulator<HostPathogen>();
+	Populator<Reference> pop = new ReferencePopulator<Reference>();
 	Document d = makeValidDocument();
-	d.removeField(BasePopulator.stored(LuceneFields.FK_PATHOGEN_ID));
-	HostPathogen ht = pop.populate(d);
+	d.removeField(BasePopulator.stored(LuceneFields.FK_REF_SOURCE_ID));
+	Reference ht = pop.populate(d);
     }
 
     @Test
     public void populateShouldSucceedWithDocumentMissingNonMandatoryField() throws IndexFailureException,InitializationException{
-	Populator<HostPathogen> pop = new HostPathogenPopulator<HostPathogen>();
+	Populator<Reference> pop = new ReferencePopulator<Reference>();
 	Document d = makeValidDocument();
 	d.removeField(BasePopulator.stored(LuceneFields.RUST_STATE));
-	HostPathogen ht = pop.populate(d);
+	Reference ht = pop.populate(d);
 	Assert.assertTrue(ht != null);
     }
 
@@ -85,15 +85,12 @@ public class ReferencePopulatorTest{
 	Document d = new Document();
 	d.add(new StoredField(BasePopulator.stored(LuceneFields.PK), "3"));
 
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.PATHOGEN_GENUS), "pathogen_genus"));
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.PATHOGEN_SPECIES), "pathogen_species"));
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.HOST_GENUS), "host_genus"));
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.HOST_SPECIES), "host_species"));
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.HOST_SUBSPECIFIC_TAXA), "host_subspecific_taxa"));
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.FK_REFERENCE_ID), "12"));
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.FK_HOST_ID), "433"));
-	d.add(new StoredField(BasePopulator.stored(LuceneFields.FK_PATHOGEN_ID), "10118"));
-
+	d.add(new StoredField(BasePopulator.stored(LuceneFields.REFERENCE_YEAR), "reference_year"));
+	d.add(new StoredField(BasePopulator.stored(LuceneFields.REFERENCE_AUTHORS), "reference_authors"));
+	d.add(new StoredField(BasePopulator.stored(LuceneFields.FK_REF_SOURCE_ID), "2048"));
+	      d.add(new StoredField(BasePopulator.stored(LuceneFields.CHAPTER_ARTICLE_TITLE), "chapter_article_title"));
+	      d.add(new StoredField(BasePopulator.stored(LuceneFields.VOLUME), "volume"));
+	      d.add(new StoredField(BasePopulator.stored(LuceneFields.PAGES), "pages"));
 	return d;
     }
 }

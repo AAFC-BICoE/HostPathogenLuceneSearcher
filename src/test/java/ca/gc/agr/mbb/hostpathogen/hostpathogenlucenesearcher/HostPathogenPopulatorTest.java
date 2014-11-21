@@ -29,7 +29,7 @@ public class HostPathogenPopulatorTest{
     static LuceneConfig htConfig;
     static{
 	try{
-	    htConfig = UtilLucene.luceneConfig(LuceneFields.HIGHER_TAXA_TYPE, UtilTest.goodProperties);
+	    htConfig = UtilLucene.luceneConfig(LuceneFields.HOST_PATHOGEN_TYPE, UtilTest.goodProperties);
 	}catch(InitializationException e){
 	    e.printStackTrace();
 	}
