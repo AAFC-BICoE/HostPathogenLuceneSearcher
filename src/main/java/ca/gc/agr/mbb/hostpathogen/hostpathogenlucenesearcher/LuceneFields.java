@@ -15,7 +15,14 @@ public interface LuceneFields{
 
     public static final String STORED_SUFFIX= "_stored";
 
-    // Nouns
+
+    public static final String TIMESTAMP_TYPE = "time_stamp";
+    public static final String TIMESTAMP_FIELD = TIMESTAMP_TYPE;
+    public static final String TIMESTAMP_FIELD_IN_MILLIS = TIMESTAMP_FIELD + "_millis";
+    public static final String TIMESTAMP_FORMAT = "yyyy.MM.dd  HH:mm:ss z";
+
+    // NOUNS
+    //     TYPES
     public static final String AUTHOR_TYPE = "author";
     public static final String ANAMORPH_TYPE = "anamorph";
     public static final String HIGHER_TAXA_TYPE = "higher_taxa";
@@ -26,15 +33,7 @@ public interface LuceneFields{
     public static final String PATHOGEN_TYPE = "pathogen";
     public static final String REFERENCE_TYPE = "reference";
     public static final String REF_SOURCES_TYPE = "ref_sources";
-
-    // TimeStamp
-    public static final String TIMESTAMP_TYPE = "time_stamp";
-    public static final String TIMESTAMP_FIELD = TIMESTAMP_TYPE;
-    public static final String TIMESTAMP_FIELD_IN_MILLIS = TIMESTAMP_FIELD + "_millis";
-    public static final String TIMESTAMP_FORMAT = "yyyy.MM.dd  HH:mm:ss z";
-    
-
-    // FIELDS
+    //     FIELDS
     public static final String RECORD_TYPE = "record_type";
     public static final String BOOK_AUTHOR="book_author";
     public static final String BOOK_EDITOR="book_editor";
@@ -47,6 +46,11 @@ public interface LuceneFields{
     public static final String CULTIVAR="cultivar";
     public static final String DATA_SOURCE = "data_source";
     public static final String FK_ANAMORPH_ID = "fk_anamorph_id";
+
+    public static final String FK_PATHOGEN_ID_ANA = "fk_pathogen_id_ana";
+    public static final String FK_PATHOGEN_ID_SYN = "fk_pathogen_id_syn";
+    public static final String FK_PATHOGEN_ID_SYN2 = "fk_pathogen_id_syn2";
+
     public static final String FK_HIGHER_TAXA_ID = "fk_higher_taxa_id";
     public static final String FK_HOST_ID = "fk_host_id";
     public static final String FK_HOST_ID_ACCEPTED = "fk_host_id_accepted";
@@ -72,6 +76,7 @@ public interface LuceneFields{
     public static final String PATHOGEN_SPECIES = "pathogen_species";
     public static final String PATHOGEN_SUBSPECIFIC_TAXA = "pathogen_subspecific_taxa";
     public static final String PK_AUTHOR_LOOKUP_ID="pk_author_lookup_id";
+    public static final String PK_ANAMORPH_ID = "pk_anamorph_id";
     public static final String PK_HOST_ID = "pk_host_id";
     public static final String PK_HOST_PATHOGEN_ID = "pk_host_pathogen_id";
     public static final String PK_LOCATION_ID = "pk_location_id";

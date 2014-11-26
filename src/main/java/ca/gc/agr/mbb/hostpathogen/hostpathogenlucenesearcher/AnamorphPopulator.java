@@ -7,22 +7,19 @@ public class AnamorphPopulator<T> extends BasePopulator{
 
     public AnamorphPopulator(){
 	recordType = ANAMORPH_TYPE;
-
-	//addSortFields(HOST_GENUS, HOST_SPECIES);
-
-	//addDefaultSortFields(HOST_GENUS, HOST_SPECIES, HOST_SUBSPECIFIC_TAXA);
+	classType = Anamorph.class;
     }
 
     @Override
     public final T populate(Document doc) throws FailedPopulateException{
 	super.populate(doc);
-	throw new FailedPopulateException();
-
-	// Anamorph h = new Anamorph();
+	 Anamorph h = new Anamorph();
 	// // obligatory
-	// h.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
-
-	// return (T)h;
+	 h.setId(longValue(doc, stored(primaryKeyField), true));
+	 h.setAnamorphId(longValue(doc, stored(LuceneFields.FK_PATHOGEN_ID_ANA), true));
+	 h.setSynanamorphId(longValue(doc, stored(LuceneFields.FK_PATHOGEN_ID_SYN), true));
+	 h.setSynanamorphId2(longValue(doc, stored(LuceneFields.FK_PATHOGEN_ID_SYN2), true));
+	 return (T)h;
     }
 
 

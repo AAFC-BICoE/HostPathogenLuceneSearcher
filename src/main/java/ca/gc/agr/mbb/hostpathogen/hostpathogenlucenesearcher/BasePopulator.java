@@ -110,7 +110,8 @@ abstract public class BasePopulator<T> implements Populator{
 	    Util.isNull(doc);
 	}catch(IllegalArgumentException e){
 	    e.printStackTrace();
-	    throw new FailedPopulateException("Document is null");
+	    //throw new FailedPopulateException("Document is null");
+	    throw new FailedPopulateException(e);
 	}
 	return null;
     }
