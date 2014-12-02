@@ -20,11 +20,11 @@ public class HigherTaxaPopulator<T> extends BasePopulator{
 	HigherTaxa h = new HigherTaxa();
 	
 	// obligatory
-	h.setID(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
+	h.setId(longValue(doc, primaryKeyField+STORED_SUFFIX, true));
 
 	h.setKingdom(stringValue(doc, stored(KINGDOM)));
 	h.setDivision(stringValue(doc, stored(DIVISION)));
-	h.setClasses(stringValue(doc, stored(CLASS)));
+	h.setClazz(stringValue(doc, stored(CLASS)));
 	h.setOrder(stringValue(doc, stored(ORDER)));
 	h.setFamily(stringValue(doc, stored(FAMILY)));
 	return (T)h;
