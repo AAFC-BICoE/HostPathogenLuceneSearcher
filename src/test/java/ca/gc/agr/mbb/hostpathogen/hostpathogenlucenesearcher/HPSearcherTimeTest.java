@@ -36,7 +36,6 @@ public class HPSearcherTimeTest{
     @Test(expected=InitializationException.class)
     public void shouldFailIfNotInited() throws IndexFailureException,InitializationException{
 	SearcherDao<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
-
 	Date timeStamp = hps.getTimeStamp();
     }
 
