@@ -12,7 +12,6 @@ public class LocationPopulator<T> extends BasePopulator{
 	addSortFields(COUNTRY, PROVINCE_STATE_TERRITORY);
 	addDefaultSortFields(COUNTRY, PROVINCE_STATE_TERRITORY);
 	addSearchFields(COUNTRY);
-
     }
 
     @Override
