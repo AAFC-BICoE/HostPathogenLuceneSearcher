@@ -33,6 +33,8 @@ public interface LuceneFields{
     public static final String PATHOGEN_TYPE = "pathogen";
     public static final String REFERENCE_TYPE = "reference";
     public static final String REF_SOURCES_TYPE = "ref_sources";
+
+    public static final String HOST_PATHOGEN_SEARCH_TYPE = "host_pathogen_search";
     //     FIELDS
     public static final String RECORD_TYPE = "record_type";
     public static final String BOOK_AUTHOR="book_author";
@@ -55,6 +57,7 @@ public interface LuceneFields{
     public static final String FK_HOST_ID = "fk_host_id";
     public static final String FK_HOST_ID_ACCEPTED = "fk_host_id_accepted";
     public static final String FK_PATHOGEN_ID = "fk_pathogen_id";
+    public static final String FK_HOST_PATHOGEN_ID = "fk_host_pathogen_id";
     public static final String FK_PATHOGEN_ID_ACCEPTED = "fk_pathogen_id_accepted";
     public static final String FK_REFERENCE_ID="fk_reference_id";
     public static final String FK_REF_SOURCE_ID = "fk_ref_source_id";
@@ -65,6 +68,8 @@ public interface LuceneFields{
     public static final String HOST_ID_ACCEPTED = "host_id_accepted";
     public static final String HOST_SPECIES = "host_species";
     public static final String HOST_SUBSPECIFIC_TAXA = "host_subspecific_taxa";
+
+    
     public static final String INTERPRETATION = "interpretation";
     public static final String JOURNAL_ABBREVIATION="journal_abbreviation";
     public static final String JOURNAL_TITLE="journal_title";
