@@ -49,6 +49,8 @@ public interface LuceneFields{
     public static final String DATA_SOURCE = "data_source";
     public static final String FK_ANAMORPH_ID = "fk_anamorph_id";
 
+    public static final String FK_LOCATION_ID = "fk_location_id";
+
     public static final String FK_PATHOGEN_ID_ANA = "fk_pathogen_id_ana";
     public static final String FK_PATHOGEN_ID_SYN = "fk_pathogen_id_syn";
     public static final String FK_PATHOGEN_ID_SYN2 = "fk_pathogen_id_syn2";
