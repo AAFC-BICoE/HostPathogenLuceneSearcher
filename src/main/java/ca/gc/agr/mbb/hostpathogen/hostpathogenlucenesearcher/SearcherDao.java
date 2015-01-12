@@ -11,6 +11,10 @@ import java.util.Properties;
 import java.util.Date;
 
 public interface SearcherDao<T>{
+    public static final String LUCENE_INDICES_BASE_DIR = "lucene_indices_base_dir";
+
+    public static final int MAX_REQUESTED_IDS = 100;
+    public static final int MAX_REQUESTED_OBJECTS = 20;
 
      /**
      * Initialize the Searcher. Must be run before any other methods.
@@ -19,6 +23,7 @@ public interface SearcherDao<T>{
      * @return Searcher
      * @throws InitializationException <<Description>>
      */
+
     public void init(LuceneConfig lc) throws InitializationException;
 
     public List<Long>getAll(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException;
@@ -33,12 +38,13 @@ public interface SearcherDao<T>{
 
     public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException, InitializationException;
 
+    // 1:many
     public List<Long> getBy(Class type, long foreignKeyId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException,InitializationException;
+
+    // many:many
+    //public List<Long> getBy(long thisId, Class joinType, Class otherType, long thatId, final long offset, final int limit) throws IllegalArgumentException, IndexFailureException, IllegalOffsetLimitException,InitializationException;
 
     public Date getTimeStamp() throws IndexFailureException, InitializationException;
 
-    public static final String LUCENE_INDICES_BASE_DIR = "lucene_indices_base_dir";
 
-    public static final int MAX_REQUESTED_IDS = 100;
-    public static final int MAX_REQUESTED_OBJECTS = 20;
 }
