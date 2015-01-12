@@ -39,4 +39,17 @@ public class HPSearcher_PathogenTest implements HPSearch{
        Assert.assertTrue(all != null && all.size() >0);
     }
 
+
+
+   @Test
+   public void shouldGetSinglePathogenById() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       SearcherDao<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
+       hps.init(pathogenConfig);
+       List<Long> all = hps.getAll(1,10);	
+
+       Pathogen pathogen = hps.get(all.get(0));
+       Assert.assertTrue(pathogen != null);
+    }
+
+
 }
