@@ -21,9 +21,13 @@ public class ReferencePopulator<T> extends BasePopulator{
 	Reference ref = new Reference();
 	// obligatory
 	ref.setId(longValue(doc, stored(primaryKeyField), true));
-	ref.setSourceId(longValue(doc, stored(FK_REF_SOURCE_ID), true));
-	ref.setAuthor(stringValue(doc, stored(REFERENCE_AUTHORS), true));
-	ref.setYear(stringValue(doc, stored(REFERENCE_YEAR), true));
+	if (doc.get(stored(FK_REF_SOURCE_ID)) == null){
+		System.err.println("************** " + doc);
+	    }
+	//ref.setSourceId(longValue(doc, stored(FK_REF_SOURCE_ID), true));
+	ref.setSourceId(longValue(doc, stored(FK_REF_SOURCE_ID)));
+	ref.setAuthor(stringValue(doc, stored(REFERENCE_AUTHORS)));
+	ref.setYear(stringValue(doc, stored(REFERENCE_YEAR)));
 	ref.setTitle(stringValue(doc, stored(CHAPTER_ARTICLE_TITLE), true));
 	//
 	ref.setVolume(stringValue(doc, stored(VOLUME)));

@@ -17,6 +17,10 @@ public class FailedPopulateException extends IllegalArgumentException{
 	super(m);
     }
 
+    public FailedPopulateException(final String s, final Throwable m){
+	super(s,m);
+    }
+
 
 }
 

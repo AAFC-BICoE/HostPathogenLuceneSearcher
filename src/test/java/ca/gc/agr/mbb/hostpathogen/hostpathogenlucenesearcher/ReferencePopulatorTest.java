@@ -68,7 +68,7 @@ public class ReferencePopulatorTest{
     public void populateShouldFailWithDocumentMissingMandatoryField() throws IndexFailureException,InitializationException{
 	Populator<Reference> pop = new ReferencePopulator<Reference>();
 	Document d = makeValidDocument();
-	d.removeField(BasePopulator.stored(LuceneFields.FK_REF_SOURCE_ID));
+	d.removeField(BasePopulator.stored(LuceneFields.CHAPTER_ARTICLE_TITLE));
 	Reference ht = pop.populate(d);
     }
 

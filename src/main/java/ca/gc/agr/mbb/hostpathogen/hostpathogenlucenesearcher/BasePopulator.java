@@ -111,7 +111,7 @@ abstract public class BasePopulator<T> implements Populator{
 	}catch(IllegalArgumentException e){
 	    e.printStackTrace();
 	    //throw new FailedPopulateException("Document is null");
-	    throw new FailedPopulateException(e);
+	    throw new FailedPopulateException("The Lucene Document is null", e);
 	}
 	return null;
     }
