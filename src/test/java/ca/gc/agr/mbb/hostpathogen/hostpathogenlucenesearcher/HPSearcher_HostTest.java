@@ -19,12 +19,14 @@ import ca.gc.agr.mbb.hostpathogen.nouns.Host;
 
 
 @RunWith(JUnit4.class)
-public class HPSearcher_HostTest implements HPSearch{
+public class HPSearcher_HostTest extends BaseNoun implements HPSearch {
     private final static Logger LOG = Logger.getLogger(HPSearcher_HostTest.class.getName()); 
 
     static LuceneConfig hostConfig;
 
     static{
+	validIds = new Long[] {1l,2l,3l,4l,5l,6l,7l,8l,9l,10l};
+	invalidIds = new Long[] {711049l, 711050l, 711058l};
 	try{
 	    hostConfig = UtilLucene.luceneConfig(LuceneFields.HOST_TYPE, UtilTest.goodProperties);
 	}catch(InitializationException e){
@@ -37,7 +39,7 @@ public class HPSearcher_HostTest implements HPSearch{
        //SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
        SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
        hps.init(hostConfig);
-       List<Long> all = hps.getAll(1,10);	   
+       List<Long> all = hps.getAll(1,40);	   
        Assert.assertTrue(all != null && all.size() >0);
     }
 
@@ -45,14 +47,14 @@ public class HPSearcher_HostTest implements HPSearch{
     public void shouldFailWithNegativeOffset() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	//SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
 	SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
-       hps.init(hostConfig);
-       List<Long> all = hps.getAll(-1,10);	   
+	hps.init(hostConfig);
+	List<Long> all = hps.getAll(-1,10);	   
     }
 
     @Test(expected=IllegalOffsetLimitException.class)
     public void shouldFailWithBadLimit() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	//SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
-SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
+	SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
        hps.init(hostConfig);
        List<Long> all = hps.getAll(10,-1);	   
     }
@@ -82,10 +84,18 @@ SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
    public void shouldGetSingleHostById() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
        SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
        hps.init(hostConfig);
-       List<Long> all = hps.getAll(1,10);	
-
-       Host host = hps.get(all.get(0));
+       long id = validIds().get(0);	
+       Host host = hps.get(id);
        Assert.assertTrue(host != null);
+    }
+
+
+   @Test
+   public void shouldGetMultipleHostById() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
+       SearcherDao<Host> hps = new HPSearcher<Host>(Host.class);
+       hps.init(hostConfig);
+       List<Host> hosts = hps.get(validIds());
+       Assert.assertTrue(hosts != null && hosts.size() > 0);
     }
 
 

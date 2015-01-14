@@ -11,11 +11,6 @@ import java.util.Properties;
 import java.util.Date;
 
 public interface SearcherDao<T>{
-    public static final String LUCENE_INDICES_BASE_DIR = "lucene_indices_base_dir";
-
-    public static final int MAX_REQUESTED_IDS = 100;
-    public static final int MAX_REQUESTED_OBJECTS = 20;
-
      /**
      * Initialize the Searcher. Must be run before any other methods.
      *
@@ -47,4 +42,8 @@ public interface SearcherDao<T>{
     public Date getTimeStamp() throws IndexFailureException, InitializationException;
 
 
+
+    public static final String LUCENE_INDICES_BASE_DIR = "lucene_indices_base_dir";
+    public static final int MAX_REQUESTED_IDS = 100;
+    public static final int MAX_REQUESTED_OBJECTS = 20;
 }

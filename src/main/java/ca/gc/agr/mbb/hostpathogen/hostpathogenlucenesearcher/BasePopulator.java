@@ -116,8 +116,6 @@ abstract public class BasePopulator<T> implements Populator{
 	return null;
     }
 
-    //////////
-
     final long longValue(Document doc, String fieldName) throws FailedPopulateException{
 	return longValue(doc, fieldName, false);
     }

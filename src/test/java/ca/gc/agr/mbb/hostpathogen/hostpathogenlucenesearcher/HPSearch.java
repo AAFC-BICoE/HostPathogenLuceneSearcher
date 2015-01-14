@@ -6,7 +6,7 @@ public interface HPSearch{
      static final String TMP_DIR="./testDir_" + System.nanoTime();
      static final String TMP_FILE="./testFile_" + System.nanoTime();
 
-     static final String GOOD_HOST_GENUS="Abies";
+    static final String GOOD_HOST_GENUS="Abies";
      static final String BAD_HOST_GENUS="ABCDEFGHIJK555";
      static final String GOOD_PATHOGEN_GENUS="Basidiodendron";
 
