@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Arrays;
 
 abstract public class BaseNoun{
+    static final String IMPOSSIBLE_STRING = "ab8jd93jdkk";
+
     static Long validIds[] = null;
     static Long invalidIds[] = null;
 
@@ -11,7 +13,10 @@ abstract public class BaseNoun{
     static String invalidSortFields[] = null;
 
     static String validGenus = null;
-    static String invalidGenus = "ab8jd93jdkk";
+    static String invalidGenus = IMPOSSIBLE_STRING;
+
+    static String validSpecies = null;
+    static String invalidSpecies = IMPOSSIBLE_STRING;
 
     public List<Long> validIds(){
 	return Arrays.asList(validIds);
@@ -36,6 +41,16 @@ abstract public class BaseNoun{
     public String invalidGenus(){
 	return invalidGenus;
     }
+
+
+    public String validSpecies(){
+	return validSpecies;
+    }
+
+    public String invalidSpecies(){
+	return invalidSpecies;
+    }
+
 
     
 

@@ -32,6 +32,7 @@ public class HPSearcher_PathogenTest  extends BaseNoun implements HPSearch{
 	invalidSortFields = new String[]{"foobarx"};
 
 	validGenus = "Basidiodendron";
+	validSpecies = "cinereum";
 
 	try{
 	    pathogenConfig = UtilLucene.luceneConfig(LuceneFields.PATHOGEN_TYPE, UtilTest.goodProperties);
@@ -67,11 +68,6 @@ public class HPSearcher_PathogenTest  extends BaseNoun implements HPSearch{
     }
 
 
-
-
-
-
-    ////////////////
     @Test(expected=IllegalOffsetLimitException.class)
     public void shouldFailWithNegativeOffset() throws InitializationException, IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException{
 	SearcherDao<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
@@ -126,12 +122,36 @@ public class HPSearcher_PathogenTest  extends BaseNoun implements HPSearch{
 
 
     @Test
-    public void searchPathogenSuccessfully() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+    public void searchPathogenByGenusSuccessfully() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
 	Map<String, List<String>> queryParameters = HPSearcherTest.makeSimpleQuery(LuceneFields.PATHOGEN_GENUS, validGenus());
 	SearcherDao<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
 	hps.init(pathogenConfig);
-	List<Long> results = hps.search(queryParameters, validSortFields(), 1,3);
+	List<Long> results = hps.search(queryParameters, validSortFields(), 0,3);
 	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+    @Test
+    public void searchPathogenByGenusSpeciesSuccessfully() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = HPSearcherTest.makeSimpleQuery(LuceneFields.PATHOGEN_GENUS, validGenus());
+	queryParameters.putAll(HPSearcherTest.makeSimpleQuery(LuceneFields.PATHOGEN_SPECIES, validSpecies()));
+	//queryParameters.putAll(HPSearcherTest.makeSimpleQuery(LuceneFields.PATHOGEN_SPECIES, ));
+
+	SearcherDao<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
+	hps.init(pathogenConfig);
+	List<Long> results = hps.search(queryParameters, validSortFields(), 0,3);
+	Assert.assertTrue(results != null && results.size()>0);
+    }
+
+
+    @Test
+    public void searchPathogenByGenusBadSpeciesShouldFail() throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
+	Map<String, List<String>> queryParameters = HPSearcherTest.makeSimpleQuery(LuceneFields.PATHOGEN_GENUS, validGenus());
+	queryParameters.putAll(HPSearcherTest.makeSimpleQuery(LuceneFields.PATHOGEN_SPECIES, invalidSpecies()));
+
+	SearcherDao<Pathogen> hps = new HPSearcher<Pathogen>(Pathogen.class);
+	hps.init(pathogenConfig);
+	List<Long> results = hps.search(queryParameters, validSortFields(), 1,3);
+	Assert.assertTrue(results == null || results.size()==0);
     }
 
     @Test

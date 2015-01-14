@@ -89,7 +89,7 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     public List<Long>getAll(final long offset, final int limit) throws IllegalOffsetLimitException, IllegalArgumentException, IndexFailureException, InitializationException{
 	checkInit();
 	Util.checkOffsetAndLimit(offset, limit);
-	return UtilLucene.runQueryForIds(null, offset, limit, luceneConfig);
+	return UtilLucene.runQueryForIds(null, offset, limit, luceneConfig, false);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
 	Util.checkOffsetAndLimit(offset, limit);
 	Util.checkOffsetAndLimit(offset, limit);
 	
-	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig);
+	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig, true);
     }
 
     @Override
@@ -114,12 +114,10 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
 	    throw new TooManyIdsException("Too many ids: " + ids.size() +"; larger than max=" + MAX_IDS);
 	}
 
-	String queryString = UtilLucene.buildQuery(UtilLucene.makeIdsQueryMap(luceneConfig.populator.getPrimaryKeyField(), ids), luceneConfig.populator.getRecordType());
-	LOG.info("**** query=" + queryString);
+	String queryString = UtilLucene.buildQuery(UtilLucene.makeIdsQueryMap(luceneConfig.populator.getPrimaryKeyField(), ids), luceneConfig.populator.getRecordType(), false);
 	List<T>nouns = null;
 	try{
 	    TopDocs td = UtilLucene.runQuery(queryString, luceneConfig.populator.getDefaultSortFields(), luceneConfig.analyzer, luceneConfig.searcher, false);
-	    LOG.info("**** Totalhits=" + td.totalHits);
 	    nouns = new ArrayList<T>(td.totalHits);
 	    for(ScoreDoc sd: td.scoreDocs){
 		Document doc = luceneConfig.searcher.doc(sd.doc);
@@ -157,7 +155,7 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
     @Override
     public long searchCount(Map<String,List<String>>queryParameters) throws IllegalArgumentException, IndexFailureException,InitializationException{
 	checkInit();
-	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, luceneConfig.populator.getRecordType()), luceneConfig.populator.getDefaultSortFields(), luceneConfig.analyzer, luceneConfig.searcher).totalHits;
+	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, luceneConfig.populator.getRecordType(), true), luceneConfig.populator.getDefaultSortFields(), luceneConfig.analyzer, luceneConfig.searcher).totalHits;
     }
 
     @Override
@@ -176,7 +174,7 @@ public class HPSearcher<T> implements SearcherDao<T>, LuceneFields{
 
 	queryParameters.put(luceneConfig.populator.getRelationField(type), fieldQuery);
 
-	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig);
+	return UtilLucene.runQueryForIds(queryParameters, offset, limit, luceneConfig, true);
     }
 
     // This is just temp: supposed to read this from Lucene index

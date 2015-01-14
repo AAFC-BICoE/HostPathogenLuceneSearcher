@@ -107,7 +107,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	    throw new TooManyIdsException("Too many ids: " + ids.size() +"; larger than max=" + MAX_IDS);
 	}
 
-	String queryString = UtilLucene.buildQuery(UtilLucene.makeIdsQueryMap(populator.getPrimaryKeyField(), ids), populator.getRecordType());
+	String queryString = UtilLucene.buildQuery(UtilLucene.makeIdsQueryMap(populator.getPrimaryKeyField(), ids), populator.getRecordType(), false);
 	LOG.info("**** query=" + queryString);
 	List<T>pathogens = null;
 	try{
@@ -140,7 +140,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
     public long countSearch(final Map<String,List<String>>queryParameters) throws IndexFailureException{
 	Util.checkQueryParameters(queryParameters, populator.getValidSearchFieldSet());
 	//return (long)all().totalHits;
-	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType()), populator.getDefaultSortFields(), analyzer, searcher).totalHits;
+	return UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType(), true), populator.getDefaultSortFields(), analyzer, searcher).totalHits;
     }
 
 
@@ -151,7 +151,7 @@ public class LuceneIndexSearcher<T> implements LuceneFields{
 	List<String> recordType = new ArrayList<String>(1);
 	recordType.add(populator.getRecordType());
 
-	return UtilLucene.topDocsToIds(UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType()), populator.getDefaultSortFields(), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
+	return UtilLucene.topDocsToIds(UtilLucene.runQuery(UtilLucene.buildQuery(queryParameters, populator.getRecordType(), true), populator.getDefaultSortFields(), analyzer, searcher), searcher, populator.getPrimaryKeyField(), offset, limit);
     }
 
     public Populator getPopulator(){

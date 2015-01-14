@@ -9,7 +9,6 @@ public interface HPSearch{
     static final String GOOD_HOST_GENUS="Abies";
      static final String BAD_HOST_GENUS="ABCDEFGHIJK555";
      static final String GOOD_PATHOGEN_GENUS="Basidiodendron";
-
      static final long GOOD_HP_HOST_FK = 1698;
      static final long GOOD_HP_PATHOGEN_FK = 74462;
      static final long GOOD_HP_REFERENCE_FK = 2111;

@@ -34,10 +34,12 @@ import org.apache.lucene.document.Field;
 import ca.gc.agr.mbb.hostpathogen.nouns.Pathogen;
 
 public class UtilLucene implements LuceneFields{
-    private final static Logger LOG = Logger.getLogger(UtilLucene.class.getName()); 
+    private final static Logger log = Logger.getLogger(UtilLucene.class.getName()); 
 
     public static final String makeLuceneQueryPair(final String key, final String value){
-	return key + ":" + value.toLowerCase();
+	return key 
+	    + ":" 
+	    + value.toLowerCase() + " ";
     }
 
     public static final Map<String, List<String>> makeIdQueryMap(final String fieldName, final Long id){
@@ -85,7 +87,7 @@ public class UtilLucene implements LuceneFields{
 	return runQuery(recordTypeFilter(recordType), sortFields, analyzer,searcher);
     }
 
-    protected final static String buildQuery(final Map<String,List<String>>queryParameters, String recordType){
+    protected final static String buildQuery(final Map<String,List<String>>queryParameters, String recordType, boolean allRequired){
 	if (recordType == null || recordType.length() == 0){
 	    throw new NullPointerException("record type cannot be null");
 	}
@@ -93,7 +95,11 @@ public class UtilLucene implements LuceneFields{
 	    return recordTypeFilter(recordType);
 	}
 	
-	StringBuilder sb = new StringBuilder("(");
+	StringBuilder sb = new StringBuilder();
+	
+	if (!allRequired){
+	    sb.append("(");
+	}
 	boolean first = true;
 	for(String key:queryParameters.keySet()){
 	    if(key.equals(LuceneFields.SORT_FIELD)){
@@ -103,18 +109,24 @@ public class UtilLucene implements LuceneFields{
 	    if (first){
 		first = false;
 	    }else{
-		sb.append(" ");
+		if (allRequired){
+		    sb.append("AND ");
+		}
 	    }
 	    List<String>values = queryParameters.get(key);
+
 	    for(String value: values){
 		sb.append(UtilLucene.makeLuceneQueryPair(key, value));
 		sb.append(" ");
 	    }
 	}
-	sb.append(") AND ");
+
+	if (!allRequired){
+	    sb.append(")");
+	}
+	sb.append("AND ");
 	sb.append(recordTypeFilter(recordType));
-	LOG.info("Lucene QueryParemeters: " + queryParameters);
-	LOG.info("Lucene Query: " + sb.toString());
+	log.info("Lucene Query: " + sb.toString());
 	return sb.toString();
     }
 
@@ -130,7 +142,7 @@ public class UtilLucene implements LuceneFields{
 	    sort.setSort(sFields);
 	}
 	try{
-	    LOG.info("Lucene query run: " + query);
+	    log.info("Lucene query run: " + query);
 	    if (sort == null){
 		    return searcher.search(query, Integer.MAX_VALUE);
 		}else{
@@ -161,13 +173,13 @@ public class UtilLucene implements LuceneFields{
 	    e.printStackTrace();
 	    throw new IndexFailureException(e);
 	}
-	return UtilLucene.runQuery(query, sortFields, searcher);
+	return runQuery(query, sortFields, searcher);
     }
 
     
     public static final IndexSearcher makeIndexSearcher(String dir) throws IOException{
 	IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(dir)));
-	LOG.info("Num docs in " + dir + "=" + reader.maxDoc());
+	log.info("Num docs in " + dir + "=" + reader.maxDoc());
 	return new IndexSearcher(reader);
     }
 
@@ -180,14 +192,14 @@ public class UtilLucene implements LuceneFields{
     }
 
     public static final IndexWriter makeIndexWriter(final String indexDir, final Analyzer analyzer) throws IOException{
-	LOG.info("Opening Lucene index: " + indexDir);
+	log.info("Opening Lucene index: " + indexDir);
 	Directory dir = FSDirectory.open(new File(indexDir));
 	IndexWriterConfig iwc = new IndexWriterConfig(UtilLucene.luceneVersion(), analyzer);
 
 	iwc.setOpenMode(OpenMode.CREATE);
 
 	IndexWriter writer = new IndexWriter(dir, iwc);
-	LOG.info("Success opening Lucene index: " + indexDir);
+	log.info("Success opening Lucene index: " + indexDir);
 	return writer;
     }
 
@@ -218,7 +230,7 @@ public class UtilLucene implements LuceneFields{
 	if(luceneDir == null){
 	    throw new IllegalArgumentException("luceneDir is null: LUCENE_INDICES_BASE_DIR is not set in properties?");
 	}
-	LOG.info("Opening Lucene index for directory: " + luceneDir);
+	log.info("Opening Lucene index for directory: " + luceneDir);
 
 	// FIXX analyzer and indexSearcher need to be singletons
 	LuceneConfig lc = new LuceneConfig();
@@ -273,11 +285,12 @@ public class UtilLucene implements LuceneFields{
 	return lc;
     }
 
-    public static final List<Long> runQueryForIds(final Map<String,List<String>>queryParameters, long offset, int limit, LuceneConfig lc) throws IllegalArgumentException, IndexFailureException{
-	String query = buildQuery(queryParameters, lc.populator.getRecordType());
+    public static final List<Long> runQueryForIds(final Map<String,List<String>>queryParameters, long offset, int limit, LuceneConfig lc, boolean allRequired) throws IllegalArgumentException, IndexFailureException{
+	String query = buildQuery(queryParameters, lc.populator.getRecordType(), allRequired);
 	TopDocs td = runQuery(query, lc.populator.getDefaultSortFields(), lc.analyzer, lc.searcher);
 	List<Long> resultIds = topDocsToIds(td, lc.searcher, lc.populator.getPrimaryKeyField(), offset, limit);
-	//return topDocsToIds(lc.populator.getDefaultSortFields(), lc.analyzer, lc.searcher), lc.searcher, lc.populator.getPrimaryKeyField(), offset, limit);
+	log.info("Query results #=" + resultIds.size() + "  [" + query + "]" + "  offset=" + offset + "  limit=" + limit);
+
 	return resultIds;
 	
     }
