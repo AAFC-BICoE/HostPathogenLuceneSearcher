@@ -64,13 +64,14 @@ public class ReferencePopulatorTest{
 	Reference ht = pop.populate(d);
     }
 
-    @Test(expected=FailedPopulateException.class)
-    public void populateShouldFailWithDocumentMissingMandatoryField() throws IndexFailureException,InitializationException{
-	Populator<Reference> pop = new ReferencePopulator<Reference>();
-	Document d = makeValidDocument();
-	d.removeField(BasePopulator.stored(LuceneFields.CHAPTER_ARTICLE_TITLE));
-	Reference ht = pop.populate(d);
-    }
+    // # Not mandatory (from data)
+    // @Test(expected=FailedPopulateException.class)
+    // public void populateShouldFailWithDocumentMissingMandatoryField() throws IndexFailureException,InitializationException{
+    // 	Populator<Reference> pop = new ReferencePopulator<Reference>();
+    // 	Document d = makeValidDocument();
+    // 	d.removeField(BasePopulator.stored(LuceneFields.CHAPTER_ARTICLE_TITLE));
+    // 	Reference ht = pop.populate(d);
+    // }
 
     @Test
     public void populateShouldSucceedWithDocumentMissingNonMandatoryField() throws IndexFailureException,InitializationException{

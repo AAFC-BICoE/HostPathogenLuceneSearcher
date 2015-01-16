@@ -29,7 +29,7 @@ public class ReferencePopulator<T> extends BasePopulator{
 	ref.setAuthor(stringValue(doc, stored(REFERENCE_AUTHORS))); // Thought should be mandatory
 	ref.setYear(stringValue(doc, stored(REFERENCE_YEAR))); // Thought should be mandatory
 
-	ref.setTitle(stringValue(doc, stored(CHAPTER_ARTICLE_TITLE), true)); // Thought should be mandatory
+	ref.setTitle(stringValue(doc, stored(CHAPTER_ARTICLE_TITLE))); // Thought should be mandatory
 
 	ref.setVolume(stringValue(doc, stored(VOLUME)));
 	ref.setPage(stringValue(doc, stored(PAGES)));
